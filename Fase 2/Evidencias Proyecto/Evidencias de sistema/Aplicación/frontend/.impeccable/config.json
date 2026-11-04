@@ -1,0 +1,35 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "design-system-font",
+        "value": "public sans",
+        "files": [
+          ".impeccable/mocks/decision"
+        ],
+        "createdAt": "2026-10-23T20:33:16.422Z",
+        "reason": "decision-round sketches (spent hand), not shipped UI: assistant triage"
+      },
+      {
+        "rule": "design-system-font",
+        "value": "barlow semi condensed",
+        "files": [
+          ".impeccable/mocks/decision"
+        ],
+        "createdAt": "2026-10-23T20:33:16.546Z",
+        "reason": "decision-round sketches (spent hand), not shipped UI: assistant triage"
+      },
+      {
+        "rule": "design-system-font",
+        "value": "barlow",
+        "files": [
+          ".impeccable/mocks/decision"
+        ],
+        "createdAt": "2026-10-23T20:33:16.634Z",
+        "reason": "decision-round sketches (spent hand), not shipped UI: assistant triage"
+      }
+    ]
+  }
+}

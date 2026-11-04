@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8">
+<style>
+*{box-sizing:border-box;margin:0}
+body{width:1440px;height:900px;overflow:hidden;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;background:#FAFAFA;color:#0A0A0A;display:grid;grid-template-columns:232px 1fr}
+aside{border-right:1px solid #E5E5E5;padding:22px 16px;display:flex;flex-direction:column;gap:18px;background:#fff}
+aside b{font-size:16px;font-weight:600}aside b span{display:block;font-size:12px;font-weight:400;color:#737373}
+.g{font-size:12px;color:#737373;margin-bottom:4px}.a{display:block;padding:7px 10px;border-radius:6px;font-size:14px;color:#404040}.a.on{background:#F0F0F0;color:#0A0A0A;font-weight:600}
+main{display:flex;flex-direction:column}
+.top{height:60px;border-bottom:1px solid #E5E5E5;display:flex;align-items:center;padding:0 32px;gap:14px;background:#fff}
+.top h1{font-size:18px;font-weight:600}.sp{margin-left:auto}.btn{border:1px solid #E5E5E5;border-radius:6px;padding:7px 12px;font-size:14px}.btn.p{background:#2563EB;color:#fff;border-color:#2563EB}
+.page{padding:28px 32px;display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
+.c{background:#fff;border:1px solid #E5E5E5;border-radius:10px;padding:22px;display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.c .l{font-size:13px;color:#737373}.c .v{font-size:44px;font-weight:600;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.c .v small{font-size:15px;color:#737373;font-weight:400}
+.proof{border-left:1px solid #E5E5E5;padding-left:18px;font-size:13px;color:#525252;display:flex;flex-direction:column;gap:8px;justify-content:center}
+.proof b{color:#0A0A0A;font-weight:600}
+.red{color:#B91C1C}.amb{color:#A16207}
+.wide{grid-column:1/-1;display:block}
+.wide h2{font-size:15px;font-weight:600;margin-bottom:14px}
+svg{display:block}
+</style></head><body>
+<aside><b>PowerGuardian Pro<span>INDUC TECH</span></b>
+<div><div class="g">Panel</div><a class="a on">Panel Principal</a></div>
+<div><div class="g">Monitoreo</div><a class="a">Parámetros Eléctricos</a><a class="a">Armónicos</a><a class="a">Forma de Onda</a><a class="a">Tendencias</a></div>
+<div><div class="g">Compensación</div><a class="a">Compensación Activa</a><a class="a">Cortocircuito</a></div>
+<div><div class="g">Gestión</div><a class="a">Equipos</a><a class="a">Incidencias</a></div></aside>
+<main><header class="top"><h1>Panel solar</h1><span class="sp"></span><span class="btn">Equipo ▾</span><span class="btn">☾</span><span class="btn p">Ver incidencias (2)</span></header>
+<div class="page">
+<div class="c"><div><div class="l">THD</div><div class="v red">9,8<small> %</small></div></div><div class="proof"><span><b>Límite:</b> 5 % (IEEE 519)</span><span><b>Tendencia:</b> +6,4 pts en 4 min</span><span><b>Causa probable:</b> VFD sin filtro</span></div></div>
+<div class="c"><div><div class="l">Factor de potencia</div><div class="v amb">0,91</div></div><div class="proof"><span><b>Mínimo:</b> 0,90</span><span><b>Objetivo:</b> 0,95 tras compensación</span><span><b>Qc necesario:</b> 4,9 kVAr</span></div></div>
+<div class="c"><div><div class="l">Tensión L1</div><div class="v">219,6<small> V</small></div></div><div class="proof"><span><b>Rango:</b> 210–240 V</span><span><b>Desbalance:</b> 1,47 % (límite 2 %)</span></div></div>
+<div class="c"><div><div class="l">Corriente L3</div><div class="v red">118,4<small> A</small></div></div><div class="proof"><span><b>Máximo:</b> 100 A</span><span><b>Incidencia:</b> activa desde 16:39</span></div></div>
+<div class="c wide"><h2>THD últimos 5 minutos</h2><svg viewBox="0 0 1300 160" width="100%" height="160"><line x1="0" y1="100" x2="1300" y2="100" stroke="#E5E5E5"/><line x1="0" y1="80" x2="1300" y2="80" stroke="#B91C1C" stroke-dasharray="4 4"/><polyline fill="none" stroke="#0A0A0A" stroke-width="2" points="0,120 100,118 200,122 300,117 400,121 500,115 600,96 700,60 800,52 900,58 1000,90 1100,55 1200,50 1300,54"/></svg></div>
+</div></main></body></html>

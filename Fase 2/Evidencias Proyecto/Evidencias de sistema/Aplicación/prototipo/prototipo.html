@@ -1,0 +1,2768 @@
+<!-- CONFIDENCIAL - USO ACADEMICO CAPSTONE - INDUC TECH - NO DISTRIBUIR -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PowerGuardian Pro v1.0 – INDUC TECH</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg-deep:    #050E1A;
+            --bg-panel:   #091828;
+            --bg-card:    #0D2035;
+            --bg-card2:   #0A1A2E;
+            --accent:     #00C8E8;
+            --accent2:    #0099BB;
+            --accent3:    #00E5C0;
+            --gold:       #E8A500;
+            --ok:         #2DBD6E;
+            --warn:       #E8A000;
+            --danger:     #E03040;
+            --border:     #12304A;
+            --border2:    #1A4060;
+            --txt1:       #E8F4FF;
+            --txt2:       #7AACCF;
+            --txt3:       #3A6080;
+        }
+        html, body { height: 100%; overflow: hidden; }
+        body { font-family: 'Segoe UI', 'Consolas', sans-serif; background: var(--bg-deep); color: var(--txt1); }
+        .app { display: flex; height: 100vh; }
+
+        /* ── SIDEBAR ── */
+        .sidebar {
+            width: 240px; min-width: 240px;
+            background: linear-gradient(180deg, #06111F 0%, #050E1A 100%);
+            border-right: 1px solid var(--border2);
+            display: flex; flex-direction: column;
+            box-shadow: 4px 0 20px rgba(0,0,0,0.7);
+            z-index: 100;
+        }
+        .sb-brand {
+            padding: 18px 16px 14px;
+            border-bottom: 1px solid var(--border);
+            background: linear-gradient(135deg, #07192B, #051220);
+        }
+        .sb-brand-name {
+            font-size: 15px; font-weight: 800; letter-spacing: 0.5px;
+            background: linear-gradient(90deg, var(--accent), var(--accent3));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .sb-brand-sub { font-size: 9px; color: var(--txt3); margin-top: 2px; letter-spacing: 1.5px; text-transform: uppercase; }
+        .sb-brand-ver { font-size: 8px; color: var(--ok); margin-top: 3px; }
+        .sb-brand-company { font-size: 8px; color: var(--txt3); margin-top: 1px; }
+
+        .sb-nav { flex: 1; padding: 12px 8px; overflow-y: auto; }
+        .sb-group { margin-bottom: 18px; }
+        .sb-group-label {
+            font-size: 7.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px;
+            color: var(--accent); padding: 0 10px 6px; opacity: 0.8;
+        }
+        .sb-item {
+            display: flex; align-items: center; gap: 8px;
+            padding: 9px 10px; margin-bottom: 2px; border-radius: 6px;
+            font-size: 10.5px; font-weight: 500; color: var(--txt2);
+            cursor: pointer; transition: all 0.25s;
+            border-left: 3px solid transparent;
+            position: relative;
+        }
+        .sb-item:hover { background: rgba(0,200,232,0.08); color: var(--txt1); }
+        .sb-item.active {
+            background: rgba(0,200,232,0.14); color: var(--accent);
+            border-left-color: var(--accent);
+            box-shadow: inset 0 0 12px rgba(0,200,232,0.07);
+        }
+        .sb-icon { font-size: 12px; width: 16px; text-align: center; }
+        .sb-dot { width: 5px; height: 5px; border-radius: 50%; background: transparent; margin-left: auto; }
+        .sb-item.active .sb-dot { background: var(--ok); box-shadow: 0 0 4px var(--ok); }
+
+        .sb-footer {
+            padding: 10px 8px; border-top: 1px solid var(--border);
+            display: flex; gap: 5px;
+        }
+        .sb-btn {
+            flex: 1; padding: 7px 0; background: transparent; border: 1px solid var(--border2);
+            border-radius: 4px; color: var(--txt2); font-size: 10px; cursor: pointer;
+            transition: all 0.2s;
+        }
+        .sb-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+        /* ── MAIN ── */
+        .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+
+        .topbar {
+            background: linear-gradient(90deg, #07192B 0%, #050E1A 100%);
+            border-bottom: 1px solid var(--border);
+            padding: 12px 24px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .topbar-left h1 { font-size: 14px; font-weight: 700; letter-spacing: 0.3px; }
+        .topbar-left p { font-size: 9px; color: var(--txt2); margin-top: 2px; }
+        .topbar-right { display: flex; gap: 8px; align-items: center; }
+        .badge {
+            font-size: 8px; padding: 3px 8px; border-radius: 3px;
+            border: 1px solid; font-weight: 600; letter-spacing: 0.5px;
+        }
+        .badge-ok { color: var(--ok); border-color: var(--ok); background: rgba(45,189,110,0.1); }
+        .badge-info { color: var(--accent); border-color: var(--accent); background: rgba(0,200,232,0.08); }
+        .badge-warn { color: var(--warn); border-color: var(--warn); background: rgba(232,160,0,0.1); }
+        #ts { font-size: 8px; color: var(--txt3); }
+
+        /* ── WORKSPACE ── */
+        .workspace { flex: 1; display: flex; gap: 10px; padding: 10px 16px; overflow: hidden; }
+
+        /* ── INPUT PANEL ── */
+        /* ── PANEL DE MONITOREO EN VIVO ── */
+        .live-panel {
+            width: 220px; min-width: 220px;
+            background: var(--bg-panel);
+            border: 1px solid var(--border);
+            border-radius: 8px; padding: 10px;
+            overflow-y: auto; display: flex; flex-direction: column; gap: 8px;
+        }
+        .lp-section { border: 1px solid var(--border); border-radius: 5px; padding: 9px; }
+        .lp-title {
+            font-size: 8px; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 0.8px; color: var(--accent); margin-bottom: 8px;
+        }
+        /* Lectura de sensor en vivo */
+        .sensor-row {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 5px 0; border-bottom: 1px solid var(--border);
+        }
+        .sensor-row:last-child { border-bottom: none; }
+        .sensor-name { font-size: 8.5px; color: var(--txt2); }
+        .sensor-val {
+            font-size: 11px; font-weight: 700;
+            font-family: 'Consolas', monospace; color: var(--txt1);
+            transition: color 0.4s;
+        }
+        .sensor-val.ok   { color: var(--ok); }
+        .sensor-val.warn { color: var(--warn); }
+        .sensor-val.err  { color: var(--danger); }
+        .sensor-unit { font-size: 7.5px; color: var(--txt3); margin-left: 2px; }
+        /* Minigráfico de tendencia inline */
+        .sparkline { width: 100%; height: 28px; margin-top: 4px; }
+        /* Botones de control */
+        .ctrl-btn {
+            width: 100%; padding: 8px; border: none; border-radius: 6px;
+            font-size: 10px; font-weight: 700; cursor: pointer;
+            transition: all 0.2s; text-transform: uppercase; letter-spacing: 0.4px;
+        }
+        .ctrl-btn.primary {
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            color: var(--bg-deep); box-shadow: 0 3px 10px rgba(0,200,232,0.25);
+        }
+        .ctrl-btn.primary:hover { box-shadow: 0 5px 16px rgba(0,200,232,0.4); transform: translateY(-1px); }
+        .ctrl-btn.secondary {
+            background: transparent; border: 1px solid var(--border2); color: var(--txt2);
+        }
+        .ctrl-btn.secondary:hover { border-color: var(--accent); color: var(--accent); }
+        .ctrl-btn.danger { background: transparent; border: 1px solid var(--danger); color: var(--danger); }
+        /* Selector de escenario */
+        .scen-sel {
+            width: 100%; padding: 6px 7px; background: var(--bg-deep);
+            border: 1px solid var(--border); border-radius: 4px;
+            font-size: 9.5px; color: var(--txt1); cursor: pointer; outline: none;
+            transition: border-color 0.2s;
+        }
+        .scen-sel:focus { border-color: var(--accent); }
+        /* Indicador de tasa de actualización */
+        .update-rate {
+            display: flex; align-items: center; gap: 5px;
+            font-size: 8px; color: var(--txt3); padding: 3px 0;
+        }
+        .update-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--ok); }
+        .update-dot.active { animation: pulse 1s infinite; }
+        /* Configuración de instalación (fija, no live) */
+        .config-row { margin-bottom: 6px; }
+        .config-label { font-size: 8px; color: var(--txt3); margin-bottom: 2px; }
+        .config-val { font-size: 9.5px; color: var(--txt2); font-family: 'Consolas', monospace; }
+        .config-inp {
+            width: 100%; padding: 5px 7px; background: var(--bg-deep);
+            border: 1px solid var(--border); border-radius: 3px;
+            font-size: 9.5px; color: var(--txt1); font-family: 'Consolas', monospace;
+            outline: none;
+        }
+        .config-inp:focus { border-color: var(--border2); }
+
+        /* ── OUTPUT ── */
+        .output-area { flex: 1; overflow: hidden; display: flex; flex-direction: column; }
+        .section-view { display: none; height: 100%; overflow-y: auto; }
+        .section-view.active { display: flex; flex-direction: column; gap: 10px; animation: fadeIn 0.3s; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* ── CARDS ── */
+        .row-cards { display: flex; gap: 10px; }
+        .card {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: 8px; padding: 12px; flex: 1;
+        }
+        .card-title {
+            font-size: 9px; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 0.8px; color: var(--accent); margin-bottom: 10px;
+            border-bottom: 1px solid var(--border); padding-bottom: 6px;
+        }
+        .kpi { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid var(--border); font-size: 10px; }
+        .kpi:last-child { border-bottom: none; }
+        .kpi-label { color: var(--txt2); }
+        .kpi-val { font-family: 'Consolas', monospace; font-weight: 600; color: var(--txt1); }
+        .kpi-val.ok { color: var(--ok); }
+        .kpi-val.warn { color: var(--warn); }
+        .kpi-val.err { color: var(--danger); }
+
+        /* Gauge circles */
+        .gauges { display: flex; gap: 12px; justify-content: space-around; margin-top: 8px; }
+        .gauge-wrap { text-align: center; }
+        .gauge-svg { display: block; margin: 0 auto; }
+        .gauge-label { font-size: 8px; color: var(--txt2); margin-top: 3px; }
+        .gauge-value { font-size: 11px; font-weight: 700; }
+
+        /* Alert boxes */
+        .alert { padding: 8px 10px; border-radius: 4px; font-size: 9px; line-height: 1.5; margin-bottom: 4px; }
+        .alert-info { background: rgba(0,200,232,0.08); border-left: 3px solid var(--accent); color: #7AE0F0; }
+        .alert-ok { background: rgba(45,189,110,0.08); border-left: 3px solid var(--ok); color: #7ADEA8; }
+        .alert-warn { background: rgba(232,160,0,0.1); border-left: 3px solid var(--warn); color: #F0C060; }
+        .alert-err { background: rgba(224,48,64,0.1); border-left: 3px solid var(--danger); color: #F08090; }
+
+        /* Chart containers */
+        .chart-box { background: var(--bg-card2); border: 1px solid var(--border); border-radius: 6px; padding: 10px; }
+        .chart-box canvas { max-height: 220px; }
+
+        /* Spectrum bars */
+        .spectrum { display: flex; align-items: flex-end; gap: 3px; height: 80px; padding: 0 4px; }
+        .spec-bar { flex: 1; border-radius: 2px 2px 0 0; transition: all 0.5s; min-width: 8px; }
+        .spec-labels { display: flex; gap: 3px; padding: 0 4px; }
+        .spec-lbl { flex: 1; font-size: 6.5px; text-align: center; color: var(--txt3); }
+
+        /* IoT status */
+        .iot-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+        .iot-chip {
+            background: var(--bg-card2); border: 1px solid var(--border);
+            border-radius: 5px; padding: 8px 10px;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .iot-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+        .iot-dot.active { background: var(--ok); box-shadow: 0 0 6px var(--ok); animation: pulse 2s infinite; }
+        .iot-dot.inactive { background: var(--txt3); }
+        .iot-dot.warn { background: var(--warn); box-shadow: 0 0 6px var(--warn); animation: pulse 1s infinite; }
+        @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+        .iot-info { flex: 1; }
+        .iot-proto { font-size: 9px; font-weight: 700; color: var(--txt1); }
+        .iot-status { font-size: 7.5px; color: var(--txt2); }
+
+        /* Norm-IA */
+        .norm-block {
+            background: var(--bg-card2); border: 1px solid var(--border);
+            border-left: 3px solid var(--accent); border-radius: 4px;
+            padding: 9px 10px; margin-bottom: 6px;
+        }
+        .norm-block.ok-b { border-left-color: var(--ok); }
+        .norm-block.warn-b { border-left-color: var(--warn); }
+        .norm-block.err-b { border-left-color: var(--danger); }
+        .norm-block-title { font-size: 8px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+        .norm-block.ok-b .norm-block-title { color: var(--ok); }
+        .norm-block.warn-b .norm-block-title { color: var(--warn); }
+        .norm-block.err-b .norm-block-title { color: var(--danger); }
+        .norm-block-title span { color: var(--accent); }
+        .norm-item { font-size: 8.5px; color: var(--txt2); line-height: 1.5; }
+
+        /* Econ table */
+        .econ-table { width: 100%; border-collapse: collapse; font-size: 9.5px; }
+        .econ-table th { background: var(--bg-card2); color: var(--accent); font-size: 8px; text-transform: uppercase; padding: 6px 8px; text-align: left; border-bottom: 1px solid var(--border2); }
+        .econ-table td { padding: 6px 8px; border-bottom: 1px solid var(--border); color: var(--txt2); }
+        .econ-table td.val { font-family: 'Consolas', monospace; color: var(--txt1); font-weight: 600; }
+        .econ-table td.ok { color: var(--ok); font-weight: 700; }
+        .econ-table td.warn { color: var(--warn); font-weight: 700; }
+
+        /* Dashboard KPI big */
+        .kpi-big-row { display: flex; gap: 8px; }
+        .kpi-big {
+            flex: 1; background: var(--bg-card2); border: 1px solid var(--border);
+            border-radius: 7px; padding: 12px 14px; text-align: center;
+        }
+        .kpi-big-icon { font-size: 18px; margin-bottom: 4px; }
+        .kpi-big-val { font-size: 20px; font-weight: 800; font-family: 'Consolas', monospace; }
+        .kpi-big-val.ok { color: var(--ok); }
+        .kpi-big-val.warn { color: var(--warn); }
+        .kpi-big-val.err { color: var(--danger); }
+        .kpi-big-val.accent { color: var(--accent); }
+        .kpi-big-label { font-size: 7.5px; color: var(--txt2); text-transform: uppercase; letter-spacing: 0.8px; margin-top: 2px; }
+
+        /* Road-map timeline */
+        .roadmap { display: flex; flex-direction: column; gap: 0; }
+        .rm-item { display: flex; gap: 12px; padding-bottom: 14px; position: relative; }
+        .rm-item::before { content: ''; position: absolute; left: 9px; top: 22px; bottom: 0; width: 1px; background: var(--border2); }
+        .rm-item:last-child::before { display: none; }
+        .rm-dot { width: 20px; height: 20px; border-radius: 50%; border: 2px solid; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 8px; }
+        .rm-dot.done { border-color: var(--ok); background: rgba(45,189,110,0.15); color: var(--ok); }
+        .rm-dot.active { border-color: var(--accent); background: rgba(0,200,232,0.15); color: var(--accent); animation: pulse 2s infinite; }
+        .rm-dot.future { border-color: var(--txt3); background: transparent; color: var(--txt3); }
+        .rm-content { flex: 1; }
+        .rm-phase { font-size: 8px; font-weight: 700; color: var(--txt3); }
+        .rm-title { font-size: 10px; font-weight: 600; margin: 2px 0; }
+        .rm-desc { font-size: 8.5px; color: var(--txt2); line-height: 1.4; }
+
+        /* scrollbar */
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-thumb { background: rgba(0,200,232,0.25); border-radius: 3px; }
+
+        @media print {
+            .sidebar, .input-panel, .topbar { display: none !important; }
+            .output-area { width: 100%; }
+        }
+
+        /* ── MODO LIVE & CONEXIÓN BACKEND ── */
+        .live-btn {
+            display:flex;align-items:center;gap:5px;font-size:8px;padding:3px 9px;
+            border-radius:3px;border:1px solid;font-weight:600;cursor:pointer;
+            transition:all 0.2s;background:transparent;
+        }
+        .live-btn.off  { color:var(--txt3);border-color:var(--txt3); }
+        .live-btn.conn { color:var(--warn);border-color:var(--warn);background:rgba(232,160,0,0.08); }
+        .live-btn.on   { color:var(--ok);border-color:var(--ok);background:rgba(45,189,110,0.1); }
+        .live-dot { width:6px;height:6px;border-radius:50%;background:currentColor;flex-shrink:0; }
+        .live-btn.on .live-dot { animation:pulse 1.5s infinite; }
+        .node-sel {
+            background:var(--bg-deep);border:1px solid var(--border2);
+            border-radius:4px;color:var(--txt1);font-size:9px;
+            padding:3px 6px;cursor:pointer;outline:none;
+        }
+        /* ── CHAT PGP-IA ── */
+        .pgp-chat-wrap { position:fixed;bottom:20px;right:20px;z-index:5000;display:flex;flex-direction:column;align-items:flex-end;gap:8px; }
+        .pgp-chat-fab {
+            width:50px;height:50px;border-radius:50%;
+            background:linear-gradient(135deg,var(--accent),var(--accent2));
+            border:none;cursor:pointer;font-size:18px;color:var(--bg-deep);font-weight:900;
+            box-shadow:0 4px 18px rgba(0,200,232,0.4);
+            transition:transform 0.2s,box-shadow 0.2s;position:relative;
+        }
+        .pgp-chat-fab:hover{transform:scale(1.08);box-shadow:0 6px 24px rgba(0,200,232,0.6);}
+        .pgp-notif{
+            position:absolute;top:-3px;right:-3px;width:14px;height:14px;border-radius:50%;
+            background:var(--danger);border:2px solid var(--bg-deep);
+            font-size:7px;font-weight:800;color:#fff;
+            display:none;align-items:center;justify-content:center;
+        }
+        .pgp-chat-box{
+            width:380px;background:var(--bg-panel);border:1px solid var(--border2);
+            border-radius:10px;display:none;flex-direction:column;
+            box-shadow:0 8px 32px rgba(0,0,0,0.7);max-height:530px;overflow:hidden;
+        }
+        .pgp-chat-box.open{display:flex;animation:fadeIn 0.2s;}
+        .pgp-chat-hd{
+            background:linear-gradient(90deg,#07192B,#050E1A);
+            padding:10px 14px;border-bottom:1px solid var(--border);
+            display:flex;align-items:center;justify-content:space-between;
+        }
+        .pgp-chat-hd-l{display:flex;align-items:center;gap:8px;}
+        .pgp-av{
+            width:28px;height:28px;border-radius:50%;
+            background:linear-gradient(135deg,var(--accent),var(--accent3));
+            display:flex;align-items:center;justify-content:center;
+            font-size:11px;font-weight:800;color:var(--bg-deep);
+        }
+        .pgp-chat-nm{font-size:11px;font-weight:700;color:var(--txt1);}
+        .pgp-chat-st{font-size:8px;color:var(--txt2);margin-top:1px;}
+        .pgp-chat-x{background:none;border:none;cursor:pointer;color:var(--txt2);font-size:14px;padding:2px;transition:color 0.2s;line-height:1;}
+        .pgp-chat-x:hover{color:var(--txt1);}
+        .pgp-msgs{
+            flex:1;overflow-y:auto;padding:10px;
+            display:flex;flex-direction:column;gap:8px;
+            min-height:160px;max-height:290px;
+        }
+        .pgp-msgs::-webkit-scrollbar{width:3px;}
+        .pgp-msgs::-webkit-scrollbar-thumb{background:rgba(0,200,232,0.2);border-radius:2px;}
+        .pgp-m{display:flex;flex-direction:column;max-width:92%;}
+        .pgp-m.u{align-self:flex-end;align-items:flex-end;}
+        .pgp-m.b{align-self:flex-start;}
+        .pgp-mb{padding:7px 11px;border-radius:8px;font-size:10.5px;line-height:1.5;white-space:pre-wrap;}
+        .pgp-m.u .pgp-mb{background:rgba(0,200,232,0.13);border:1px solid rgba(0,200,232,0.2);color:var(--txt1);}
+        .pgp-m.b .pgp-mb{background:var(--bg-card);border:1px solid var(--border);color:#C8E0F4;}
+        .pgp-mts{font-size:7.5px;color:var(--txt3);margin-top:2px;}
+        .pgp-typing{display:flex;gap:3px;align-items:center;padding:5px 0;}
+        .pgp-typing span{width:5px;height:5px;border-radius:50%;background:var(--accent);opacity:0.4;animation:pgpB 1.2s infinite;}
+        .pgp-typing span:nth-child(2){animation-delay:.2s;}
+        .pgp-typing span:nth-child(3){animation-delay:.4s;}
+        @keyframes pgpB{0%,80%,100%{transform:translateY(0);opacity:.4}40%{transform:translateY(-4px);opacity:1}}
+        .pgp-quick{padding:4px 10px 5px;display:flex;flex-wrap:wrap;gap:4px;border-top:1px solid var(--border);}
+        .pgp-qb{
+            font-size:8.5px;padding:3px 8px;
+            background:rgba(0,200,232,0.06);border:1px solid rgba(0,200,232,0.16);
+            border-radius:10px;color:var(--txt2);cursor:pointer;transition:all 0.2s;white-space:nowrap;
+        }
+        .pgp-qb:hover{background:rgba(0,200,232,0.14);color:var(--txt1);}
+        .pgp-alert-b{
+            margin:0 10px 6px;padding:6px;font-size:9px;cursor:pointer;
+            background:rgba(224,48,64,0.07);border:1px solid rgba(224,48,64,0.22);
+            border-radius:5px;color:#F08090;text-align:center;transition:all 0.2s;
+        }
+        .pgp-alert-b:hover{background:rgba(224,48,64,0.15);}
+        .pgp-inp-row{padding:8px 10px;border-top:1px solid var(--border);display:flex;gap:6px;align-items:flex-end;}
+        .pgp-ta{
+            flex:1;background:var(--bg-deep);border:1px solid var(--border);
+            border-radius:6px;color:var(--txt1);font-size:10px;
+            padding:6px 8px;resize:none;font-family:inherit;
+            min-height:30px;max-height:80px;outline:none;transition:border-color 0.2s;
+        }
+        .pgp-ta:focus{border-color:var(--accent);}
+        .pgp-ta::placeholder{color:var(--txt3);}
+        .pgp-send{
+            width:32px;height:30px;border-radius:6px;border:none;
+            background:linear-gradient(135deg,var(--accent),var(--accent2));
+            color:var(--bg-deep);font-size:12px;cursor:pointer;flex-shrink:0;
+            transition:opacity 0.2s;display:flex;align-items:center;justify-content:center;
+        }
+        .pgp-send:disabled{opacity:.35;cursor:not-allowed;}
+        .pgp-llmwarn{
+            margin:6px 10px;padding:7px 10px;
+            background:rgba(232,160,0,0.07);border:1px solid rgba(232,160,0,0.18);
+            border-radius:5px;font-size:8.5px;color:#F0C060;line-height:1.5;
+        }
+
+        /* ══ PANEL LATERAL DUAL ══ */
+        .side-panel {
+            width: 220px; min-width: 220px;
+            background: var(--bg-panel);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            overflow-y: auto;
+            display: flex; flex-direction: column;
+        }
+        .panel-mode { display: none; flex-direction: column; gap: 8px; padding: 10px; }
+        .panel-mode.active { display: flex; }
+
+        .sp-section {
+            border: 1px solid var(--border); border-radius: 5px; padding: 9px;
+            display: flex; flex-direction: column; gap: 0;
+        }
+        .sp-title {
+            font-size: 7.5px; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 0.8px; color: var(--accent); margin-bottom: 8px;
+        }
+        .sp-btn {
+            width: 100%; padding: 8px; border: none; border-radius: 5px;
+            font-size: 9.5px; font-weight: 700; cursor: pointer;
+            text-transform: uppercase; letter-spacing: 0.4px; transition: all 0.2s;
+        }
+        .sp-btn.primary {
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            color: var(--bg-deep); box-shadow: 0 2px 10px rgba(0,200,232,0.25);
+        }
+        .sp-btn.primary:hover { box-shadow: 0 4px 16px rgba(0,200,232,0.4); transform: translateY(-1px); }
+        .sp-btn.secondary {
+            background: transparent; border: 1px solid var(--border2); color: var(--txt2);
+        }
+        .sp-btn.secondary:hover { border-color: var(--accent); color: var(--accent); }
+        .sp-select {
+            width: 100%; padding: 5px 7px; background: var(--bg-deep);
+            border: 1px solid var(--border); border-radius: 4px;
+            font-size: 9px; color: var(--txt1); cursor: pointer; outline: none;
+        }
+        .sp-select:focus { border-color: var(--accent); }
+
+        /* Lecturas en vivo */
+        .live-reading {
+            display: flex; align-items: center;
+            padding: 4px 0; border-bottom: 1px solid var(--border);
+            gap: 4px;
+        }
+        .live-reading:last-child { border-bottom: none; }
+        .lr-label { font-size: 8.5px; color: var(--txt2); width: 52px; flex-shrink: 0; }
+        .lr-val {
+            font-size: 13px; font-weight: 800; font-family: 'Consolas', monospace;
+            color: var(--txt1); flex: 1; text-align: right;
+            transition: color 0.4s, transform 0.15s;
+        }
+        .lr-val.flash { transform: scale(1.08); }
+        .lr-val.ok   { color: var(--ok); }
+        .lr-val.warn { color: var(--warn); }
+        .lr-val.err  { color: var(--danger); }
+        .lr-unit { font-size: 7.5px; color: var(--txt3); width: 20px; flex-shrink: 0; }
+
+        /* Fuente de datos */
+        .source-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+        .source-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--txt3); flex-shrink: 0; transition: background 0.3s; }
+        .source-dot.live { background: var(--ok); box-shadow: 0 0 6px var(--ok); animation: pulse 2s infinite; }
+        .source-dot.sim  { background: var(--accent); box-shadow: 0 0 5px var(--accent); animation: pulse 3s infinite; }
+        .source-dot.conn { background: var(--warn); animation: pulse 0.8s infinite; }
+        .source-name { font-size: 9.5px; font-weight: 700; color: var(--txt1); }
+        .source-sub  { font-size: 7.5px; color: var(--txt2); margin-top: 1px; }
+        .update-row {
+            display: flex; align-items: center; gap: 5px;
+            font-size: 7.5px; color: var(--txt3); margin-top: 6px;
+        }
+        .upd-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--txt3); flex-shrink: 0; }
+        .upd-dot.active { background: var(--ok); animation: pulse 1s infinite; }
+
+        /* Botón modo en topbar */
+        .mode-toggle-btn {
+            padding: 3px 10px; background: transparent;
+            border: 1px solid var(--border2); border-radius: 3px;
+            color: var(--txt2); font-size: 8px; font-weight: 600;
+            cursor: pointer; transition: all 0.2s; letter-spacing: 0.3px;
+        }
+        .mode-toggle-btn:hover { border-color: var(--warn); color: var(--warn); }
+        .mode-toggle-btn.tech-active { border-color: var(--warn); color: var(--warn); background: rgba(232,160,0,0.08); }
+
+        /* Modo técnico */
+        .tech-banner {
+            background: rgba(232,160,0,0.08); border: 1px solid rgba(232,160,0,0.25);
+            border-radius: 5px; padding: 8px 9px;
+            font-size: 9px; color: var(--warn); font-weight: 600; line-height: 1.4;
+            margin-bottom: 0;
+        }
+        .tech-row {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 4px 0; border-bottom: 1px solid var(--border); gap: 6px;
+        }
+        .tech-row:last-child { border-bottom: none; }
+        .tech-label { font-size: 8px; color: var(--txt2); flex: 1; }
+        .tech-inp {
+            padding: 4px 5px; background: var(--bg-deep);
+            border: 1px solid var(--border); border-radius: 3px;
+            font-size: 9.5px; color: var(--txt1); font-family: 'Consolas', monospace;
+            outline: none; text-align: right;
+            transition: border-color 0.15s;
+        }
+        .tech-inp:focus { border-color: var(--accent); }
+        .tech-unit { font-size: 7.5px; color: var(--txt3); }
+
+        /* Print: ocultar panel lateral pero mostrar ambos modos */
+        @media print {
+            .sidebar, .side-panel, .topbar, .pgp-chat-wrap { display: none !important; }
+            .output-area { width: 100%; }
+        }
+
+    </style>
+</head>
+<body>
+<div class="app">
+
+    <!-- ═══ SIDEBAR ═══ -->
+    <aside class="sidebar">
+        <div class="sb-brand">
+            <div class="sb-brand-name">⚡ PowerGuardian Pro</div>
+            <div class="sb-brand-sub">Sistema de Gestión Energética</div>
+            <div class="sb-brand-ver">● v1.0 RELEASE – Operativo</div>
+            <div class="sb-brand-company">INDUC TECH | Claudio Bugueño</div>
+        </div>
+
+        <nav class="sb-nav">
+            <div class="sb-group">
+                <div class="sb-group-label">📊 Dashboard</div>
+                <div class="sb-item active" onclick="show('dashboard')">
+                    <span class="sb-icon">🏠</span> Panel Principal <span class="sb-dot"></span>
+                </div>
+            </div>
+            <div class="sb-group">
+                <div class="sb-group-label">⚡ Monitoreo Trifásico</div>
+                <div class="sb-item" onclick="show('electrico')">
+                    <span class="sb-icon">📡</span> Parámetros Eléctricos <span class="sb-dot"></span>
+                </div>
+                <div class="sb-item" onclick="show('armonicos')">
+                    <span class="sb-icon">🌊</span> Análisis Armónicos / THD <span class="sb-dot"></span>
+                </div>
+                <div class="sb-item" onclick="show('ondas')">
+                    <span class="sb-icon">📈</span> Forma de Onda <span class="sb-dot"></span>
+                </div>
+            </div>
+            <div class="sb-group">
+                <div class="sb-group-label">⚖️ Compensación</div>
+                <div class="sb-item" onclick="show('compensacion')">
+                    <span class="sb-icon">🔧</span> Compensación Activa <span class="sb-dot"></span>
+                </div>
+                <div class="sb-item" onclick="show('cortocircuito')">
+                    <span class="sb-icon">⚔️</span> Cortocircuito / Protección <span class="sb-dot"></span>
+                </div>
+            </div>
+            <div class="sb-group">
+                <div class="sb-group-label">📶 IoT / Comunicaciones</div>
+                <div class="sb-item" onclick="show('iot')">
+                    <span class="sb-icon">📶</span> Estado Comunicaciones <span class="sb-dot"></span>
+                </div>
+            </div>
+            <div class="sb-group">
+                <div class="sb-group-label">🧠 Diagnóstico IA</div>
+                <div class="sb-item" onclick="show('normia')">
+                    <span class="sb-icon">🔍</span> NORM-IA / IEC 61000 <span class="sb-dot"></span>
+                </div>
+            </div>
+            <div class="sb-group">
+                <div class="sb-group-label">💰 Análisis Económico</div>
+                <div class="sb-item" onclick="show('economia')">
+                    <span class="sb-icon">💹</span> ROI / Penalizaciones <span class="sb-dot"></span>
+                </div>
+            </div>
+            <div class="sb-group">
+                <div class="sb-group-label">📋 Reportes</div>
+                <div class="sb-item" onclick="show('reporte')">
+                    <span class="sb-icon">📄</span> Informe Técnico <span class="sb-dot"></span>
+                </div>
+                <div class="sb-item" onclick="show('roadmap')">
+                    <span class="sb-icon">🗺️</span> Roadmap Proyecto <span class="sb-dot"></span>
+                </div>
+            </div>
+        </nav>
+
+        <div class="sb-footer">
+            <button class="sb-btn" onclick="generarPDF()" title="PDF">📄 PDF</button>
+            <button class="sb-btn" onclick="exportJSON()" title="JSON">💾 JSON</button>
+            <button class="sb-btn" onclick="resetAll()" title="Reset">🗑️</button>
+        </div>
+    </aside>
+
+    <!-- ═══ MAIN ═══ -->
+    <div class="main">
+
+        <!-- TOPBAR -->
+        <div class="topbar">
+            <div class="topbar-left">
+                <h1 id="page-title">⚡ PowerGuardian Pro – Panel Principal</h1>
+                <p id="page-sub">Sistema Inteligente de Monitoreo y Compensación Energética | Minería & Industria Pesada</p>
+            </div>
+            <div class="topbar-right">
+                <select class="node-sel" id="node-sel" onchange="PGP.setNode(this.value)" title="Nodo activo">
+                    <option value="PGP-SIM-001">PGP-SIM-001</option>
+                    <option value="PGP-DEMO-001">PGP-DEMO-001</option>
+                </select>
+                <button class="live-btn off" id="live-btn" onclick="PGP.toggleLive()" title="Conectar al backend">
+                    <span class="live-dot"></span>
+                    <span id="live-txt">OFFLINE</span>
+                </button>
+                <span class="badge badge-ok" id="sys-status">SISTEMA ACTIVO</span>
+                <span class="badge badge-info" id="norm-badge">IEC 61000</span>
+                <span class="badge badge-info" id="ip-badge">IP66</span>
+                <span id="ts">--:--:--</span>
+                <button class="mode-toggle-btn" id="mode-toggle-btn" onclick="MODO.toggle()" title="Alternar modo">
+                    🔧 MODO TÉCNICO
+                </button>
+            </div>
+        </div>
+
+        <!-- WORKSPACE -->
+        <div class="workspace">
+
+            <!-- PANEL LATERAL DUAL: LIVE + TÉCNICO -->
+            <div class="side-panel" id="side-panel">
+
+                <!-- ══ MODO LIVE (por defecto) ══ -->
+                <div id="panel-live" class="panel-mode active">
+
+                    <!-- Fuente de datos -->
+                    <div class="sp-section">
+                        <div class="sp-title">📡 Fuente de datos</div>
+                        <div class="source-row">
+                            <div class="source-dot" id="src-dot"></div>
+                            <div class="source-info">
+                                <div class="source-name" id="src-name">Simulador local</div>
+                                <div class="source-sub" id="src-sub">Generando datos sintéticos</div>
+                            </div>
+                        </div>
+                        <button class="sp-btn primary" id="btn-live" onclick="PGP.toggleLive()">
+                            📡 CONECTAR BACKEND
+                        </button>
+                        <div class="update-row">
+                            <div class="upd-dot active" id="upd-dot"></div>
+                            <span id="upd-label">Actualizando cada 3s</span>
+                            <span id="upd-ts" style="margin-left:auto;color:var(--txt3)">—</span>
+                        </div>
+                    </div>
+
+                    <!-- Lecturas en vivo — Tensiones -->
+                    <div class="sp-section">
+                        <div class="sp-title">⚡ Tensiones en vivo</div>
+                        <div class="live-reading">
+                            <span class="lr-label">VA</span>
+                            <span class="lr-val" id="lr-va">—</span>
+                            <span class="lr-unit">V</span>
+                        </div>
+                        <div class="live-reading">
+                            <span class="lr-label">VB</span>
+                            <span class="lr-val" id="lr-vb">—</span>
+                            <span class="lr-unit">V</span>
+                        </div>
+                        <div class="live-reading">
+                            <span class="lr-label">VC</span>
+                            <span class="lr-val" id="lr-vc">—</span>
+                            <span class="lr-unit">V</span>
+                        </div>
+                        <div class="live-reading warn-row" id="lr-desb-row">
+                            <span class="lr-label">Desbalance</span>
+                            <span class="lr-val" id="lr-desb">—</span>
+                            <span class="lr-unit">%</span>
+                        </div>
+                    </div>
+
+                    <!-- Corrientes en vivo -->
+                    <div class="sp-section">
+                        <div class="sp-title">🔌 Corrientes en vivo</div>
+                        <div class="live-reading">
+                            <span class="lr-label">IA</span>
+                            <span class="lr-val" id="lr-ia">—</span>
+                            <span class="lr-unit">A</span>
+                        </div>
+                        <div class="live-reading">
+                            <span class="lr-label">IB</span>
+                            <span class="lr-val" id="lr-ib">—</span>
+                            <span class="lr-unit">A</span>
+                        </div>
+                        <div class="live-reading">
+                            <span class="lr-label">IC</span>
+                            <span class="lr-val" id="lr-ic">—</span>
+                            <span class="lr-unit">A</span>
+                        </div>
+                    </div>
+
+                    <!-- Calidad de energía en vivo -->
+                    <div class="sp-section">
+                        <div class="sp-title">🌊 Calidad energía en vivo</div>
+                        <div class="live-reading">
+                            <span class="lr-label">THD-V</span>
+                            <span class="lr-val" id="lr-thdv">—</span>
+                            <span class="lr-unit">%</span>
+                        </div>
+                        <div class="live-reading">
+                            <span class="lr-label">THD-I</span>
+                            <span class="lr-val" id="lr-thdi">—</span>
+                            <span class="lr-unit">%</span>
+                        </div>
+                        <div class="live-reading">
+                            <span class="lr-label">cos φ</span>
+                            <span class="lr-val" id="lr-fp">—</span>
+                            <span class="lr-unit"></span>
+                        </div>
+                        <div class="live-reading">
+                            <span class="lr-label">Temp.</span>
+                            <span class="lr-val" id="lr-temp">—</span>
+                            <span class="lr-unit">°C</span>
+                        </div>
+                    </div>
+
+                    <!-- Escenario simulador -->
+                    <div class="sp-section" id="sim-ctrl-box">
+                        <div class="sp-title">🎛 Escenario simulador</div>
+                        <select class="sp-select" id="sim-scenario" onchange="MODO.setEscenario(this.value)">
+                            <option value="normal">Normal — operación estándar</option>
+                            <option value="thd_alto">THD alto — VFDs sin filtro</option>
+                            <option value="fp_bajo">fp bajo — penalización</option>
+                            <option value="falla">Falla — condición crítica</option>
+                        </select>
+                    </div>
+
+                </div>
+
+                <!-- ══ MODO TÉCNICO (oculto por defecto) ══ -->
+                <div id="panel-tecnico" class="panel-mode">
+
+                    <div class="tech-banner">
+                        🔧 Modo Técnico — Ingreso Manual<br>
+                        <span style="font-size:8px;opacity:0.7">Los datos que ingreses reemplazan temporalmente los valores en vivo</span>
+                    </div>
+
+                    <div class="sp-section">
+                        <div class="sp-title">⚡ Sistema – BT/MT</div>
+                        <div class="tech-row">
+                            <span class="tech-label">V nominal (L-L)</span>
+                            <div style="display:flex;align-items:center;gap:3px">
+                                <input id="v_nom" type="number" class="tech-inp" value="0.4" min="0.1" step="0.001" style="width:64px">
+                                <span class="tech-unit">kV</span>
+                            </div>
+                        </div>
+                        <div class="tech-row">
+                            <span class="tech-label">Corrientes A/B/C</span>
+                        </div>
+                        <div style="display:flex;gap:3px;margin-bottom:6px">
+                            <input id="ia" type="number" class="tech-inp" value="82" placeholder="A" style="flex:1">
+                            <input id="ib" type="number" class="tech-inp" value="85" placeholder="B" style="flex:1">
+                            <input id="ic" type="number" class="tech-inp" value="79" placeholder="C" style="flex:1">
+                        </div>
+                        <div class="tech-row">
+                            <span class="tech-label">Tensiones A/B/C</span>
+                        </div>
+                        <div style="display:flex;gap:3px;margin-bottom:6px">
+                            <input id="va" type="number" class="tech-inp" value="395" placeholder="VA" style="flex:1">
+                            <input id="vb" type="number" class="tech-inp" value="398" placeholder="VB" style="flex:1">
+                            <input id="vc" type="number" class="tech-inp" value="393" placeholder="VC" style="flex:1">
+                        </div>
+                        <div class="tech-row">
+                            <span class="tech-label">Factor de potencia</span>
+                            <div style="display:flex;align-items:center;gap:3px">
+                                <input id="fp" type="number" class="tech-inp" value="0.82" min="0.5" max="1" step="0.01" style="width:60px">
+                            </div>
+                        </div>
+                        <div class="tech-row">
+                            <span class="tech-label">THD-V</span>
+                            <div style="display:flex;align-items:center;gap:3px">
+                                <input id="thd_v" type="number" class="tech-inp" value="4.8" min="0" step="0.1" style="width:56px">
+                                <span class="tech-unit">%</span>
+                            </div>
+                        </div>
+                        <div class="tech-row">
+                            <span class="tech-label">THD-I</span>
+                            <div style="display:flex;align-items:center;gap:3px">
+                                <input id="thd_i" type="number" class="tech-inp" value="18.3" min="0" step="0.1" style="width:56px">
+                                <span class="tech-unit">%</span>
+                            </div>
+                        </div>
+                        <div class="tech-row">
+                            <span class="tech-label">Temperatura</span>
+                            <div style="display:flex;align-items:center;gap:3px">
+                                <input id="temp" type="number" class="tech-inp" value="38" min="-20" max="85" style="width:52px">
+                                <span class="tech-unit">°C</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="sp-section">
+                        <div class="sp-title">🔧 Transformador</div>
+                        <div class="tech-row">
+                            <span class="tech-label">Potencia</span>
+                            <div style="display:flex;align-items:center;gap:3px">
+                                <input id="s_tr" type="number" class="tech-inp" value="250" min="10" style="width:60px">
+                                <span class="tech-unit">kVA</span>
+                            </div>
+                        </div>
+                        <div class="tech-row">
+                            <span class="tech-label">Impedancia Z%</span>
+                            <div style="display:flex;align-items:center;gap:3px">
+                                <input id="z_tr" type="number" class="tech-inp" value="4.5" min="0.5" step="0.1" style="width:52px">
+                                <span class="tech-unit">%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="sp-section">
+                        <div class="sp-title">📍 Línea / Instalación</div>
+                        <div class="tech-row">
+                            <span class="tech-label">Longitud</span>
+                            <div style="display:flex;align-items:center;gap:3px">
+                                <input id="l_km" type="number" class="tech-inp" value="0.18" min="0.001" step="0.001" style="width:60px">
+                                <span class="tech-unit">km</span>
+                            </div>
+                        </div>
+                        <div class="tech-row">
+                            <span class="tech-label">Sección</span>
+                            <div style="display:flex;align-items:center;gap:3px">
+                                <input id="l_sec" type="number" class="tech-inp" value="95" min="1" style="width:60px">
+                                <span class="tech-unit">mm²</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="sp-section">
+                        <div class="sp-title">💰 Parámetros Económicos</div>
+                        <div class="tech-row">
+                            <span class="tech-label">FP objetivo</span>
+                            <input id="fp_target" type="number" class="tech-inp" value="0.95" min="0.8" max="1" step="0.01" style="width:60px">
+                        </div>
+                        <div class="tech-row">
+                            <span class="tech-label">Penaliz. (USD/mes)</span>
+                            <input id="penalty" type="number" class="tech-inp" value="1850" min="0" style="width:68px">
+                        </div>
+                        <div class="tech-row">
+                            <span class="tech-label">Tarifa (USD/MWh)</span>
+                            <input id="tariff" type="number" class="tech-inp" value="85" min="10" style="width:52px">
+                        </div>
+                        <div class="tech-row">
+                            <span class="tech-label">Costo PGP (USD)</span>
+                            <input id="pgp_cost" type="number" class="tech-inp" value="38000" min="1000" style="width:68px">
+                        </div>
+                    </div>
+
+                    <button class="sp-btn primary" id="btn-analizar" onclick="MODO.calcularTecnico()">
+                        ⚡ CALCULAR CON DATOS MANUALES
+                    </button>
+                    <button class="sp-btn secondary" onclick="MODO.volverLive()" style="margin-top:4px">
+                        ↩ Volver a datos en vivo
+                    </button>
+                    <button class="sp-btn secondary" onclick="resetAll()" style="margin-top:4px;border-color:var(--danger);color:var(--danger)">
+                        🗑 Limpiar resultados
+                    </button>
+
+                </div>
+            </div>
+
+            <!-- OUTPUT AREA -->
+            <div class="output-area">
+
+                <!-- ══ DASHBOARD ══ -->
+                <div id="sec-dashboard" class="section-view active">
+                    <div class="kpi-big-row">
+                        <div class="kpi-big">
+                            <div class="kpi-big-icon">⚡</div>
+                            <div class="kpi-big-val accent" id="db-p">—</div>
+                            <div class="kpi-big-label">Potencia Activa (kW)</div>
+                        </div>
+                        <div class="kpi-big">
+                            <div class="kpi-big-icon">⚖️</div>
+                            <div class="kpi-big-val" id="db-fp" style="color:var(--txt1)">—</div>
+                            <div class="kpi-big-label">Factor de Potencia</div>
+                        </div>
+                        <div class="kpi-big">
+                            <div class="kpi-big-icon">🌊</div>
+                            <div class="kpi-big-val" id="db-thdi" style="color:var(--txt1)">—</div>
+                            <div class="kpi-big-label">THD-I (%)</div>
+                        </div>
+                        <div class="kpi-big">
+                            <div class="kpi-big-icon">🌡️</div>
+                            <div class="kpi-big-val" id="db-temp" style="color:var(--txt1)">—</div>
+                            <div class="kpi-big-label">Temperatura (°C)</div>
+                        </div>
+                        <div class="kpi-big">
+                            <div class="kpi-big-icon">💹</div>
+                            <div class="kpi-big-val ok" id="db-roi">—</div>
+                            <div class="kpi-big-label">ROI Estimado (meses)</div>
+                        </div>
+                    </div>
+                    <div class="row-cards">
+                        <div class="card" style="flex:1.5">
+                            <div class="card-title">Estado Operacional – PowerGuardian Pro</div>
+                            <div id="db-status-html">
+                                <div class="alert alert-info">Ingrese parámetros y presione <strong>⚡ ANALIZAR CON PGP</strong> para obtener diagnóstico completo.</div>
+                                <div class="alert alert-info" style="margin-top:6px">
+                                    <strong>PowerGuardian Pro</strong> — Sistema Inteligente de Monitoreo y Compensación Energética.<br>
+                                    Monitoreo THD hasta 50ª armónica · Compensación activa DSP · IoT Modbus/MQTT/OPC-UA · IP66 · IEC 61000
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card" style="flex:1">
+                            <div class="card-title">Indicadores PGP</div>
+                            <div id="db-kpi-html">
+                                <div class="kpi"><span class="kpi-label">Potencia activa</span><span class="kpi-val">—</span></div>
+                                <div class="kpi"><span class="kpi-label">Potencia reactiva</span><span class="kpi-val">—</span></div>
+                                <div class="kpi"><span class="kpi-label">Potencia aparente</span><span class="kpi-val">—</span></div>
+                                <div class="kpi"><span class="kpi-label">THD-V</span><span class="kpi-val">—</span></div>
+                                <div class="kpi"><span class="kpi-label">THD-I</span><span class="kpi-val">—</span></div>
+                                <div class="kpi"><span class="kpi-label">Desbalance V</span><span class="kpi-val">—</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row-cards">
+                        <div class="card">
+                            <div class="card-title">Gauges – Calidad de Energía (IEC 61000-3-2)</div>
+                            <div class="gauges" id="db-gauges">
+                                <div class="gauge-wrap">
+                                    <svg class="gauge-svg" width="90" height="60" viewBox="0 0 90 60">
+                                        <path d="M10 55 A35 35 0 0 1 80 55" fill="none" stroke="#12304A" stroke-width="8" stroke-linecap="round"/>
+                                        <path id="g-fp" d="M10 55 A35 35 0 0 1 80 55" fill="none" stroke="#3A6080" stroke-width="8" stroke-linecap="round" stroke-dasharray="110" stroke-dashoffset="110"/>
+                                        <text x="45" y="50" text-anchor="middle" font-size="12" fill="#E8F4FF" font-weight="bold" id="g-fp-v">—</text>
+                                    </svg>
+                                    <div class="gauge-label">Factor de Potencia</div>
+                                </div>
+                                <div class="gauge-wrap">
+                                    <svg class="gauge-svg" width="90" height="60" viewBox="0 0 90 60">
+                                        <path d="M10 55 A35 35 0 0 1 80 55" fill="none" stroke="#12304A" stroke-width="8" stroke-linecap="round"/>
+                                        <path id="g-thd" d="M10 55 A35 35 0 0 1 80 55" fill="none" stroke="#3A6080" stroke-width="8" stroke-linecap="round" stroke-dasharray="110" stroke-dashoffset="110"/>
+                                        <text x="45" y="50" text-anchor="middle" font-size="11" fill="#E8F4FF" font-weight="bold" id="g-thd-v">—</text>
+                                    </svg>
+                                    <div class="gauge-label">THD-I (%)</div>
+                                </div>
+                                <div class="gauge-wrap">
+                                    <svg class="gauge-svg" width="90" height="60" viewBox="0 0 90 60">
+                                        <path d="M10 55 A35 35 0 0 1 80 55" fill="none" stroke="#12304A" stroke-width="8" stroke-linecap="round"/>
+                                        <path id="g-bal" d="M10 55 A35 35 0 0 1 80 55" fill="none" stroke="#3A6080" stroke-width="8" stroke-linecap="round" stroke-dasharray="110" stroke-dashoffset="110"/>
+                                        <text x="45" y="50" text-anchor="middle" font-size="11" fill="#E8F4FF" font-weight="bold" id="g-bal-v">—</text>
+                                    </svg>
+                                    <div class="gauge-label">Desbalance V (%)</div>
+                                </div>
+                                <div class="gauge-wrap">
+                                    <svg class="gauge-svg" width="90" height="60" viewBox="0 0 90 60">
+                                        <path d="M10 55 A35 35 0 0 1 80 55" fill="none" stroke="#12304A" stroke-width="8" stroke-linecap="round"/>
+                                        <path id="g-drop" d="M10 55 A35 35 0 0 1 80 55" fill="none" stroke="#3A6080" stroke-width="8" stroke-linecap="round" stroke-dasharray="110" stroke-dashoffset="110"/>
+                                        <text x="45" y="50" text-anchor="middle" font-size="11" fill="#E8F4FF" font-weight="bold" id="g-drop-v">—</text>
+                                    </svg>
+                                    <div class="gauge-label">Caída de Tensión (%)</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ══ ELÉCTRICO ══ -->
+                <div id="sec-electrico" class="section-view">
+                    <div class="row-cards">
+                        <div class="card">
+                            <div class="card-title">Potencias del Sistema</div>
+                            <div id="el-potencias"></div>
+                        </div>
+                        <div class="card">
+                            <div class="card-title">Línea de Distribución</div>
+                            <div id="el-linea"></div>
+                        </div>
+                        <div class="card">
+                            <div class="card-title">Balance de Tensiones</div>
+                            <div id="el-balance"></div>
+                        </div>
+                    </div>
+                    <div class="chart-box">
+                        <div class="card-title" style="margin-bottom:8px">Perfil de Corrientes por Fase</div>
+                        <canvas id="chart-corrientes" height="180"></canvas>
+                    </div>
+                </div>
+
+                <!-- ══ ARMÓNICOS ══ -->
+                <div id="sec-armonicos" class="section-view">
+                    <div class="row-cards">
+                        <div class="card">
+                            <div class="card-title">THD – Distorsión Armónica Total (IEC 61000-3-2)</div>
+                            <div id="arm-thd"></div>
+                        </div>
+                        <div class="card">
+                            <div class="card-title">Componentes Armónicas Dominantes</div>
+                            <div id="arm-comp"></div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">Espectro Armónico (hasta 25ª) – Modo DSP PowerGuardian Pro</div>
+                        <div id="arm-spectrum" class="spectrum"></div>
+                        <div id="arm-spec-labels" class="spec-labels" style="margin-top:3px"></div>
+                        <div id="arm-chart-box" style="margin-top:10px">
+                            <canvas id="chart-armonicos" height="180"></canvas>
+                        </div>
+                    </div>
+                    <div class="row-cards">
+                        <div class="card">
+                            <div class="card-title">Causas Raíz Detectadas – Ishikawa PGP</div>
+                            <div id="arm-rca"></div>
+                        </div>
+                        <div class="card">
+                            <div class="card-title">Plan de Mitigación</div>
+                            <div id="arm-plan"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ══ ONDAS ══ -->
+                <div id="sec-ondas" class="section-view">
+                    <div class="card">
+                        <div class="card-title">Forma de Onda Trifásica – Simulación con Armónicos</div>
+                        <canvas id="chart-ondas" height="200"></canvas>
+                    </div>
+                    <div class="row-cards">
+                        <div class="card">
+                            <div class="card-title">Parámetros de Onda</div>
+                            <div id="onda-params"></div>
+                        </div>
+                        <div class="card">
+                            <div class="card-title">Efecto Armónico en Onda</div>
+                            <div id="onda-efecto"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ══ COMPENSACIÓN ══ -->
+                <div id="sec-compensacion" class="section-view">
+                    <div class="row-cards">
+                        <div class="card">
+                            <div class="card-title">Compensación Activa – DSP Algorithm</div>
+                            <div id="comp-banco"></div>
+                        </div>
+                        <div class="card">
+                            <div class="card-title">Resultado Post-Compensación</div>
+                            <div id="comp-resultado"></div>
+                        </div>
+                    </div>
+                    <div class="chart-box">
+                        <div class="card-title" style="margin-bottom:8px">Triángulo de Potencias – Antes y Después PGP</div>
+                        <canvas id="chart-potencias" height="200"></canvas>
+                    </div>
+                </div>
+
+                <!-- ══ CORTOCIRCUITO ══ -->
+                <div id="sec-cortocircuito" class="section-view">
+                    <div class="row-cards">
+                        <div class="card">
+                            <div class="card-title">Corrientes de Cortocircuito – IEC 60909</div>
+                            <div id="cc-icc"></div>
+                        </div>
+                        <div class="card">
+                            <div class="card-title">Arco Eléctrico – NFPA 70E</div>
+                            <div id="cc-arco"></div>
+                        </div>
+                        <div class="card">
+                            <div class="card-title">Protecciones Recomendadas</div>
+                            <div id="cc-prot"></div>
+                        </div>
+                    </div>
+                    <div class="chart-box">
+                        <div class="card-title" style="margin-bottom:8px">Curvas de Protección – Tiempo vs. Corriente</div>
+                        <canvas id="chart-curvas" height="200"></canvas>
+                    </div>
+                </div>
+
+                <!-- ══ IoT ══ -->
+                <div id="sec-iot" class="section-view">
+                    <div class="card">
+                        <div class="card-title">Estado de Comunicaciones – PowerGuardian Pro IoT Stack</div>
+                        <div class="iot-grid" id="iot-grid">
+                            <div class="iot-chip"><div class="iot-dot active"></div><div class="iot-info"><div class="iot-proto">Modbus TCP/IP</div><div class="iot-status">Conectado – Puerto 502</div></div></div>
+                            <div class="iot-chip"><div class="iot-dot active"></div><div class="iot-info"><div class="iot-proto">MQTT v3.1.1</div><div class="iot-status">Broker activo – QoS 1</div></div></div>
+                            <div class="iot-chip"><div class="iot-dot active"></div><div class="iot-info"><div class="iot-proto">OPC-UA</div><div class="iot-status">Nodo servidor – Puerto 4840</div></div></div>
+                            <div class="iot-chip"><div class="iot-dot warn"></div><div class="iot-info"><div class="iot-proto">SCADA / ERP Link</div><div class="iot-status">En espera de handshake</div></div></div>
+                            <div class="iot-chip"><div class="iot-dot active"></div><div class="iot-info"><div class="iot-proto">Ethernet / RS-485</div><div class="iot-status">Link activo 100Mbps</div></div></div>
+                            <div class="iot-chip"><div class="iot-dot inactive"></div><div class="iot-info"><div class="iot-proto">LoRa / 4G LTE</div><div class="iot-status">Modo stand-by</div></div></div>
+                            <div class="iot-chip"><div class="iot-dot active"></div><div class="iot-info"><div class="iot-proto">Firmware OTA</div><div class="iot-status">v1.0.0 – Al día</div></div></div>
+                            <div class="iot-chip"><div class="iot-dot active"></div><div class="iot-info"><div class="iot-proto">Seguridad TLS 1.3</div><div class="iot-status">Certificado válido</div></div></div>
+                        </div>
+                    </div>
+                    <div class="row-cards">
+                        <div class="card">
+                            <div class="card-title">Métricas de Comunicación</div>
+                            <div class="kpi"><span class="kpi-label">Latencia promedio</span><span class="kpi-val ok">12 ms</span></div>
+                            <div class="kpi"><span class="kpi-label">Paquetes enviados (sesión)</span><span class="kpi-val">4,218</span></div>
+                            <div class="kpi"><span class="kpi-label">Tasa de pérdida</span><span class="kpi-val ok">0.02%</span></div>
+                            <div class="kpi"><span class="kpi-label">Uptime comunicaciones</span><span class="kpi-val ok">99.97%</span></div>
+                            <div class="kpi"><span class="kpi-label">Redundancia activa</span><span class="kpi-val ok">Sí – Dual path</span></div>
+                            <div class="kpi"><span class="kpi-label">Temperatura módulo IoT</span><span class="kpi-val" id="iot-temp">—</span></div>
+                        </div>
+                        <div class="card">
+                            <div class="card-title">Alertas Predictivas Activas</div>
+                            <div id="iot-alertas"></div>
+                        </div>
+                    </div>
+                    <div class="chart-box">
+                        <div class="card-title" style="margin-bottom:8px">Historial de Parámetros – Últimas 24h (simulado)</div>
+                        <canvas id="chart-iot" height="180"></canvas>
+                    </div>
+                </div>
+
+                <!-- ══ NORM-IA ══ -->
+                <div id="sec-normia" class="section-view">
+                    <div class="card">
+                        <div class="card-title">🧠 Diagnóstico NORM-IA – Conformidad Normativa Inteligente</div>
+                        <div id="normia-content">
+                            <div class="alert alert-info">Ejecute el análisis para obtener diagnóstico NORM-IA completo.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ══ ECONOMÍA ══ -->
+                <div id="sec-economia" class="section-view">
+                    <div class="row-cards">
+                        <div class="card">
+                            <div class="card-title">Análisis ROI – PowerGuardian Pro</div>
+                            <div id="eco-roi"></div>
+                        </div>
+                        <div class="card">
+                            <div class="card-title">Reducción de Penalizaciones</div>
+                            <div id="eco-penalty"></div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">Tabla Comparativa – Impacto Económico (24 meses)</div>
+                        <table class="econ-table" id="eco-table">
+                            <thead><tr><th>Ítem</th><th>Sin PGP</th><th>Con PGP</th><th>Ahorro</th></tr></thead>
+                            <tbody id="eco-tbody"><tr><td colspan="4" style="color:var(--txt3);font-size:9px;text-align:center;padding:12px">Ejecute análisis para ver datos</td></tr></tbody>
+                        </table>
+                    </div>
+                    <div class="chart-box">
+                        <div class="card-title" style="margin-bottom:8px">Proyección de Ahorro Acumulado – 36 meses</div>
+                        <canvas id="chart-economia" height="200"></canvas>
+                    </div>
+                </div>
+
+                <!-- ══ REPORTE ══ -->
+                <div id="sec-reporte" class="section-view">
+                    <div class="card">
+                        <div id="reporte-content">
+                            <div class="alert alert-info">Ejecute el análisis para generar el informe técnico completo.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ══ ROADMAP ══ -->
+                <div id="sec-roadmap" class="section-view">
+                    <div class="row-cards">
+                        <div class="card" style="flex:1.5">
+                            <div class="card-title">Roadmap PowerGuardian Pro – 36 meses (Fase CORFO)</div>
+                            <div class="roadmap">
+                                <div class="rm-item">
+                                    <div class="rm-dot done">✓</div>
+                                    <div class="rm-content">
+                                        <div class="rm-phase">Fase 0 – Mes 0–3</div>
+                                        <div class="rm-title">Diseño conceptual y arquitectura HW/SW</div>
+                                        <div class="rm-desc">Definición de arquitectura DSP, selección de componentes IEC, diseño de PCB preliminar. Validación de simulaciones computacionales.</div>
+                                    </div>
+                                </div>
+                                <div class="rm-item">
+                                    <div class="rm-dot done">✓</div>
+                                    <div class="rm-content">
+                                        <div class="rm-phase">Fase 1 – Mes 3–9</div>
+                                        <div class="rm-title">Prototipo v0.1 – Laboratorio</div>
+                                        <div class="rm-desc">Construcción prototipo funcional. Pruebas de estrés electromagnético. Validación THD en banco de cargas. Integración firmware v0.1.</div>
+                                    </div>
+                                </div>
+                                <div class="rm-item">
+                                    <div class="rm-dot active">●</div>
+                                    <div class="rm-content">
+                                        <div class="rm-phase">Fase 2 – Mes 9–18 ← ACTUAL</div>
+                                        <div class="rm-title">Piloto en Terreno – Faena Minera</div>
+                                        <div class="rm-desc">Instalación en planta cliente (minería/industria). Monitoreo continuo. Validación IEC 61000, IEC 60529. Ajuste algoritmos DSP.</div>
+                                    </div>
+                                </div>
+                                <div class="rm-item">
+                                    <div class="rm-dot future">○</div>
+                                    <div class="rm-content">
+                                        <div class="rm-phase">Fase 3 – Mes 18–27</div>
+                                        <div class="rm-title">Certificación Internacional</div>
+                                        <div class="rm-desc">Certificaciones IEC, UL, CE. Homologación para exportación Perú, Colombia, México. Publicación resultados técnicos.</div>
+                                    </div>
+                                </div>
+                                <div class="rm-item">
+                                    <div class="rm-dot future">○</div>
+                                    <div class="rm-content">
+                                        <div class="rm-phase">Fase 4 – Mes 27–36</div>
+                                        <div class="rm-title">Escalamiento Comercial Regional</div>
+                                        <div class="rm-desc">Alianzas distribuidores LAT. Adaptación normativa local. Integración renovables y analítica avanzada. Meta: 500 unidades/año.</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-title">KPIs Técnicos Objetivo</div>
+                            <div class="kpi"><span class="kpi-label">Reducción THD-I</span><span class="kpi-val ok">&lt; 5% (IEEE 519)</span></div>
+                            <div class="kpi"><span class="kpi-label">Factor de potencia final</span><span class="kpi-val ok">≥ 0.97</span></div>
+                            <div class="kpi"><span class="kpi-label">Protección ingreso</span><span class="kpi-val">IP66 (IEC 60529)</span></div>
+                            <div class="kpi"><span class="kpi-label">Temp. operación</span><span class="kpi-val">-20°C a +70°C</span></div>
+                            <div class="kpi"><span class="kpi-label">MTBF objetivo</span><span class="kpi-val ok">&gt; 50,000 h</span></div>
+                            <div class="kpi"><span class="kpi-label">Protocolos IoT</span><span class="kpi-val">Modbus, MQTT, OPC-UA</span></div>
+                            <div class="kpi"><span class="kpi-label">Armónicos monitoreados</span><span class="kpi-val">Hasta 50ª orden</span></div>
+                            <div class="kpi"><span class="kpi-label">Payback estimado</span><span class="kpi-val ok">&lt; 24 meses</span></div>
+                            <div class="kpi"><span class="kpi-label">TRL actual</span><span class="kpi-val warn">4–5 (piloto)</span></div>
+                            <div class="kpi"><span class="kpi-label">Empleos directos generados</span><span class="kpi-val">5–8 (fase piloto)</span></div>
+                            <div class="card-title" style="margin-top:14px">Mercado Objetivo</div>
+                            <div class="kpi"><span class="kpi-label">Chile – Minería</span><span class="kpi-val ok">~500 empresas</span></div>
+                            <div class="kpi"><span class="kpi-label">Perú / Colombia / México</span><span class="kpi-val">Expansión 36m</span></div>
+                            <div class="kpi"><span class="kpi-label">Precio referencial unitario</span><span class="kpi-val">USD 28,000–45,000</span></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div><!-- output-area -->
+        </div><!-- workspace -->
+    </div><!-- main -->
+</div><!-- app -->
+
+<script>
+// ═══════════════════════════════════════════════════════════
+// ESTADO GLOBAL
+// ═══════════════════════════════════════════════════════════
+let state = {
+    input: {},
+    calc: { valid: false },
+    charts: {}
+};
+
+// Timestamp
+setInterval(() => {
+    document.getElementById('ts').textContent = new Date().toLocaleTimeString('es-CL');
+}, 1000);
+
+// ═══════════════════════════════════════════════════════════
+// NAVEGACIÓN
+// ═══════════════════════════════════════════════════════════
+const titles = {
+    dashboard:     ['⚡ PowerGuardian Pro – Panel Principal', 'Sistema Inteligente de Monitoreo y Compensación Energética'],
+    electrico:     ['📡 Parámetros Eléctricos Trifásicos', 'Monitoreo continuo – Potencias, corrientes y tensiones'],
+    armonicos:     ['🌊 Análisis Armónicos / THD', 'Detección DSP hasta 50ª orden – IEC 61000-3-2'],
+    ondas:         ['📈 Forma de Onda Trifásica', 'Visualización con contenido armónico superpuesto'],
+    compensacion:  ['⚖️ Compensación Reactiva Activa', 'Algoritmo DSP de filtrado dinámico – Factor de potencia'],
+    cortocircuito: ['⚔️ Cortocircuito y Protecciones', 'IEC 60909 · NFPA 70E · Curvas de protección'],
+    iot:           ['📶 Estado Comunicaciones IoT', 'Modbus TCP/IP · MQTT · OPC-UA · Firmware OTA'],
+    normia:        ['🧠 Diagnóstico NORM-IA', 'Conformidad inteligente – IEC 61000 · IEEE 519 · NFPA 70E'],
+    economia:      ['💹 Análisis Económico ROI', 'Penalizaciones · Payback · Proyección 36 meses'],
+    reporte:       ['📄 Informe Técnico PGP', 'Reporte ejecutivo completo – PowerGuardian Pro'],
+    roadmap:       ['🗺️ Roadmap del Proyecto', 'Diseño → Piloto → Certificación → Escale comercial (36m)']
+};
+
+function show(sec) {
+    document.querySelectorAll('.section-view').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.sb-item').forEach(el => el.classList.remove('active'));
+    document.getElementById('sec-' + sec).classList.add('active');
+    const t = titles[sec] || ['PowerGuardian Pro', ''];
+    document.getElementById('page-title').textContent = t[0];
+    document.getElementById('page-sub').textContent = t[1];
+    // activate sidebar item
+    document.querySelectorAll('.sb-item').forEach(el => {
+        if (el.getAttribute('onclick') === `show('${sec}')`) el.classList.add('active');
+    });
+    // render charts on demand
+    if (sec === 'ondas' && state.calc.valid) renderChartOndas();
+    if (sec === 'cortocircuito' && state.calc.valid) renderChartCurvas();
+    if (sec === 'iot') renderChartIoT();
+    if (sec === 'economia' && state.calc.valid) renderChartEcon();
+}
+
+// ═══════════════════════════════════════════════════════════
+// LECTURA DE INPUTS
+// ═══════════════════════════════════════════════════════════
+function readInputs() {
+    return {
+        v_nom: parseFloat(document.getElementById('v_nom').value) * 1000, // en V
+        ia: parseFloat(document.getElementById('ia').value),
+        ib: parseFloat(document.getElementById('ib').value),
+        ic: parseFloat(document.getElementById('ic').value),
+        va: parseFloat(document.getElementById('va').value),
+        vb: parseFloat(document.getElementById('vb').value),
+        vc: parseFloat(document.getElementById('vc').value),
+        fp: parseFloat(document.getElementById('fp').value),
+        thd_v: parseFloat(document.getElementById('thd_v').value),
+        thd_i: parseFloat(document.getElementById('thd_i').value),
+        temp: parseFloat(document.getElementById('temp').value),
+        s_tr: parseFloat(document.getElementById('s_tr').value) * 1000, // VA
+        z_tr: parseFloat(document.getElementById('z_tr').value),
+        l_km: parseFloat(document.getElementById('l_km').value),
+        l_sec: parseFloat(document.getElementById('l_sec').value),
+        fp_target: parseFloat(document.getElementById('fp_target').value),
+        penalty: parseFloat(document.getElementById('penalty').value),
+        tariff: parseFloat(document.getElementById('tariff').value),
+        pgp_cost: parseFloat(document.getElementById('pgp_cost').value),
+    };
+}
+
+// ═══════════════════════════════════════════════════════════
+// CÁLCULO CENTRAL
+// ═══════════════════════════════════════════════════════════
+function calcular() {
+    const e = readInputs();
+    state.input = e;
+
+    // Parámetros base
+    const V = e.v_nom;
+    const I_prom = (e.ia + e.ib + e.ic) / 3;
+    const phi = Math.acos(e.fp);
+    const S = Math.sqrt(3) * V * I_prom / 1000; // kVA
+    const P = S * e.fp;                          // kW
+    const Q = P * Math.tan(phi);                 // kVAr
+
+    // Línea
+    const rho = 0.0176;
+    const R_lin = (rho * e.l_km * 1000) / e.l_sec;
+    const X_lin = 0.08 * e.l_km;
+    const Z_lin = Math.sqrt(R_lin**2 + X_lin**2);
+    const U_drop = (Math.sqrt(3) * R_lin * I_prom * e.fp + X_lin * I_prom * Math.sin(phi)) / 1000;
+    const U_drop_pct = (U_drop / (V/1000)) * 100;
+
+    // Desbalance tensión
+    const vMax = Math.max(e.va, e.vb, e.vc);
+    const vMin = Math.min(e.va, e.vb, e.vc);
+    const desbalance = ((vMax - vMin) / vMin) * 100;
+
+    // Transformador + cortocircuito
+    const Z_tr_ohm = (e.z_tr / 100) * (V**2) / e.s_tr;
+    const Z_tot = Z_tr_ohm + Z_lin;
+    const Icc_ori = V / (Z_tr_ohm * Math.sqrt(3));
+    const Icc_tab = V / (Z_tot  * Math.sqrt(3));
+
+    // Arco eléctrico (estimación NFPA 70E simplificada)
+    const E_arc = 0.0093 * (Icc_tab / 1000)**2; // MVA base estimado
+    const AFIE = E_arc > 40 ? '4' : E_arc > 8 ? '3' : E_arc > 4 ? '2' : '1';
+
+    // Compensación activa
+    const phi2 = Math.acos(e.fp_target);
+    const Qc = P * (Math.tan(phi) - Math.tan(phi2));
+    const Q_fin = Math.max(0, Q - Qc);
+    const S_fin = Math.sqrt(P**2 + Q_fin**2);
+    const fp_fin = Math.min(1, P / S_fin);
+    const I_fin = (S_fin * 1000) / (Math.sqrt(3) * V);
+    const redI_pct = ((I_prom - I_fin) / I_prom) * 100;
+    const redPerd_pct = (1 - (I_fin / I_prom)**2) * 100;
+
+    // THD post-compensación (activa DSP – reducción típica 60-75%)
+    const thd_i_post = e.thd_i * 0.28;
+    const thd_v_post = e.thd_v * 0.35;
+
+    // Economía
+    const penaltyFin = fp_fin >= 0.95 ? 0 : e.penalty * (0.95 / fp_fin - 1) * 0.12;
+    const ahorro_pen = (e.penalty - penaltyFin) * 12; // USD/año
+    const ahorro_ener = redPerd_pct / 100 * P * 8760 * e.tariff / 1000; // USD/año
+    const ahorro_total = ahorro_pen + ahorro_ener;
+    const roi_meses = ahorro_total > 0 ? (e.pgp_cost / ahorro_total) * 12 : 999;
+
+    state.calc = {
+        valid: true, e,
+        V, I_prom, phi, S, P, Q,
+        R_lin, X_lin, Z_lin, U_drop, U_drop_pct, desbalance,
+        Z_tr_ohm, Z_tot, Icc_ori, Icc_tab,
+        E_arc, AFIE,
+        Qc, Q_fin, S_fin, fp_fin, I_fin, redI_pct, redPerd_pct,
+        thd_i_post, thd_v_post,
+        penaltyFin, ahorro_pen, ahorro_ener, ahorro_total, roi_meses
+    };
+
+    renderAll();
+}
+
+// ═══════════════════════════════════════════════════════════
+// RENDER ALL
+// ═══════════════════════════════════════════════════════════
+function renderAll() {
+    const c = state.calc;
+    const e = c.e;
+
+    // STATUS BADGE
+    const sysOk = e.thd_i < 8 && e.fp > 0.93 && c.desbalance < 2;
+    const sysWarn = !sysOk && (e.thd_i < 20 && e.fp > 0.85);
+    document.getElementById('sys-status').className = 'badge ' + (sysOk ? 'badge-ok' : sysWarn ? 'badge-warn' : 'badge badge-warn');
+    document.getElementById('sys-status').textContent = sysOk ? 'SISTEMA OK' : sysWarn ? 'REQUIERE ATENCIÓN' : 'CRÍTICO';
+
+    // DASHBOARD BIG KPIs
+    document.getElementById('db-p').textContent    = c.P.toFixed(1) + ' kW';
+    const fpEl = document.getElementById('db-fp');
+    fpEl.textContent = e.fp.toFixed(3);
+    fpEl.className = 'kpi-big-val ' + (e.fp >= 0.95 ? 'ok' : e.fp >= 0.90 ? 'warn' : 'err');
+    const thdEl = document.getElementById('db-thdi');
+    thdEl.textContent = e.thd_i.toFixed(1) + '%';
+    thdEl.className = 'kpi-big-val ' + (e.thd_i < 8 ? 'ok' : e.thd_i < 20 ? 'warn' : 'err');
+    const tmpEl = document.getElementById('db-temp');
+    tmpEl.textContent = e.temp + '°C';
+    tmpEl.className = 'kpi-big-val ' + (e.temp < 55 ? 'ok' : e.temp < 70 ? 'warn' : 'err');
+    const roiEl = document.getElementById('db-roi');
+    roiEl.textContent = c.roi_meses < 900 ? c.roi_meses.toFixed(0) + ' meses' : '—';
+    roiEl.className = 'kpi-big-val ' + (c.roi_meses < 24 ? 'ok' : c.roi_meses < 36 ? 'warn' : 'accent');
+
+    // DASHBOARD STATUS HTML
+    let alerts = '';
+    if (e.thd_i >= 8) alerts += `<div class="alert alert-${e.thd_i>20?'err':'warn'}">THD-I = ${e.thd_i}% — Límite IEEE 519: 8% · PGP reduce a ${c.thd_i_post.toFixed(1)}% tras compensación activa.</div>`;
+    if (e.fp < 0.93) alerts += `<div class="alert alert-${e.fp<0.85?'err':'warn'}">Factor de potencia ${e.fp.toFixed(3)} — Penalización activa. PGP lleva a fp = ${c.fp_fin.toFixed(3)}.</div>`;
+    if (c.desbalance > 2) alerts += `<div class="alert alert-warn">Desbalance de tensión ${c.desbalance.toFixed(2)}% — Límite: 2% (IEC 61000-3-13). Revisar cargas monofásicas.</div>`;
+    if (c.U_drop_pct > 5) alerts += `<div class="alert alert-warn">Caída de tensión ${c.U_drop_pct.toFixed(2)}% — Máximo recomendado: 5%. Revisar sección conductor.</div>`;
+    if (e.temp > 55) alerts += `<div class="alert alert-${e.temp>70?'err':'warn'}">Temperatura ${e.temp}°C — Rango operación PGP: -20°C a +70°C. ${e.temp>70?'CRÍTICO':'Revisar ventilación.'}.</div>`;
+    if (!alerts) alerts = `<div class="alert alert-ok">✔ Sistema dentro de parámetros normales. PowerGuardian Pro operando óptimamente.</div>`;
+    document.getElementById('db-status-html').innerHTML = alerts;
+
+    // DASHBOARD KPI SMALL
+    document.getElementById('db-kpi-html').innerHTML = `
+        <div class="kpi"><span class="kpi-label">Potencia activa</span><span class="kpi-val">${c.P.toFixed(2)} kW</span></div>
+        <div class="kpi"><span class="kpi-label">Potencia reactiva</span><span class="kpi-val ${c.Q<0?'err':''}">${c.Q.toFixed(2)} kVAr</span></div>
+        <div class="kpi"><span class="kpi-label">Potencia aparente</span><span class="kpi-val">${c.S.toFixed(2)} kVA</span></div>
+        <div class="kpi"><span class="kpi-label">THD-V</span><span class="kpi-val ${e.thd_v<5?'ok':'warn'}">${e.thd_v.toFixed(1)}%</span></div>
+        <div class="kpi"><span class="kpi-label">THD-I</span><span class="kpi-val ${e.thd_i<8?'ok':e.thd_i<20?'warn':'err'}">${e.thd_i.toFixed(1)}%</span></div>
+        <div class="kpi"><span class="kpi-label">Desbalance V</span><span class="kpi-val ${c.desbalance<2?'ok':'warn'}">${c.desbalance.toFixed(2)}%</span></div>
+    `;
+
+    // GAUGES
+    updateGauge('fp', e.fp, 0.85, 1.0, e.fp.toFixed(3), e.fp>=0.95?'#2DBD6E':e.fp>=0.90?'#E8A000':'#E03040');
+    updateGauge('thd', e.thd_i, 0, 40, e.thd_i.toFixed(1)+'%', e.thd_i<8?'#2DBD6E':e.thd_i<20?'#E8A000':'#E03040', true);
+    updateGauge('bal', c.desbalance, 0, 10, c.desbalance.toFixed(1)+'%', c.desbalance<2?'#2DBD6E':c.desbalance<5?'#E8A000':'#E03040', true);
+    updateGauge('drop', c.U_drop_pct, 0, 10, c.U_drop_pct.toFixed(1)+'%', c.U_drop_pct<3?'#2DBD6E':c.U_drop_pct<5?'#E8A000':'#E03040', true);
+
+    // ELÉCTRICO
+    document.getElementById('el-potencias').innerHTML = `
+        <div class="kpi"><span class="kpi-label">P activa</span><span class="kpi-val">${c.P.toFixed(2)} kW</span></div>
+        <div class="kpi"><span class="kpi-label">Q reactiva</span><span class="kpi-val">${c.Q.toFixed(2)} kVAr</span></div>
+        <div class="kpi"><span class="kpi-label">S aparente</span><span class="kpi-val">${c.S.toFixed(2)} kVA</span></div>
+        <div class="kpi"><span class="kpi-label">cos φ</span><span class="kpi-val ${e.fp>=0.95?'ok':e.fp>=0.9?'warn':'err'}">${e.fp.toFixed(3)}</span></div>
+        <div class="kpi"><span class="kpi-label">I promedio</span><span class="kpi-val">${c.I_prom.toFixed(1)} A</span></div>`;
+    document.getElementById('el-linea').innerHTML = `
+        <div class="kpi"><span class="kpi-label">R línea</span><span class="kpi-val">${c.R_lin.toFixed(4)} Ω</span></div>
+        <div class="kpi"><span class="kpi-label">X línea</span><span class="kpi-val">${c.X_lin.toFixed(4)} Ω</span></div>
+        <div class="kpi"><span class="kpi-label">Z línea</span><span class="kpi-val">${c.Z_lin.toFixed(4)} Ω</span></div>
+        <div class="kpi"><span class="kpi-label">Caída abs.</span><span class="kpi-val">${(c.U_drop*1000).toFixed(1)} mV</span></div>
+        <div class="kpi"><span class="kpi-label">Caída %</span><span class="kpi-val ${c.U_drop_pct<5?'ok':'warn'}">${c.U_drop_pct.toFixed(2)}%</span></div>`;
+    document.getElementById('el-balance').innerHTML = `
+        <div class="kpi"><span class="kpi-label">VA</span><span class="kpi-val">${e.va} V</span></div>
+        <div class="kpi"><span class="kpi-label">VB</span><span class="kpi-val">${e.vb} V</span></div>
+        <div class="kpi"><span class="kpi-label">VC</span><span class="kpi-val">${e.vc} V</span></div>
+        <div class="kpi"><span class="kpi-label">Desbalance</span><span class="kpi-val ${c.desbalance<2?'ok':'warn'}">${c.desbalance.toFixed(2)}%</span></div>
+        <div class="alert ${c.desbalance<2?'alert-ok':'alert-warn'}" style="margin-top:6px">Límite IEC 61000-3-13: 2%</div>`;
+
+    // ARMÓNICOS
+    const thd_v_class = e.thd_v<5?'ok':e.thd_v<8?'warn':'err';
+    const thd_i_class = e.thd_i<8?'ok':e.thd_i<20?'warn':'err';
+    document.getElementById('arm-thd').innerHTML = `
+        <div class="kpi"><span class="kpi-label">THD-V medido</span><span class="kpi-val ${thd_v_class}">${e.thd_v.toFixed(1)}%</span></div>
+        <div class="kpi"><span class="kpi-label">THD-V post-PGP</span><span class="kpi-val ok">${c.thd_v_post.toFixed(1)}%</span></div>
+        <div class="kpi"><span class="kpi-label">THD-I medido</span><span class="kpi-val ${thd_i_class}">${e.thd_i.toFixed(1)}%</span></div>
+        <div class="kpi"><span class="kpi-label">THD-I post-PGP</span><span class="kpi-val ok">${c.thd_i_post.toFixed(1)}%</span></div>
+        <div class="kpi"><span class="kpi-label">Límite IEC 61000-3-2</span><span class="kpi-val">THD-V ≤ 5%</span></div>
+        <div class="kpi"><span class="kpi-label">Límite IEEE 519-2022</span><span class="kpi-val">THD-I ≤ 8%</span></div>
+        <div class="alert ${e.thd_i<8?'alert-ok':'alert-err'}" style="margin-top:6px">${e.thd_i>=8?'⚠ INCUMPLIMIENTO IEEE 519 – Compensación activa requerida':'✔ En conformidad con IEEE 519'}</div>`;
+    
+    // Armónicos calculados (espectro sintético basado en THD-I)
+    const harms = calcArmonicos(e.thd_i);
+    let compHtml = '';
+    harms.slice(0,6).forEach(h => {
+        compHtml += `<div class="kpi"><span class="kpi-label">${h.n}ª (${h.freq} Hz)</span><span class="kpi-val ${h.pct>10?'err':h.pct>5?'warn':'ok'}">${h.pct.toFixed(2)}%</span></div>`;
+    });
+    document.getElementById('arm-comp').innerHTML = compHtml;
+
+    // Espectro barras
+    renderEspectro(harms, e.thd_i);
+
+    // RCA
+    document.getElementById('arm-rca').innerHTML = `
+        <div class="alert alert-warn">Causas detectadas por NORM-IA:</div>
+        ${e.thd_i>15?'<div class="norm-item" style="margin-top:4px">• <strong>VFDs sin filtro</strong> – Principal fuente de 5ª y 7ª armónica</div>':''}
+        ${e.thd_i>8?'<div class="norm-item">• <strong>Rectificadores 6 pulsos</strong> – Contribuyentes 11ª y 13ª</div>':''}
+        <div class="norm-item">• <strong>UPS/balastos electrónicos</strong> – Cargas no lineales 3ª armónica</div>
+        ${e.thd_i>20?'<div class="norm-item" style="color:var(--danger)">• <strong>Resonancia paralela</strong> – Revisión urgente banco capacitores</div>':''}`;
+    document.getElementById('arm-plan').innerHTML = `
+        <div class="norm-item">1. Instalar <strong>PowerGuardian Pro</strong> – Filtro activo DSP</div>
+        <div class="norm-item" style="margin-top:3px">2. Filtros pasivos en entradas VFD > 75 kW</div>
+        <div class="norm-item" style="margin-top:3px">3. Revisión banco capacitores existente</div>
+        <div class="norm-item" style="margin-top:3px">4. Medición IEEE 519 post-instalación</div>
+        <div class="alert alert-ok" style="margin-top:6px">THD-I esperada post-PGP: ${c.thd_i_post.toFixed(1)}%</div>`;
+
+    // ONDAS
+    renderChartOndas();
+
+    // ONDAS cards
+    document.getElementById('onda-params').innerHTML = `
+        <div class="kpi"><span class="kpi-label">V pico (A)</span><span class="kpi-val">${(e.va*Math.sqrt(2)).toFixed(1)} V</span></div>
+        <div class="kpi"><span class="kpi-label">Frecuencia fundamental</span><span class="kpi-val">50 Hz</span></div>
+        <div class="kpi"><span class="kpi-label">THD-V</span><span class="kpi-val ${thd_v_class}">${e.thd_v.toFixed(1)}%</span></div>
+        <div class="kpi"><span class="kpi-label">Forma de onda</span><span class="kpi-val">${e.thd_i>10?'Distorsionada':'Cuasi-sinusoidal'}</span></div>`;
+    document.getElementById('onda-efecto').innerHTML = `
+        <div class="kpi"><span class="kpi-label">Distorsión visible</span><span class="kpi-val ${e.thd_i>15?'err':'warn'}">${e.thd_i>15?'Alta':'Moderada'}</span></div>
+        <div class="kpi"><span class="kpi-label">Pérdidas adicionales</span><span class="kpi-val warn">${(e.thd_i*0.05).toFixed(1)}% estimado</span></div>
+        <div class="kpi"><span class="kpi-label">Impacto transformador</span><span class="kpi-val ${e.thd_i>20?'err':'warn'}">K-factor ≈ ${(1+0.01*e.thd_i**1.8).toFixed(2)}</span></div>`;
+
+    // COMPENSACIÓN
+    document.getElementById('comp-banco').innerHTML = `
+        <div class="kpi"><span class="kpi-label">Qc necesario</span><span class="kpi-val">${c.Qc.toFixed(2)} kVAr</span></div>
+        <div class="kpi"><span class="kpi-label">fp inicial</span><span class="kpi-val ${e.fp>=0.95?'ok':'warn'}">${e.fp.toFixed(3)}</span></div>
+        <div class="kpi"><span class="kpi-label">fp objetivo</span><span class="kpi-val">${e.fp_target.toFixed(3)}</span></div>
+        <div class="kpi"><span class="kpi-label">Algoritmo DSP</span><span class="kpi-val ok">Activo – Real-time</span></div>
+        <div class="kpi"><span class="kpi-label">Tiempo respuesta</span><span class="kpi-val ok">&lt; 1 ciclo (20ms)</span></div>`;
+    document.getElementById('comp-resultado').innerHTML = `
+        <div class="kpi"><span class="kpi-label">fp final</span><span class="kpi-val ${c.fp_fin>=0.95?'ok':'warn'}">${c.fp_fin.toFixed(3)}</span></div>
+        <div class="kpi"><span class="kpi-label">Q residual</span><span class="kpi-val">${c.Q_fin.toFixed(2)} kVAr</span></div>
+        <div class="kpi"><span class="kpi-label">S final</span><span class="kpi-val">${c.S_fin.toFixed(2)} kVA</span></div>
+        <div class="kpi"><span class="kpi-label">Reducción I</span><span class="kpi-val ok">${c.redI_pct.toFixed(1)}%</span></div>
+        <div class="kpi"><span class="kpi-label">Reducción pérdidas</span><span class="kpi-val ok">${c.redPerd_pct.toFixed(1)}%</span></div>
+        <div class="alert ${c.fp_fin>=0.95?'alert-ok':'alert-warn'}" style="margin-top:6px">${c.fp_fin>=0.95?'✔ Sin penalización':'⚠ Penalización parcial residual'}</div>`;
+
+    // CORTOCIRCUITO
+    document.getElementById('cc-icc').innerHTML = `
+        <div class="kpi"><span class="kpi-label">Z transformador</span><span class="kpi-val">${c.Z_tr_ohm.toFixed(4)} Ω</span></div>
+        <div class="kpi"><span class="kpi-label">Z total</span><span class="kpi-val">${c.Z_tot.toFixed(4)} Ω</span></div>
+        <div class="kpi"><span class="kpi-label">Icc en origen TR</span><span class="kpi-val err">${(c.Icc_ori/1000).toFixed(2)} kA</span></div>
+        <div class="kpi"><span class="kpi-label">Icc en tablero</span><span class="kpi-val warn">${(c.Icc_tab/1000).toFixed(2)} kA</span></div>
+        <div class="alert alert-info" style="margin-top:6px">Modelo simplificado IEC 60909. No reemplaza estudio profesional.</div>`;
+    document.getElementById('cc-arco').innerHTML = `
+        <div class="kpi"><span class="kpi-label">Energía incidente est.</span><span class="kpi-val warn">${c.E_arc.toFixed(2)} cal/cm²</span></div>
+        <div class="kpi"><span class="kpi-label">Categoría PPE (NFPA 70E)</span><span class="kpi-val ${c.AFIE>='3'?'err':'warn'}">AFIE ${c.AFIE}</span></div>
+        <div class="kpi"><span class="kpi-label">Distancia trabajo</span><span class="kpi-val">${c.Icc_tab > 10000 ? '≥1.8 m' : '≥0.9 m'}</span></div>
+        <div class="alert alert-warn" style="margin-top:6px">PPE mínimo: ${c.AFIE>='3'?'Traje arco completo ≥40 cal/cm²':'Protección arco básica'}</div>`;
+    document.getElementById('cc-prot').innerHTML = `
+        <div class="kpi"><span class="kpi-label">Icc tablero</span><span class="kpi-val">${(c.Icc_tab/1000).toFixed(1)} kA</span></div>
+        <div class="kpi"><span class="kpi-label">Poder corte mínimo</span><span class="kpi-val warn">${Math.ceil((c.Icc_tab/1000)*1.25*10)/10} kA</span></div>
+        <div class="kpi"><span class="kpi-label">Rel. protección</span><span class="kpi-val">50/51 – Sobreintensidad</span></div>
+        <div class="kpi"><span class="kpi-label">Ajuste recomendado</span><span class="kpi-val">${(c.I_prom*1.25).toFixed(0)} A (1.25×In)</span></div>`;
+
+    // IoT alertas
+    let iotAlertas = '';
+    if (e.thd_i > 15) iotAlertas += `<div class="alert alert-err">🔴 THD-I crítico – Envío de alerta MQTT al SCADA</div>`;
+    if (e.fp < 0.90) iotAlertas += `<div class="alert alert-warn">🟡 fp bajo – Compensación activa iniciada por PGP</div>`;
+    if (e.temp > 55) iotAlertas += `<div class="alert alert-warn">🟡 Temperatura elevada – Alerta OPC-UA activada</div>`;
+    if (!iotAlertas) iotAlertas = `<div class="alert alert-ok">✔ Sin alertas activas – Operación normal</div>`;
+    document.getElementById('iot-alertas').innerHTML = iotAlertas;
+    const iotTmpEl = document.getElementById('iot-temp');
+    iotTmpEl.textContent = e.temp + '°C';
+    iotTmpEl.className = 'kpi-val ' + (e.temp<55?'ok':e.temp<70?'warn':'err');
+
+    // NORM-IA
+    renderNormIA();
+
+    // ECONOMÍA
+    renderEconomia();
+
+    // REPORTE
+    renderReporte();
+
+    // Charts corrientes
+    renderChartCorrientes();
+    renderChartArmonicos(harms);
+    renderChartPotencias();
+    renderChartCurvas();
+    renderChartIoT();
+    renderChartEcon();
+}
+
+// ═══════════════════════════════════════════════════════════
+// NORM-IA
+// ═══════════════════════════════════════════════════════════
+function renderNormIA() {
+    const c = state.calc; const e = c.e;
+    const norms = [
+        {
+            code: 'IEC 61000-3-2', title: 'Emisiones Armónicas – Corriente',
+            ok: e.thd_i < 8,
+            label: e.thd_i < 8 ? 'CONFORME' : 'NO CONFORME',
+            detail: `THD-I medido: ${e.thd_i.toFixed(1)}% | Límite: 8% | Post-PGP: ${c.thd_i_post.toFixed(1)}%`
+        },
+        {
+            code: 'IEC 61000-3-3', title: 'Fluctuación de Tensión / Flicker',
+            ok: c.desbalance < 2,
+            label: c.desbalance < 2 ? 'CONFORME' : 'VERIFICAR',
+            detail: `Desbalance: ${c.desbalance.toFixed(2)}% | Límite IEC: 2%`
+        },
+        {
+            code: 'IEEE 519-2022', title: 'Límites Armónicos Sistemas ≤1kV',
+            ok: e.thd_i < 8 && e.thd_v < 5,
+            label: (e.thd_i < 8 && e.thd_v < 5) ? 'CONFORME' : 'NO CONFORME',
+            detail: `THD-V: ${e.thd_v.toFixed(1)}% (lím 5%) | THD-I: ${e.thd_i.toFixed(1)}% (lím 8%)`
+        },
+        {
+            code: 'IEC 60529', title: 'Protección Ingreso – PGP Hardware',
+            ok: true,
+            label: 'CONFORME',
+            detail: 'PowerGuardian Pro certificado IP66 – Polvo y chorros de agua a presión'
+        },
+        {
+            code: 'NFPA 70E', title: 'Seguridad Eléctrica – Arco',
+            ok: c.AFIE <= '2',
+            label: `AFIE ${c.AFIE} – ${c.AFIE>='3'?'ALTO RIESGO':'CONTROLADO'}`,
+            detail: `Energía incidente est.: ${c.E_arc.toFixed(2)} cal/cm² | Icc: ${(c.Icc_tab/1000).toFixed(2)} kA`
+        },
+        {
+            code: 'RIC 4/2019 (Chile)', title: 'Reglamento de Instalaciones de Consumo',
+            ok: c.U_drop_pct < 5 && e.fp > 0.90,
+            label: c.U_drop_pct < 5 && e.fp > 0.90 ? 'CONFORME' : 'REVISAR',
+            detail: `Caída de tensión: ${c.U_drop_pct.toFixed(2)}% (máx 5%) | fp: ${e.fp.toFixed(3)}`
+        },
+    ];
+    let html = '';
+    norms.forEach(n => {
+        const cls = n.ok ? 'ok-b' : 'warn-b';
+        const icon = n.ok ? '✔' : '⚠';
+        html += `<div class="norm-block ${cls}">
+            <div class="norm-block-title">${icon} <span>${n.code}</span> – ${n.title} &nbsp;<em style="font-size:7.5px;font-weight:600;color:inherit">[${n.label}]</em></div>
+            <div class="norm-item">${n.detail}</div>
+        </div>`;
+    });
+    document.getElementById('normia-content').innerHTML = html;
+}
+
+// ═══════════════════════════════════════════════════════════
+// ECONOMÍA
+// ═══════════════════════════════════════════════════════════
+function renderEconomia() {
+    const c = state.calc; const e = c.e;
+    document.getElementById('eco-roi').innerHTML = `
+        <div class="kpi"><span class="kpi-label">Ahorro penalizaciones/año</span><span class="kpi-val ok">USD ${c.ahorro_pen.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g,',')}</span></div>
+        <div class="kpi"><span class="kpi-label">Ahorro energía/año</span><span class="kpi-val ok">USD ${c.ahorro_ener.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g,',')}</span></div>
+        <div class="kpi"><span class="kpi-label">Ahorro total/año</span><span class="kpi-val ok">USD ${c.ahorro_total.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g,',')}</span></div>
+        <div class="kpi"><span class="kpi-label">Inversión PGP</span><span class="kpi-val">USD ${e.pgp_cost.toLocaleString()}</span></div>
+        <div class="kpi"><span class="kpi-label">Payback</span><span class="kpi-val ${c.roi_meses<24?'ok':c.roi_meses<36?'warn':'err'}">${c.roi_meses.toFixed(1)} meses</span></div>
+        <div class="alert ${c.roi_meses<24?'alert-ok':'alert-info'}" style="margin-top:6px">Meta proyecto: payback &lt; 24 meses</div>`;
+    document.getElementById('eco-penalty').innerHTML = `
+        <div class="kpi"><span class="kpi-label">Penalización actual/mes</span><span class="kpi-val err">USD ${e.penalty.toLocaleString()}</span></div>
+        <div class="kpi"><span class="kpi-label">Penalización post-PGP</span><span class="kpi-val ok">USD ${c.penaltyFin.toFixed(0)}</span></div>
+        <div class="kpi"><span class="kpi-label">fp actual</span><span class="kpi-val warn">${e.fp.toFixed(3)}</span></div>
+        <div class="kpi"><span class="kpi-label">fp post-PGP</span><span class="kpi-val ok">${c.fp_fin.toFixed(3)}</span></div>
+        <div class="kpi"><span class="kpi-label">Reducción pérdidas</span><span class="kpi-val ok">${c.redPerd_pct.toFixed(1)}%</span></div>`;
+    
+    const fmt = n => 'USD ' + n.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g,',');
+    const ahorro24 = c.ahorro_total * 2;
+    document.getElementById('eco-tbody').innerHTML = `
+        <tr><td>Penalización tarifaria/2 años</td><td class="val">${fmt(e.penalty*24)}</td><td class="val ok">${fmt(c.penaltyFin*24)}</td><td class="val ok">${fmt(c.ahorro_pen*2)}</td></tr>
+        <tr><td>Pérdidas energía/2 años</td><td class="val">${fmt(c.S*8760*2*e.tariff/1000*(1-(e.fp**2)))}</td><td class="val ok">${fmt(c.S_fin*8760*2*e.tariff/1000*(1-(c.fp_fin**2)))}</td><td class="val ok">${fmt(c.ahorro_ener*2)}</td></tr>
+        <tr><td>Inversión PowerGuardian Pro</td><td class="val">—</td><td class="val">${fmt(e.pgp_cost)}</td><td class="val warn">—</td></tr>
+        <tr><td><strong>Balance neto 24 meses</strong></td><td class="val">—</td><td class="val">—</td><td class="val ${ahorro24>e.pgp_cost?'ok':'warn'}">${fmt(ahorro24 - e.pgp_cost)}</td></tr>`;
+}
+
+// ═══════════════════════════════════════════════════════════
+// REPORTE
+// ═══════════════════════════════════════════════════════════
+function renderReporte() {
+    const c = state.calc; const e = c.e;
+    const now = new Date().toLocaleString('es-CL');
+    document.getElementById('reporte-content').innerHTML = `
+        <div style="border-bottom:2px solid var(--accent);padding-bottom:10px;margin-bottom:14px">
+            <div style="font-size:16px;font-weight:800;color:var(--accent)">⚡ PowerGuardian Pro – Informe Técnico</div>
+            <div style="font-size:9px;color:var(--txt2);margin-top:3px">INDUC TECH | ${now} | v1.0 | IEC 61000 · IEEE 519 · NFPA 70E · RIC 4/2019</div>
+        </div>
+        <div style="font-size:10px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:6px">1. Parámetros del Sistema</div>
+        <div class="kpi"><span class="kpi-label">Tensión nominal</span><span class="kpi-val">${(e.v_nom/1000).toFixed(3)} kV (${e.v_nom.toFixed(0)} V)</span></div>
+        <div class="kpi"><span class="kpi-label">Corrientes A/B/C</span><span class="kpi-val">${e.ia}/${e.ib}/${e.ic} A</span></div>
+        <div class="kpi"><span class="kpi-label">Tensiones A/B/C</span><span class="kpi-val">${e.va}/${e.vb}/${e.vc} V</span></div>
+        <div class="kpi"><span class="kpi-label">Factor de potencia</span><span class="kpi-val ${e.fp>=0.95?'ok':'warn'}">${e.fp.toFixed(3)}</span></div>
+        <div class="kpi" style="margin-bottom:12px"><span class="kpi-label">Temperatura gabinete</span><span class="kpi-val">${e.temp}°C</span></div>
+
+        <div style="font-size:10px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:6px">2. Análisis Energético</div>
+        <div class="kpi"><span class="kpi-label">P / Q / S</span><span class="kpi-val">${c.P.toFixed(2)} kW / ${c.Q.toFixed(2)} kVAr / ${c.S.toFixed(2)} kVA</span></div>
+        <div class="kpi"><span class="kpi-label">THD-V / THD-I medidos</span><span class="kpi-val">${e.thd_v.toFixed(1)}% / ${e.thd_i.toFixed(1)}%</span></div>
+        <div class="kpi"><span class="kpi-label">Desbalance de tensión</span><span class="kpi-val ${c.desbalance<2?'ok':'warn'}">${c.desbalance.toFixed(2)}%</span></div>
+        <div class="kpi" style="margin-bottom:12px"><span class="kpi-label">Caída de tensión</span><span class="kpi-val ${c.U_drop_pct<5?'ok':'warn'}">${c.U_drop_pct.toFixed(2)}%</span></div>
+
+        <div style="font-size:10px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:6px">3. Compensación Activa – Resultado PGP</div>
+        <div class="kpi"><span class="kpi-label">Potencia reactiva compensada</span><span class="kpi-val">${c.Qc.toFixed(2)} kVAr</span></div>
+        <div class="kpi"><span class="kpi-label">fp post-compensación</span><span class="kpi-val ok">${c.fp_fin.toFixed(3)}</span></div>
+        <div class="kpi"><span class="kpi-label">THD-I post-PGP</span><span class="kpi-val ok">${c.thd_i_post.toFixed(1)}%</span></div>
+        <div class="kpi" style="margin-bottom:12px"><span class="kpi-label">Reducción de pérdidas</span><span class="kpi-val ok">${c.redPerd_pct.toFixed(1)}%</span></div>
+
+        <div style="font-size:10px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:6px">4. Análisis Económico</div>
+        <div class="kpi"><span class="kpi-label">Ahorro anual total</span><span class="kpi-val ok">USD ${c.ahorro_total.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g,',')}</span></div>
+        <div class="kpi"><span class="kpi-label">Payback PowerGuardian Pro</span><span class="kpi-val ${c.roi_meses<24?'ok':'warn'}">${c.roi_meses.toFixed(1)} meses</span></div>
+        <div class="kpi" style="margin-bottom:12px"><span class="kpi-label">Reducción penalización tarifaria</span><span class="kpi-val ok">USD ${(e.penalty-c.penaltyFin).toFixed(0)}/mes</span></div>
+
+        <div style="font-size:10px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:6px">5. Cortocircuito y Seguridad</div>
+        <div class="kpi"><span class="kpi-label">Icc en tablero (IEC 60909)</span><span class="kpi-val warn">${(c.Icc_tab/1000).toFixed(2)} kA</span></div>
+        <div class="kpi"><span class="kpi-label">Categoría arco NFPA 70E</span><span class="kpi-val warn">AFIE ${c.AFIE}</span></div>
+        <div class="kpi" style="margin-bottom:12px"><span class="kpi-label">Poder corte mínimo requerido</span><span class="kpi-val">${Math.ceil((c.Icc_tab/1000)*1.25*10)/10} kA</span></div>
+
+        <div class="alert alert-ok" style="margin-top:8px">Informe generado por PowerGuardian Pro v1.0 – INDUC TECH. Para uso técnico referencial. No reemplaza estudio de ingeniería certificado.</div>
+    `;
+}
+
+// ═══════════════════════════════════════════════════════════
+// ESPECTRO ARMÓNICO
+// ═══════════════════════════════════════════════════════════
+function calcArmonicos(thd_i) {
+    // Distribución típica cargas no lineales (VFDs, rectificadores)
+    const magnitudes = {
+        1: 100, 3: thd_i*0.08, 5: thd_i*0.55, 7: thd_i*0.35,
+        9: thd_i*0.04, 11: thd_i*0.22, 13: thd_i*0.16,
+        15: thd_i*0.02, 17: thd_i*0.09, 19: thd_i*0.07,
+        23: thd_i*0.05, 25: thd_i*0.04
+    };
+    return Object.entries(magnitudes).map(([n,pct]) => ({
+        n: parseInt(n), freq: parseInt(n)*50, pct
+    }));
+}
+
+function renderEspectro(harms, thd_i) {
+    const max = 100;
+    const spec = document.getElementById('arm-spectrum');
+    const lbl = document.getElementById('arm-spec-labels');
+    spec.innerHTML = '';
+    lbl.innerHTML = '';
+    harms.forEach(h => {
+        const bar = document.createElement('div');
+        bar.className = 'spec-bar';
+        const pct = (h.pct / max) * 100;
+        const color = h.pct > 10 ? '#E03040' : h.pct > 5 ? '#E8A000' : h.n===1 ? '#00C8E8' : '#2DBD6E';
+        bar.style.cssText = `height:${Math.max(pct*0.8,2)}%;background:${color};opacity:0.85`;
+        spec.appendChild(bar);
+        const l = document.createElement('div');
+        l.className = 'spec-lbl';
+        l.textContent = h.n===1?'F':h.n+'ª';
+        lbl.appendChild(l);
+    });
+}
+
+// ═══════════════════════════════════════════════════════════
+// GAUGE
+// ═══════════════════════════════════════════════════════════
+function updateGauge(id, val, min, max, text, color, inverse=false) {
+    const ratio = Math.min(1, Math.max(0, (val - min) / (max - min)));
+    const arcLen = 110;
+    const offset = arcLen - ratio * arcLen;
+    const el = document.getElementById('g-'+id);
+    const vEl = document.getElementById('g-'+id+'-v');
+    if (el) { el.style.stroke = color; el.style.strokeDashoffset = offset; }
+    if (vEl) { vEl.textContent = text; vEl.style.fill = color; }
+}
+
+// ═══════════════════════════════════════════════════════════
+// CHARTS
+// ═══════════════════════════════════════════════════════════
+function destroyChart(id) {
+    if (state.charts[id]) { state.charts[id].destroy(); delete state.charts[id]; }
+}
+
+function renderChartCorrientes() {
+    destroyChart('corrientes');
+    const ctx = document.getElementById('chart-corrientes');
+    if (!ctx || !state.calc.valid) return;
+    const e = state.calc.e;
+    state.charts['corrientes'] = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Fase A', 'Fase B', 'Fase C', 'Promedio'],
+            datasets: [{
+                label: 'Corriente (A)',
+                data: [e.ia, e.ib, e.ic, state.calc.I_prom],
+                backgroundColor: ['rgba(0,200,232,0.6)','rgba(0,229,192,0.6)','rgba(232,165,0,0.6)','rgba(45,189,110,0.4)'],
+                borderColor: ['#00C8E8','#00E5C0','#E8A500','#2DBD6E'],
+                borderWidth: 1.5
+            }]
+        },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } },
+            scales: { y: { ticks: { color: '#7AACCF', font: {size:9} }, grid: { color: '#12304A' } },
+                x: { ticks: { color: '#7AACCF', font:{size:9} }, grid:{display:false} } } }
+    });
+}
+
+function renderChartArmonicos(harms) {
+    destroyChart('armonicos');
+    const ctx = document.getElementById('chart-armonicos');
+    if (!ctx) return;
+    state.charts['armonicos'] = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: harms.map(h => h.n===1 ? 'F (50Hz)' : h.n+'ª ('+h.freq+'Hz)'),
+            datasets: [{
+                label: '% de fundamental',
+                data: harms.map(h => h.pct),
+                backgroundColor: harms.map(h => h.pct>10?'rgba(224,48,64,0.7)':h.pct>5?'rgba(232,160,0,0.7)':h.n===1?'rgba(0,200,232,0.7)':'rgba(45,189,110,0.6)'),
+                borderWidth: 0
+            }]
+        },
+        options: { responsive: true, maintainAspectRatio: false,
+            plugins: { legend:{display:false},
+                annotation: { annotations: [{ type:'line', yMin:8, yMax:8, borderColor:'#E03040', borderWidth:1.5, label:{content:'Límite IEEE 519',display:true,color:'#E03040',font:{size:8}} }] }
+            },
+            scales: { y: { ticks:{color:'#7AACCF',font:{size:9}}, grid:{color:'#12304A'} },
+                x: { ticks:{color:'#7AACCF',font:{size:8},maxRotation:45}, grid:{display:false} } }
+        }
+    });
+}
+
+function renderChartOndas() {
+    destroyChart('ondas');
+    const ctx = document.getElementById('chart-ondas');
+    if (!ctx || !state.calc.valid) return;
+    const e = state.calc.e;
+    const harms = calcArmonicos(e.thd_i);
+    const N = 200;
+    const labels = Array.from({length:N}, (_,i) => (i/N*360).toFixed(0)+'°');
+    function wave(Vpk, phDeg, thd) {
+        return Array.from({length:N}, (_,i) => {
+            const t = i/N*2*Math.PI;
+            const ph = phDeg * Math.PI / 180;
+            let v = Vpk * Math.sin(t - ph);
+            // Agregar armónicos principales
+            harms.slice(1).forEach(h => {
+                v += Vpk * (h.pct/100) * Math.sin(h.n*(t-ph) + (h.n%2?0:Math.PI/6));
+            });
+            return v;
+        });
+    }
+    const Vpk = e.va * Math.sqrt(2);
+    state.charts['ondas'] = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels,
+            datasets: [
+                { label:'Fase A', data: wave(Vpk,0,e.thd_v), borderColor:'#00C8E8', borderWidth:1.5, pointRadius:0, tension:0.3 },
+                { label:'Fase B', data: wave(Vpk,120,e.thd_v), borderColor:'#00E5C0', borderWidth:1.5, pointRadius:0, tension:0.3 },
+                { label:'Fase C', data: wave(Vpk,240,e.thd_v), borderColor:'#E8A500', borderWidth:1.5, pointRadius:0, tension:0.3 },
+            ]
+        },
+        options: { responsive:true, maintainAspectRatio:false,
+            plugins:{legend:{labels:{color:'#7AACCF',font:{size:9}}}},
+            scales:{ y:{ticks:{color:'#7AACCF',font:{size:9}},grid:{color:'#12304A'}},
+                x:{ticks:{color:'#7AACCF',font:{size:8},maxTicksLimit:12},grid:{display:false}} }
+        }
+    });
+}
+
+function renderChartPotencias() {
+    destroyChart('potencias');
+    const ctx = document.getElementById('chart-potencias');
+    if (!ctx || !state.calc.valid) return;
+    const c = state.calc;
+    state.charts['potencias'] = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['P (kW)', 'Q (kVAr)', 'S (kVA)', 'fp'],
+            datasets: [
+                { label:'Antes PGP', data:[c.P.toFixed(1), c.Q.toFixed(1), c.S.toFixed(1), (c.e.fp*100).toFixed(1)],
+                    backgroundColor:'rgba(224,48,64,0.5)', borderColor:'#E03040', borderWidth:1.5 },
+                { label:'Post-PGP', data:[c.P.toFixed(1), c.Q_fin.toFixed(1), c.S_fin.toFixed(1), (c.fp_fin*100).toFixed(1)],
+                    backgroundColor:'rgba(45,189,110,0.5)', borderColor:'#2DBD6E', borderWidth:1.5 }
+            ]
+        },
+        options: { responsive:true, maintainAspectRatio:false,
+            plugins:{legend:{labels:{color:'#7AACCF',font:{size:9}}}},
+            scales:{ y:{ticks:{color:'#7AACCF',font:{size:9}},grid:{color:'#12304A'}},
+                x:{ticks:{color:'#7AACCF',font:{size:9}},grid:{display:false}} }
+        }
+    });
+}
+
+function renderChartCurvas() {
+    destroyChart('curvas');
+    const ctx = document.getElementById('chart-curvas');
+    if (!ctx || !state.calc.valid) return;
+    const Icc = state.calc.Icc_tab;
+    const In = state.calc.I_prom;
+    const ratios = [1.2,1.5,2,3,5,7,10,15,20,30,50,100,200];
+    const tIEC = ratios.map(r => {
+        const I = r * In;
+        return (0.14 / (Math.pow(I/In, 0.02) - 1)) * 1;
+    });
+    const tInst = ratios.map(r => r*In > Icc*0.8 ? 0.02 : null);
+    state.charts['curvas'] = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ratios.map(r => (r+'×In')),
+            datasets: [
+                { label:'Relé IEC-SI', data:tIEC, borderColor:'#00C8E8', borderWidth:1.5, pointRadius:2, tension:0.2 },
+                { label:'Disparo instantáneo', data:tInst, borderColor:'#E03040', borderWidth:2, pointRadius:3, borderDash:[5,3] }
+            ]
+        },
+        options: { responsive:true, maintainAspectRatio:false,
+            plugins:{legend:{labels:{color:'#7AACCF',font:{size:9}}}},
+            scales:{ y:{type:'logarithmic', ticks:{color:'#7AACCF',font:{size:9}},grid:{color:'#12304A'}},
+                x:{ticks:{color:'#7AACCF',font:{size:9}},grid:{display:false}} }
+        }
+    });
+}
+
+function renderChartIoT() {
+    destroyChart('iot');
+    const ctx = document.getElementById('chart-iot');
+    if (!ctx) return;
+    const hrs = Array.from({length:24}, (_,i) => i+'h');
+    const seed = (i,base,amp) => base + amp*Math.sin(i/3.5) + (Math.random()-0.5)*amp*0.3;
+    const fp24 = hrs.map((_,i) => +(0.82+0.04*Math.sin(i/4)).toFixed(3));
+    const thd24 = hrs.map((_,i) => +(15+5*Math.sin(i/3.8)+Math.random()).toFixed(1));
+    const temp24 = hrs.map((_,i) => +(36+4*Math.sin(i/5.5)+Math.random()).toFixed(1));
+    state.charts['iot'] = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: hrs,
+            datasets: [
+                { label:'fp×100', data:fp24.map(v=>+(v*100).toFixed(1)), borderColor:'#00C8E8', borderWidth:1.5, pointRadius:0, tension:0.4, yAxisID:'y' },
+                { label:'THD-I (%)', data:thd24, borderColor:'#E8A500', borderWidth:1.5, pointRadius:0, tension:0.4, yAxisID:'y' },
+                { label:'Temp (°C)', data:temp24, borderColor:'#2DBD6E', borderWidth:1.5, pointRadius:0, tension:0.4, yAxisID:'y' },
+            ]
+        },
+        options: { responsive:true, maintainAspectRatio:false,
+            plugins:{legend:{labels:{color:'#7AACCF',font:{size:9}}}},
+            scales:{ y:{ticks:{color:'#7AACCF',font:{size:9}},grid:{color:'#12304A'}},
+                x:{ticks:{color:'#7AACCF',font:{size:9},maxTicksLimit:12},grid:{display:false}} }
+        }
+    });
+}
+
+function renderChartEcon() {
+    destroyChart('economia');
+    const ctx = document.getElementById('chart-economia');
+    if (!ctx || !state.calc.valid) return;
+    const c = state.calc;
+    const meses = Array.from({length:37}, (_,i) => 'M'+i);
+    const sinPGP = meses.map((_,i) => i * (c.ahorro_total / 12));
+    const conPGP = meses.map((_,i) => Math.max(0, i * (c.ahorro_total / 12) - c.e.pgp_cost));
+    state.charts['economia'] = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: meses,
+            datasets: [
+                { label:'Ahorro sin PGP', data: sinPGP.map(_=>0), borderColor:'#E03040', borderWidth:1.5, pointRadius:0, fill:false },
+                { label:'Ahorro neto con PGP (USD)', data: conPGP, borderColor:'#2DBD6E', borderWidth:2, pointRadius:0, fill:true, backgroundColor:'rgba(45,189,110,0.08)', tension:0.2 },
+            ]
+        },
+        options: { responsive:true, maintainAspectRatio:false,
+            plugins:{legend:{labels:{color:'#7AACCF',font:{size:9}}}},
+            scales:{ y:{ticks:{color:'#7AACCF',font:{size:9},callback:v=>'$'+v.toLocaleString()},grid:{color:'#12304A'}},
+                x:{ticks:{color:'#7AACCF',font:{size:9},maxTicksLimit:12},grid:{display:false}} }
+        }
+    });
+}
+
+// ═══════════════════════════════════════════════════════════
+// UTILITIES
+// ═══════════════════════════════════════════════════════════
+function resetAll() {
+    Object.values(state.charts).forEach(ch => { try{ ch.destroy(); }catch(e){} });
+    state = { input:{}, calc:{valid:false}, charts:{} };
+    // Reset KPIs
+    ['db-p','db-fp','db-thdi','db-temp','db-roi'].forEach(id => {
+        const el = document.getElementById(id);
+        if(el){ el.textContent='—'; el.className='kpi-big-val accent'; }
+    });
+    ['db-status-html'].forEach(id => {
+        const el = document.getElementById(id);
+        if(el) el.innerHTML = '<div class="alert alert-info">Ingrese parámetros y presione ⚡ ANALIZAR CON PGP</div>';
+    });
+}
+
+function generarPDF() {
+    window.print();
+}
+
+function exportJSON() {
+    if (!state.calc.valid) { alert('Ejecute el análisis primero.'); return; }
+    const data = { timestamp: new Date().toISOString(), input: state.input, results: state.calc };
+    const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'PGP_resultado_' + new Date().toISOString().slice(0,10) + '.json';
+    a.click();
+}
+
+
+// ═══════════════════════════════════════════════════════════
+// PGP BACKEND INTEGRATION v2.0
+// Módulos: Live WebSocket | REST API | Chat LLM streaming
+// ═══════════════════════════════════════════════════════════
+const PGP = {
+
+    // ── Configuración ──────────────────────────────────────
+    cfg: (() => {
+        // FIX: host dinámico — si el dashboard se abre desde otra máquina
+        // (tablet/PC en faena apuntando a la Raspberry Pi), 'localhost'
+        // apuntaría al dispositivo del usuario, no al backend.
+        // Prioridad: ?backend=IP en la URL → localStorage → host de la página → localhost
+        const params = new URLSearchParams(location.search);
+        let host = params.get('backend')
+                || localStorage.getItem('pgp_backend_host')
+                || (location.hostname && location.protocol !== 'file:' ? location.hostname : 'localhost');
+        if (params.get('backend')) localStorage.setItem('pgp_backend_host', host);
+        const wsProto = location.protocol === 'https:' ? 'wss' : 'ws';
+        const httpProto = location.protocol === 'https:' ? 'https' : 'http';
+        return {
+            apiBase:  `${httpProto}://${host}:8000`,
+            wsBase:   `${wsProto}://${host}:8000`,
+            nodeId:   'PGP-SIM-001',
+            liveMode: false,
+        };
+    })(),
+    _ws:         null,
+    _wsRetry:    0,
+    _wsTimer:    null,
+    _pollTimer:  null,
+
+    // ── Setear nodo activo ─────────────────────────────────
+    setNode(id) {
+        this.cfg.nodeId = id;
+        if (this.cfg.liveMode) {
+            this._wsConnect();
+            this._fetchUltimaMedicion();
+        }
+    },
+
+    // ── Toggle modo live ───────────────────────────────────
+    async toggleLive() {
+        if (this.cfg.liveMode) {
+            this._detenerLive();
+        } else {
+            await this._iniciarLive();
+        }
+    },
+
+    async _iniciarLive() {
+        this._setBtnState('conn', 'CONECTANDO...');
+        // Verificar backend
+        try {
+            const r = await fetch(this.cfg.apiBase + '/health', { signal: AbortSignal.timeout(4000) });
+            if (!r.ok) throw new Error('Backend no responde');
+        } catch(e) {
+            this._setBtnState('off', 'SIN BACKEND');
+            this._showToast('⚠ Backend no disponible en localhost:8000', 'warn');
+            return;
+        }
+        this.cfg.liveMode = true;
+        this._setBtnState('on', 'LIVE');
+        document.getElementById('btn-live').textContent = '📡 DESCONECTAR';
+        document.getElementById('btn-analizar').textContent = '⚡ CALCULAR LOCAL';
+        this._showToast('✔ Conectado al backend PowerGuardian Pro', 'ok');
+
+        // Cargar datos inmediatamente
+        await this._fetchUltimaMedicion();
+        // Conectar WebSocket
+        this._wsConnect();
+        // Poll de respaldo cada 15s
+        this._pollTimer = setInterval(() => this._fetchUltimaMedicion(), 15000);
+        // Verificar LLM
+        this.chat._checkLLM();
+    },
+
+    _detenerLive() {
+        this.cfg.liveMode = false;
+        if (this._ws) { this._ws.close(); this._ws = null; }
+        if (this._wsPing)    { clearInterval(this._wsPing);    this._wsPing = null; }
+        if (this._pollTimer) { clearInterval(this._pollTimer); this._pollTimer = null; }
+        if (this._wsTimer)   { clearTimeout(this._wsTimer);   this._wsTimer = null; }
+        this._setBtnState('off', 'OFFLINE');
+        document.getElementById('btn-live').textContent = '📡 CONECTAR AL BACKEND';
+        document.getElementById('btn-analizar').textContent = '⚡ ANALIZAR CON PGP';
+        this._showToast('Modo offline — usando cálculos locales', 'info');
+    },
+
+    _setBtnState(cls, txt) {
+        const btn = document.getElementById('live-btn');
+        btn.className = 'live-btn ' + cls;
+        document.getElementById('live-txt').textContent = txt;
+    },
+
+    // ── WebSocket ──────────────────────────────────────────
+    _wsConnect() {
+        if (this._ws) { try { this._ws.close(); } catch(e){} }
+        const url = `${this.cfg.wsBase}/ws/mediciones/${this.cfg.nodeId}`;
+        try {
+            this._ws = new WebSocket(url);
+            this._ws.onopen = () => {
+                this._wsRetry = 0;
+                console.log('[PGP] WebSocket conectado');
+                // FIX: keepalive cada 25s — el README del backend lo exige.
+                // Sin esto, firewalls/NAT industriales cortan la conexión
+                // inactiva y se pierden alertas en tiempo real.
+                if (this._wsPing) clearInterval(this._wsPing);
+                this._wsPing = setInterval(() => {
+                    if (this._ws && this._ws.readyState === WebSocket.OPEN) {
+                        this._ws.send(JSON.stringify({cmd: 'ping'}));
+                    }
+                }, 25000);
+            };
+            this._ws.onmessage = (e) => {
+                try {
+                    const msg = JSON.parse(e.data);
+                    if (msg.tipo === 'medicion' && msg.data) {
+                        this._aplicarMedicionBackend(msg.data);
+                    } else if (msg.tipo === 'alerta' && msg.data) {
+                        this._procesarAlertaWS(msg.data);
+                    } else if (msg.tipo === 'diagnostico_llm' && msg.data) {
+                        this.chat._addMsg('bot', msg.data.diagnostico || '');
+                    }
+                } catch(err) {}
+            };
+            this._ws.onclose = () => {
+                if (!this.cfg.liveMode) return;
+                this._wsRetry++;
+                const delay = Math.min(this._wsRetry * 3000, 30000);
+                this._wsTimer = setTimeout(() => this._wsConnect(), delay);
+            };
+            this._ws.onerror = () => {};
+        } catch(e) {}
+    },
+
+    // ── Fetch REST: última medición ────────────────────────
+    async _fetchUltimaMedicion() {
+        if (!this.cfg.liveMode) return;
+        try {
+            const r = await fetch(
+                `${this.cfg.apiBase}/api/v1/mediciones/${this.cfg.nodeId}/ultima`,
+                { signal: AbortSignal.timeout(8000) }
+            );
+            if (!r.ok) return;
+            const med = await r.json();
+            this._aplicarMedicionBackend(med);
+        } catch(e) {}
+    },
+
+    // ── Traducir medición backend → inputs del dashboard ──
+    _aplicarMedicionBackend(med) {
+        const mapeo = {
+            tension_a:           'va',
+            tension_b:           'vb',
+            tension_c:           'vc',
+            corriente_a:         'ia',
+            corriente_b:         'ib',
+            corriente_c:         'ic',
+            factor_potencia:     'fp',
+            thd_voltaje:         'thd_v',
+            thd_corriente:       'thd_i',
+            temperatura_gabinete:'temp',
+        };
+        let camposActualizados = 0;
+        for (const [backKey, htmlId] of Object.entries(mapeo)) {
+            if (med[backKey] != null) {
+                const el = document.getElementById(htmlId);
+                if (el) {
+                    el.value = parseFloat(med[backKey]).toFixed(
+                        backKey === 'factor_potencia' ? 3 : 1
+                    );
+                    camposActualizados++;
+                }
+            }
+        }
+        // Si actualizamos campos, re-calcular el dashboard automáticamente
+        if (camposActualizados > 0) {
+            calcular();
+            this._showIndicadorLive();
+        }
+    },
+
+    // ── Alerta via WebSocket ───────────────────────────────
+    _procesarAlertaWS(alerta) {
+        const sev = (alerta.severidad || '').toUpperCase();
+        if (sev === 'CRITICO') {
+            this._showToast(`🔴 CRÍTICO: ${alerta.mensaje || alerta.tipo}`, 'err');
+            // Mostrar badge en chat
+            const notif = document.getElementById('pgp-notif');
+            if (notif) { notif.style.display = 'flex'; }
+        } else if (sev === 'WARN') {
+            this._showToast(`⚠ ${alerta.mensaje || alerta.tipo}`, 'warn');
+        }
+    },
+
+    // ── Fetch histórico para gráfico IoT ──────────────────
+    async fetchHistorico(horas = 24) {
+        if (!this.cfg.liveMode) return null;
+        try {
+            const r = await fetch(
+                `${this.cfg.apiBase}/api/v1/mediciones/${this.cfg.nodeId}/historico?horas=${horas}&bucket=1+hour`,
+                { signal: AbortSignal.timeout(10000) }
+            );
+            if (!r.ok) return null;
+            return await r.json();
+        } catch(e) { return null; }
+    },
+
+    // ── Fetch alertas activas ─────────────────────────────
+    async fetchAlertas() {
+        if (!this.cfg.liveMode) return [];
+        try {
+            const r = await fetch(
+                `${this.cfg.apiBase}/api/v1/alertas/?node_id=${this.cfg.nodeId}&solo_activas=true&horas=24`,
+                { signal: AbortSignal.timeout(8000) }
+            );
+            return r.ok ? await r.json() : [];
+        } catch(e) { return []; }
+    },
+
+    // ── Toast de notificación ─────────────────────────────
+    _toastEl: null,
+    _showToast(msg, tipo='info') {
+        if (this._toastEl) this._toastEl.remove();
+        const colors = { ok:'#2DBD6E', warn:'#E8A000', err:'#E03040', info:'#00C8E8' };
+        const el = document.createElement('div');
+        el.style.cssText = `
+            position:fixed;bottom:82px;left:50%;transform:translateX(-50%);
+            background:#0D2035;border:1px solid ${colors[tipo]||colors.info};
+            color:${colors[tipo]||colors.info};padding:7px 16px;border-radius:6px;
+            font-size:10px;font-weight:600;z-index:9999;
+            box-shadow:0 4px 16px rgba(0,0,0,0.5);
+            animation:fadeIn 0.2s;pointer-events:none;
+        `;
+        el.textContent = msg;
+        document.body.appendChild(el);
+        this._toastEl = el;
+        setTimeout(() => { if(el.parentNode) el.remove(); }, 3500);
+    },
+
+    _showIndicadorLive() {
+        const el = document.getElementById('live-txt');
+        if (el && this.cfg.liveMode) {
+            el.textContent = 'LIVE ✓';
+            setTimeout(() => { if(el) el.textContent = 'LIVE'; }, 1000);
+        }
+    },
+
+    // ── MÓDULO CHAT LLM ────────────────────────────────────
+    chat: {
+        open: false,
+        busy: false,
+        llmOk: false,
+        hist: [],
+
+        toggle(forzar) {
+            this.open = forzar !== undefined ? forzar : !this.open;
+            document.getElementById('pgp-chat-box').classList.toggle('open', this.open);
+            document.getElementById('pgp-notif').style.display = 'none';
+            if (this.open && this.hist.length === 0) {
+                this._addMsg('bot',
+                    '¡Hola! Soy PGP-IA, el asistente técnico del PowerGuardian Pro.\n\n' +
+                    'Analizo datos eléctricos en tiempo real, evalúo conformidad IEC 61000 / IEEE 519 / RIC 4/2019 y diagnostico causas raíz.\n\n' +
+                    (PGP.cfg.liveMode
+                        ? '✔ Conectado al backend — tengo acceso a los datos del nodo ' + PGP.cfg.nodeId + '.'
+                        : '⚠ Backend offline — conéctate al backend para análisis con datos reales.')
+                );
+            }
+            this._checkLLM();
+        },
+
+        async _checkLLM() {
+            try {
+                const r = await fetch(PGP.cfg.apiBase + '/api/v1/llm/estado', { signal: AbortSignal.timeout(4000) });
+                const d = await r.json();
+                this.llmOk = d.ollama_disponible;
+                const stEl = document.getElementById('pgp-llm-st');
+                const warnEl = document.getElementById('pgp-llm-warn');
+                if (stEl) stEl.textContent = this.llmOk ? '● Operativo — Mistral-7B Q4' : '● Ollama no disponible';
+                if (stEl) stEl.style.color = this.llmOk ? 'var(--ok)' : 'var(--warn)';
+                if (warnEl) warnEl.style.display = this.llmOk ? 'none' : 'block';
+            } catch(e) {
+                const stEl = document.getElementById('pgp-llm-st');
+                if (stEl) { stEl.textContent = '● Sin conexión al backend'; stEl.style.color = 'var(--danger)'; }
+            }
+        },
+
+        async enviar() {
+            const ta = document.getElementById('pgp-ta');
+            const q = ta.value.trim();
+            if (!q || this.busy) return;
+            ta.value = ''; ta.style.height = 'auto';
+            this._addMsg('u', q);
+            this._typing(true);
+            this.busy = true;
+            document.getElementById('pgp-send').disabled = true;
+            this.hist.push({ role: 'user', content: q });
+
+            if (!PGP.cfg.liveMode) {
+                this._typing(false);
+                this._addMsg('b',
+                    '⚠ Para consultar al asistente PGP-IA necesitas conectarte al backend.\n' +
+                    'Haz clic en "📡 CONECTAR AL BACKEND" en el panel lateral.'
+                );
+                this.busy = false;
+                document.getElementById('pgp-send').disabled = false;
+                return;
+            }
+
+            try {
+                const resp = await fetch(PGP.cfg.apiBase + '/api/v1/llm/chat/stream', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        node_id:   PGP.cfg.nodeId,
+                        pregunta:  q,
+                        con_datos: true,
+                    }),
+                });
+                if (!resp.ok) throw new Error('HTTP ' + resp.status);
+                this._typing(false);
+                const msgEl = this._addMsg('b', '');
+                const burbuja = msgEl.querySelector('.pgp-mb');
+                const reader = resp.body.getReader();
+                const dec = new TextDecoder();
+                let txt = '';
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+                    for (const line of dec.decode(value).split('\n')) {
+                        if (line.startsWith('data: ')) {
+                            const tok = line.slice(6);
+                            if (tok === '[DONE]') break;
+                            txt += tok;
+                            burbuja.textContent = txt;
+                            this._scroll();
+                        }
+                    }
+                }
+                this.hist.push({ role: 'assistant', content: txt });
+            } catch(err) {
+                this._typing(false);
+                this._addMsg('b', 'Error al conectar con PGP-IA: ' + err.message);
+            } finally {
+                this.busy = false;
+                document.getElementById('pgp-send').disabled = false;
+            }
+        },
+
+        async analizarAlertas() {
+            if (this.busy) return;
+            if (!this.open) this.toggle(true);
+            if (!PGP.cfg.liveMode) {
+                this._addMsg('b', '⚠ Conecta al backend primero para analizar alertas reales.');
+                return;
+            }
+            this._addMsg('u', '🔴 Analiza las alertas activas del nodo ' + PGP.cfg.nodeId);
+            this._typing(true);
+            this.busy = true;
+            document.getElementById('pgp-send').disabled = true;
+            try {
+                const r = await fetch(
+                    PGP.cfg.apiBase + '/api/v1/llm/analizar-alerta?node_id=' + PGP.cfg.nodeId,
+                    { method: 'POST', signal: AbortSignal.timeout(90000) }
+                );
+                const d = await r.json();
+                this._typing(false);
+                this._addMsg('b', d.diagnostico || '✔ Sin alertas activas — sistema en norma.');
+            } catch(e) {
+                this._typing(false);
+                this._addMsg('b', 'Error al analizar alertas: ' + e.message);
+            } finally {
+                this.busy = false;
+                document.getElementById('pgp-send').disabled = false;
+            }
+        },
+
+        _addMsg(rol, txt) {
+            const cont = document.getElementById('pgp-msgs');
+            const ts = new Date().toLocaleTimeString('es-CL', { hour:'2-digit', minute:'2-digit' });
+            const d = document.createElement('div');
+            d.className = 'pgp-m ' + (rol === 'u' ? 'u' : 'b');
+            d.innerHTML = `<div class="pgp-mb">${txt}</div><div class="pgp-mts">${ts}</div>`;
+            cont.appendChild(d);
+            this._scroll();
+            return d;
+        },
+
+        _typing(on) {
+            const ex = document.getElementById('pgp-typing-row');
+            if (ex) ex.remove();
+            if (!on) return;
+            const d = document.createElement('div');
+            d.id = 'pgp-typing-row';
+            d.className = 'pgp-m b';
+            d.innerHTML = '<div class="pgp-mb pgp-typing"><span></span><span></span><span></span><span style="font-size:8.5px;color:var(--txt2);margin-left:4px">PGP-IA analizando...</span></div>';
+            document.getElementById('pgp-msgs').appendChild(d);
+            this._scroll();
+        },
+
+        _scroll() {
+            const el = document.getElementById('pgp-msgs');
+            if (el) el.scrollTop = el.scrollHeight;
+        },
+    },
+};
+
+// ── Inicializar eventos del chat ────────────────────────────
+(function initChatEvents() {
+    // Sugerencias rápidas
+    document.querySelectorAll('.pgp-qb').forEach(btn => {
+        btn.onclick = () => {
+            document.getElementById('pgp-ta').value = btn.dataset.q || btn.textContent;
+            PGP.chat.enviar();
+        };
+    });
+    // Enter en textarea
+    const ta = document.getElementById('pgp-ta');
+    if (ta) {
+        ta.addEventListener('keydown', e => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                PGP.chat.enviar();
+            }
+        });
+        ta.addEventListener('input', () => {
+            ta.style.height = 'auto';
+            ta.style.height = Math.min(ta.scrollHeight, 80) + 'px';
+        });
+    }
+})();
+
+// ── Exponer PGP.fetchHistorico al módulo IoT del dashboard ──
+// Reemplaza el historial simulado cuando hay conexión backend
+const _origRenderChartIoT = renderChartIoT;
+async function renderChartIoT() {
+    if (!PGP.cfg.liveMode) { _origRenderChartIoT(); return; }
+    const datos = await PGP.fetchHistorico(24);
+    if (!datos || datos.length === 0) { _origRenderChartIoT(); return; }
+    destroyChart('iot');
+    const ctx = document.getElementById('chart-iot');
+    if (!ctx) return;
+    const labels = datos.map(d => {
+        const dt = new Date(d.periodo);
+        return dt.getHours() + 'h';
+    });
+    state.charts['iot'] = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels,
+            datasets: [
+                { label:'fp×100',  data: datos.map(d => +(((d.fp_avg||0)*100).toFixed(1))), borderColor:'#00C8E8', borderWidth:1.5, pointRadius:0, tension:0.4 },
+                { label:'THD-I avg (%)', data: datos.map(d => +(d.thd_i_avg||0).toFixed(1)),  borderColor:'#E8A500', borderWidth:1.5, pointRadius:0, tension:0.4 },
+                { label:'THD-I max (%)', data: datos.map(d => +(d.thd_i_max||0).toFixed(1)),  borderColor:'#E03040', borderWidth:1, pointRadius:0, tension:0.2, borderDash:[4,3] },
+                { label:'Temp (°C)',    data: datos.map(d => +(d.temp_avg||0).toFixed(1)),     borderColor:'#2DBD6E', borderWidth:1.5, pointRadius:0, tension:0.4 },
+            ]
+        },
+        options: { responsive:true, maintainAspectRatio:false,
+            plugins:{ legend:{ labels:{ color:'#7AACCF', font:{size:9} } } },
+            scales:{
+                y:{ ticks:{color:'#7AACCF',font:{size:9}}, grid:{color:'#12304A'} },
+                x:{ ticks:{color:'#7AACCF',font:{size:9},maxTicksLimit:12}, grid:{display:false} }
+            }
+        }
+    });
+}
+
+
+// ═══════════════════════════════════════════════════════════
+// MODO — Gestión de vistas Live / Técnico
+// DATOS VIVOS — Generador local + alimentación al dashboard
+// ═══════════════════════════════════════════════════════════
+
+const MODO = {
+    actual: 'live',   // 'live' | 'tecnico'
+    _pausado: false,
+
+    toggle() {
+        if (this.actual === 'live') this._irATecnico();
+        else this._irALive();
+    },
+
+    _irATecnico() {
+        this.actual = 'tecnico';
+        document.getElementById('panel-live').classList.remove('active');
+        document.getElementById('panel-tecnico').classList.add('active');
+        document.getElementById('mode-toggle-btn').textContent = '📡 MODO LIVE';
+        document.getElementById('mode-toggle-btn').classList.add('tech-active');
+        // Pausar datos en vivo mientras el técnico opera
+        this._pausado = true;
+        PGP._showToast('Modo técnico — datos en vivo pausados', 'warn');
+        // Poblar inputs con los últimos valores recibidos
+        this._poblarConUltimosValores();
+    },
+
+    _irALive() {
+        this.actual = 'live';
+        document.getElementById('panel-tecnico').classList.remove('active');
+        document.getElementById('panel-live').classList.add('active');
+        document.getElementById('mode-toggle-btn').textContent = '🔧 MODO TÉCNICO';
+        document.getElementById('mode-toggle-btn').classList.remove('tech-active');
+        this._pausado = false;
+        PGP._showToast('Modo live — datos en vivo reanudados', 'ok');
+    },
+
+    volverLive() {
+        this._irALive();
+    },
+
+    setEscenario(esc) {
+        VIVOS.escenario = esc;
+        PGP._showToast('Escenario: ' + esc, 'info');
+    },
+
+    calcularTecnico() {
+        // En modo técnico, calcular con los valores de los inputs
+        calcular();
+        PGP._showToast('Cálculo manual aplicado', 'ok');
+    },
+
+    _poblarConUltimosValores() {
+        // Si hay datos vivos, los cargamos en los inputs del modo técnico
+        const u = VIVOS.ultimo;
+        if (!u) return;
+        const m = {
+            va: u.va, vb: u.vb, vc: u.vc,
+            ia: u.ia, ib: u.ib, ic: u.ic,
+            fp: u.fp, thd_v: u.thd_v, thd_i: u.thd_i, temp: u.temp,
+        };
+        for (const [id, val] of Object.entries(m)) {
+            const el = document.getElementById(id);
+            if (el && val != null) el.value = parseFloat(val).toFixed(
+                id === 'fp' ? 3 : id.startsWith('thd') ? 1 : 1
+            );
+        }
+    },
+};
+
+// ───────────────────────────────────────────────────────────
+// VIVOS — Motor de datos en tiempo real
+// Genera datos locales mientras no hay backend conectado.
+// Cuando hay backend, los datos vienen del WebSocket/REST.
+// ───────────────────────────────────────────────────────────
+const VIVOS = {
+    escenario: 'normal',
+    intervalo: 3000,       // ms entre actualizaciones
+    _timer: null,
+    _t: 0,
+    ultimo: null,          // última medición aplicada
+    historial: {           // últimos 60 puntos por variable
+        thdi: [], fp: [], temp: [], va: [], thdv: []
+    },
+
+    iniciar() {
+        this._tick();
+        this._timer = setInterval(() => this._tick(), this.intervalo);
+        console.log('[VIVOS] Motor de datos iniciado — escenario:', this.escenario);
+    },
+
+    detener() {
+        if (this._timer) { clearInterval(this._timer); this._timer = null; }
+    },
+
+    // Recibir medición desde backend (WebSocket o REST)
+    inyectarDesdeBackend(med) {
+        if (MODO._pausado) return; // no actualizar si el técnico está operando
+        const m = {
+            va: med.tension_a,    vb: med.tension_b,    vc: med.tension_c,
+            ia: med.corriente_a,  ib: med.corriente_b,  ic: med.corriente_c,
+            fp: med.factor_potencia,
+            thd_v: med.thd_voltaje,   thd_i: med.thd_corriente,
+            temp: med.temperatura_gabinete,
+        };
+        this.ultimo = m;
+        this._aplicar(m);
+    },
+
+    _tick() {
+        // Si el backend está activo, los datos vienen de él
+        if (PGP.cfg.liveMode) return;
+        if (MODO._pausado) return;
+
+        const m = this._generar();
+        this.ultimo = m;
+        this._aplicar(m);
+        this._t += this.intervalo / 1000;
+    },
+
+    _generar() {
+        const t = this._t;
+        const esc = this.escenario;
+        const V0 = 400, I0 = 80;
+
+        // Variación de carga diaria (ciclo sinusoidal lento)
+        const carga = 0.75 + 0.18 * Math.sin(t / 120) + (Math.random() - 0.5) * 0.04;
+
+        // Tensiones con pequeño ruido (±1%)
+        const rV = () => V0 * (1 + (Math.random() - 0.5) * 0.012);
+        const va = rV(), vb = rV(), vc = rV();
+
+        // Corrientes según carga
+        const rI = () => Math.max(5, I0 * Math.max(0.3, carga) * (1 + (Math.random() - 0.5) * 0.025));
+        const ia = rI(), ib = rI(), ic = rI();
+
+        // Parámetros de calidad según escenario
+        let fp, thd_v, thd_i, temp_delta;
+        switch (esc) {
+            case 'thd_alto':
+                fp    = this._gauss(0.87, 0.015);
+                thd_i = this._gauss(22, 3);
+                thd_v = this._gauss(6.5, 0.8);
+                temp_delta = 12;
+                break;
+            case 'fp_bajo':
+                fp    = this._gauss(0.76, 0.02);
+                thd_i = this._gauss(7.5, 1.5);
+                thd_v = this._gauss(3.8, 0.5);
+                temp_delta = 5;
+                break;
+            case 'falla':
+                fp    = this._gauss(0.68, 0.05);
+                thd_i = this._gauss(36, 5);
+                thd_v = this._gauss(9, 1.5);
+                temp_delta = 25;
+                break;
+            default: // normal
+                fp    = this._gauss(0.88, 0.012);
+                thd_i = this._gauss(6.8, 1.2);
+                thd_v = this._gauss(3.5, 0.4);
+                temp_delta = 0;
+        }
+
+        const temp = this._gauss(37 + 14 * Math.max(0.3, carga) + temp_delta, 1);
+
+        return {
+            va: +va.toFixed(1), vb: +vb.toFixed(1), vc: +vc.toFixed(1),
+            ia: +ia.toFixed(1), ib: +ib.toFixed(1), ic: +ic.toFixed(1),
+            fp: +Math.min(1, Math.max(0.5, fp)).toFixed(3),
+            thd_v: +Math.max(0, thd_v).toFixed(1),
+            thd_i: +Math.max(0, thd_i).toFixed(1),
+            temp:  +Math.min(85, Math.max(-20, temp)).toFixed(1),
+        };
+    },
+
+    _gauss(mu, sigma) {
+        // Box-Muller
+        const u = 1 - Math.random(), v = Math.random();
+        return mu + sigma * Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
+    },
+
+    _aplicar(m) {
+        // ── 1. Actualizar lecturas en el panel lateral ──────────────
+        this._setLR('lr-va',   m.va,    'V',   m.va < 370 || m.va > 440 ? 'err' : '');
+        this._setLR('lr-vb',   m.vb,    'V',   m.vb < 370 || m.vb > 440 ? 'err' : '');
+        this._setLR('lr-vc',   m.vc,    'V',   m.vc < 370 || m.vc > 440 ? 'err' : '');
+        this._setLR('lr-ia',   m.ia,    'A',   '');
+        this._setLR('lr-ib',   m.ib,    'A',   '');
+        this._setLR('lr-ic',   m.ic,    'A',   '');
+        this._setLR('lr-thdv', m.thd_v, '%',   m.thd_v > 8 ? 'err' : m.thd_v > 5 ? 'warn' : 'ok');
+        this._setLR('lr-thdi', m.thd_i, '%',   m.thd_i > 20 ? 'err' : m.thd_i > 8 ? 'warn' : 'ok');
+        this._setLR('lr-fp',   m.fp,    '',    m.fp < 0.85 ? 'err' : m.fp < 0.93 ? 'warn' : 'ok');
+        this._setLR('lr-temp', m.temp,  '°C',  m.temp > 70 ? 'err' : m.temp > 55 ? 'warn' : 'ok');
+
+        // Desbalance calculado
+        const vArr = [m.va, m.vb, m.vc];
+        const desb = ((Math.max(...vArr) - Math.min(...vArr)) / Math.min(...vArr) * 100);
+        this._setLR('lr-desb', desb.toFixed(2), '%', desb > 5 ? 'err' : desb > 2 ? 'warn' : 'ok');
+
+        // Timestamp
+        const tsEl = document.getElementById('upd-ts');
+        if (tsEl) tsEl.textContent = new Date().toLocaleTimeString('es-CL', {hour:'2-digit',minute:'2-digit',second:'2-digit'});
+
+        // ── 2. Alimentar los inputs ocultos que usa calcular() ──────
+        const setV = (id, val) => {
+            const el = document.getElementById(id);
+            if (el) el.value = val;
+        };
+        setV('va', m.va); setV('vb', m.vb); setV('vc', m.vc);
+        setV('ia', m.ia); setV('ib', m.ib); setV('ic', m.ic);
+        setV('fp', m.fp); setV('thd_v', m.thd_v); setV('thd_i', m.thd_i);
+        setV('temp', m.temp);
+
+        // ── 3. Actualizar historial (ventana de 60 puntos) ──────────
+        const push = (arr, val) => { arr.push(val); if (arr.length > 60) arr.shift(); };
+        push(this.historial.thdi, m.thd_i);
+        push(this.historial.fp,   m.fp * 100);
+        push(this.historial.temp, m.temp);
+        push(this.historial.va,   m.va);
+        push(this.historial.thdv, m.thd_v);
+
+        // ── 4. Recalcular dashboard automáticamente ─────────────────
+        calcular();
+
+        // ── 5. Actualizar minigráfico del IoT si está visible ───────
+        this._actualizarSparkIoT();
+    },
+
+    _setLR(id, val, unit, cls) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        const prev = parseFloat(el.textContent);
+        el.textContent = val;
+        el.className = 'lr-val' + (cls ? ' ' + cls : '');
+        // Flash de cambio
+        if (!isNaN(prev) && Math.abs(parseFloat(val) - prev) > 0.1) {
+            el.classList.add('flash');
+            setTimeout(() => el.classList.remove('flash'), 150);
+        }
+    },
+
+    _actualizarSparkIoT() {
+        // Actualizar gráfico de histórico en tiempo real si está en pantalla
+        const sec = document.getElementById('sec-iot');
+        if (!sec || !sec.classList.contains('active')) return;
+        if (!state.charts['iot']) return;
+        const ch = state.charts['iot'];
+        const H = this.historial;
+        const labels = H.thdi.map((_, i) => i % 10 === 0 ? '-' + (H.thdi.length - i) + 's' : '');
+        ch.data.labels = labels;
+        ch.data.datasets[0].data = [...H.fp];
+        ch.data.datasets[1].data = [...H.thdi];
+        ch.data.datasets[2].data = [...H.temp];
+        ch.update('none'); // sin animación para no saltear
+    },
+};
+
+// ── Patch: PGP._aplicarMedicionBackend ahora usa VIVOS.inyectarDesdeBackend ──
+PGP._aplicarMedicionBackend = function(med) {
+    VIVOS.inyectarDesdeBackend(med);
+};
+
+// ── Iniciar motor de datos en vivo al cargar ──
+VIVOS.iniciar();
+
+// Init
+show('dashboard');
+</script>
+
+<!-- ══ CHAT PGP-IA ══ -->
+<div class="pgp-chat-wrap">
+    <div class="pgp-chat-box" id="pgp-chat-box">
+        <div class="pgp-chat-hd">
+            <div class="pgp-chat-hd-l">
+                <div class="pgp-av">IA</div>
+                <div>
+                    <div class="pgp-chat-nm">PGP-IA — Asistente Técnico</div>
+                    <div class="pgp-chat-st" id="pgp-llm-st">Verificando Ollama...</div>
+                </div>
+            </div>
+            <button class="pgp-chat-x" onclick="PGP.chat.toggle(false)">✕</button>
+        </div>
+        <div id="pgp-llm-warn" class="pgp-llmwarn" style="display:none">
+            ⚠ Ollama no disponible. Ejecutar:<br>
+            <code style="font-size:8px">ollama serve &amp;&amp; ollama pull mistral:7b-instruct-q4_K_M</code>
+        </div>
+        <div class="pgp-msgs" id="pgp-msgs"></div>
+        <div class="pgp-quick">
+            <div class="pgp-qb" data-q="¿Cuál es el estado actual del sistema?">Estado actual</div>
+            <div class="pgp-qb" data-q="¿Por qué está alta la distorsión armónica THD-I?">¿THD alto?</div>
+            <div class="pgp-qb" data-q="¿Qué norma IEC aplica al factor de potencia?">Norma FP</div>
+            <div class="pgp-qb" data-q="¿Qué acciones correctivas debo tomar hoy?">Acciones urgentes</div>
+        </div>
+        <div class="pgp-alert-b" onclick="PGP.chat.analizarAlertas()">🔴 Analizar alertas activas con IA</div>
+        <div class="pgp-inp-row">
+            <textarea class="pgp-ta" id="pgp-ta" placeholder="Consulta al asistente técnico PGP-IA..." rows="1"></textarea>
+            <button class="pgp-send" id="pgp-send" onclick="PGP.chat.enviar()">➤</button>
+        </div>
+    </div>
+    <button class="pgp-chat-fab" onclick="PGP.chat.toggle()" title="Asistente PGP-IA">
+        ⚡
+        <div class="pgp-notif" id="pgp-notif">!</div>
+    </button>
+</div>
+
+</body>
+</html>

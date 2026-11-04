@@ -1,0 +1,964 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-23T20:32:42.334Z",
+  "title": "Design System: PowerGuardian Pro",
+  "extensions": {
+    "colorMeta": {
+      "paper": {
+        "role": "neutral",
+        "displayName": "Paper",
+        "canonical": "#f6f7f4",
+        "tonalRamp": [
+          "#4a4a49",
+          "#7b7c7a",
+          "#acadab",
+          "#d8d9d7",
+          "#f8f9f6",
+          "#fafbf9",
+          "#fcfdfc",
+          "#fefefe"
+        ]
+      },
+      "panel": {
+        "role": "neutral",
+        "displayName": "Panel",
+        "canonical": "#eef1f0",
+        "tonalRamp": [
+          "#474848",
+          "#777978",
+          "#a7a9a8",
+          "#d1d4d3",
+          "#f1f4f3",
+          "#f6f7f7",
+          "#fafbfb",
+          "#fdfefe"
+        ]
+      },
+      "sheet": {
+        "role": "neutral",
+        "displayName": "Sheet",
+        "canonical": "#ffffff",
+        "tonalRamp": [
+          "#4d4d4d",
+          "#808080",
+          "#b3b3b3",
+          "#e0e0e0",
+          "#ffffff",
+          "#ffffff",
+          "#ffffff",
+          "#ffffff"
+        ]
+      },
+      "sheet-alt": {
+        "role": "neutral",
+        "displayName": "Sheet Alt",
+        "canonical": "#fafbf9",
+        "tonalRamp": [
+          "#4b4b4b",
+          "#7d7e7d",
+          "#afb0ae",
+          "#dcdddb",
+          "#fbfcfa",
+          "#fcfdfc",
+          "#fefefd",
+          "#fffffe"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Ink",
+        "canonical": "#16202b",
+        "tonalRamp": [
+          "#070a0d",
+          "#0b1016",
+          "#0f161e",
+          "#131c26",
+          "#454d55",
+          "#7f848a",
+          "#b9bcbf",
+          "#e8e9ea"
+        ]
+      },
+      "ink-2": {
+        "role": "neutral",
+        "displayName": "Ink 2",
+        "canonical": "#44515e",
+        "tonalRamp": [
+          "#14181c",
+          "#22292f",
+          "#303942",
+          "#3c4753",
+          "#69747e",
+          "#989fa6",
+          "#c7cbcf",
+          "#eceeef"
+        ]
+      },
+      "ink-3": {
+        "role": "neutral",
+        "displayName": "Ink 3",
+        "canonical": "#5b6875",
+        "tonalRamp": [
+          "#1b1f23",
+          "#2e343b",
+          "#404952",
+          "#505c67",
+          "#7c8691",
+          "#a5acb3",
+          "#ced2d6",
+          "#eff0f1"
+        ]
+      },
+      "rule": {
+        "role": "neutral",
+        "displayName": "Rule",
+        "canonical": "#d3dae0",
+        "tonalRamp": [
+          "#3f4143",
+          "#6a6d70",
+          "#94999d",
+          "#bac0c5",
+          "#dce1e6",
+          "#e7ebee",
+          "#f2f4f6",
+          "#fbfbfc"
+        ]
+      },
+      "rule-strong": {
+        "role": "neutral",
+        "displayName": "Rule Strong",
+        "canonical": "#b8c2cc",
+        "tonalRamp": [
+          "#373a3d",
+          "#5c6166",
+          "#81888f",
+          "#a2abb4",
+          "#c6ced6",
+          "#d8dde3",
+          "#eaedf0",
+          "#f8f9fa"
+        ]
+      },
+      "deep-sky": {
+        "role": "primary",
+        "displayName": "Deep Sky",
+        "canonical": "#0369a1",
+        "tonalRamp": [
+          "#012030",
+          "#023551",
+          "#024a71",
+          "#035c8e",
+          "#3587b4",
+          "#74adcb",
+          "#b3d2e3",
+          "#e6f0f6"
+        ]
+      },
+      "deep-sky-deep": {
+        "role": "primary",
+        "displayName": "Deep Sky Deep",
+        "canonical": "#075985",
+        "tonalRamp": [
+          "#021b28",
+          "#042d43",
+          "#053e5d",
+          "#064e75",
+          "#397a9d",
+          "#77a4bc",
+          "#b5cdda",
+          "#e6eef3"
+        ]
+      },
+      "deep-sky-wash": {
+        "role": "primary",
+        "displayName": "Deep Sky Wash",
+        "canonical": "#e6f0f7",
+        "tonalRamp": [
+          "#45484a",
+          "#73787c",
+          "#a1a8ad",
+          "#cad3d9",
+          "#ebf3f9",
+          "#f1f7fb",
+          "#f8fbfd",
+          "#fdfefe"
+        ]
+      },
+      "teal": {
+        "role": "neutral",
+        "displayName": "Teal",
+        "canonical": "#0f766e",
+        "tonalRamp": [
+          "#052321",
+          "#083b37",
+          "#0b534d",
+          "#0d6861",
+          "#3f918b",
+          "#7bb4af",
+          "#b7d6d4",
+          "#e7f1f1"
+        ]
+      },
+      "ok": {
+        "role": "tertiary",
+        "displayName": "Ok",
+        "canonical": "#1e7b46",
+        "tonalRamp": [
+          "#092515",
+          "#0f3e23",
+          "#155631",
+          "#1a6c3e",
+          "#4b956b",
+          "#83b699",
+          "#bcd7c8",
+          "#e9f2ed"
+        ]
+      },
+      "ok-wash": {
+        "role": "tertiary",
+        "displayName": "Ok Wash",
+        "canonical": "#e7f3ec",
+        "tonalRamp": [
+          "#454947",
+          "#747a76",
+          "#a2aaa5",
+          "#cbd6d0",
+          "#ecf5f0",
+          "#f2f8f5",
+          "#f8fbf9",
+          "#fdfefd"
+        ]
+      },
+      "warn": {
+        "role": "tertiary",
+        "displayName": "Warn",
+        "canonical": "#8a5f00",
+        "tonalRamp": [
+          "#291d00",
+          "#453000",
+          "#614300",
+          "#795400",
+          "#a17f33",
+          "#bfa773",
+          "#dccfb3",
+          "#f3efe6"
+        ]
+      },
+      "warn-wash": {
+        "role": "tertiary",
+        "displayName": "Warn Wash",
+        "canonical": "#fbf1dc",
+        "tonalRamp": [
+          "#4b4842",
+          "#7e796e",
+          "#b0a99a",
+          "#ddd4c2",
+          "#fcf4e3",
+          "#fdf7ec",
+          "#fefbf5",
+          "#fffefc"
+        ]
+      },
+      "danger": {
+        "role": "tertiary",
+        "displayName": "Danger",
+        "canonical": "#c0392b",
+        "tonalRamp": [
+          "#3a110d",
+          "#601d16",
+          "#86281e",
+          "#a93226",
+          "#cd6155",
+          "#dc928a",
+          "#ecc4bf",
+          "#f9ebea"
+        ]
+      },
+      "danger-wash": {
+        "role": "tertiary",
+        "displayName": "Danger Wash",
+        "canonical": "#fbe9e6",
+        "tonalRamp": [
+          "#4b4645",
+          "#7e7573",
+          "#b0a3a1",
+          "#ddcdca",
+          "#fcedeb",
+          "#fdf3f1",
+          "#fef8f8",
+          "#fffdfd"
+        ]
+      },
+      "phase-1": {
+        "role": "secondary",
+        "displayName": "Phase 1",
+        "canonical": "#1f5fa8",
+        "tonalRamp": [
+          "#091d32",
+          "#103054",
+          "#164376",
+          "#1b5494",
+          "#4c7fb9",
+          "#84a7cf",
+          "#bccfe5",
+          "#e9eff6"
+        ]
+      },
+      "phase-2": {
+        "role": "secondary",
+        "displayName": "Phase 2",
+        "canonical": "#6d4fc2",
+        "tonalRamp": [
+          "#21183a",
+          "#372861",
+          "#4c3788",
+          "#6046ab",
+          "#8a72ce",
+          "#af9edd",
+          "#d3caed",
+          "#f0edf9"
+        ]
+      },
+      "phase-3": {
+        "role": "secondary",
+        "displayName": "Phase 3",
+        "canonical": "#0f766e",
+        "tonalRamp": [
+          "#052321",
+          "#083b37",
+          "#0b534d",
+          "#0d6861",
+          "#3f918b",
+          "#7bb4af",
+          "#b7d6d4",
+          "#e7f1f1"
+        ]
+      },
+      "rail": {
+        "role": "neutral",
+        "displayName": "Rail",
+        "canonical": "#1f2937",
+        "tonalRamp": [
+          "#090c11",
+          "#10151c",
+          "#161d27",
+          "#1b2430",
+          "#4c545f",
+          "#848991",
+          "#bcbfc3",
+          "#e9eaeb"
+        ]
+      },
+      "rail-line": {
+        "role": "neutral",
+        "displayName": "Rail Line",
+        "canonical": "#334155",
+        "tonalRamp": [
+          "#0f141a",
+          "#1a212b",
+          "#242e3b",
+          "#2d394b",
+          "#5c6777",
+          "#8f97a2",
+          "#c2c6cc",
+          "#ebecee"
+        ]
+      },
+      "rail-text": {
+        "role": "neutral",
+        "displayName": "Rail Text",
+        "canonical": "#e5e7eb",
+        "tonalRamp": [
+          "#454547",
+          "#737476",
+          "#a0a2a5",
+          "#cacbcf",
+          "#eaecef",
+          "#f1f2f4",
+          "#f7f8f9",
+          "#fcfdfd"
+        ]
+      },
+      "rail-muted": {
+        "role": "neutral",
+        "displayName": "Rail Muted",
+        "canonical": "#a3acb9",
+        "tonalRamp": [
+          "#313438",
+          "#52565d",
+          "#727882",
+          "#8f97a3",
+          "#b5bdc7",
+          "#ccd1d9",
+          "#e3e6ea",
+          "#f6f7f8"
+        ]
+      },
+      "rail-hover": {
+        "role": "neutral",
+        "displayName": "Rail Hover",
+        "canonical": "#2b3647",
+        "tonalRamp": [
+          "#0d1015",
+          "#161b24",
+          "#1e2632",
+          "#26303e",
+          "#555e6c",
+          "#8a909a",
+          "#bfc3c8",
+          "#eaebed"
+        ]
+      },
+      "paper-dark": {
+        "role": "neutral",
+        "displayName": "Paper Dark",
+        "canonical": "#0e1620",
+        "tonalRamp": [
+          "#04070a",
+          "#070b10",
+          "#0a0f16",
+          "#0c131c",
+          "#3e454d",
+          "#7a7f84",
+          "#b7b9bc",
+          "#e7e8e9"
+        ]
+      },
+      "panel-dark": {
+        "role": "neutral",
+        "displayName": "Panel Dark",
+        "canonical": "#121c27",
+        "tonalRamp": [
+          "#05080c",
+          "#090e14",
+          "#0d141b",
+          "#101922",
+          "#414952",
+          "#7d8288",
+          "#b8bbbe",
+          "#e7e8e9"
+        ]
+      },
+      "sheet-dark": {
+        "role": "neutral",
+        "displayName": "Sheet Dark",
+        "canonical": "#16202b",
+        "tonalRamp": [
+          "#070a0d",
+          "#0b1016",
+          "#0f161e",
+          "#131c26",
+          "#454d55",
+          "#7f848a",
+          "#b9bcbf",
+          "#e8e9ea"
+        ]
+      },
+      "sheet-alt-dark": {
+        "role": "neutral",
+        "displayName": "Sheet Alt Dark",
+        "canonical": "#131c26",
+        "tonalRamp": [
+          "#06080b",
+          "#0a0e13",
+          "#0d141b",
+          "#111921",
+          "#424951",
+          "#7d8288",
+          "#b8bbbe",
+          "#e7e8e9"
+        ]
+      },
+      "ink-dark": {
+        "role": "neutral",
+        "displayName": "Ink Dark",
+        "canonical": "#e6edf3",
+        "tonalRamp": [
+          "#454749",
+          "#73777a",
+          "#a1a6aa",
+          "#cad1d6",
+          "#ebf1f5",
+          "#f1f5f8",
+          "#f8fafb",
+          "#fdfdfe"
+        ]
+      },
+      "ink-2-dark": {
+        "role": "neutral",
+        "displayName": "Ink 2 Dark",
+        "canonical": "#b3c0cd",
+        "tonalRamp": [
+          "#363a3e",
+          "#5a6067",
+          "#7d8690",
+          "#9ea9b4",
+          "#c2cdd7",
+          "#d5dce4",
+          "#e8ecf0",
+          "#f7f9fa"
+        ]
+      },
+      "ink-3-dark": {
+        "role": "neutral",
+        "displayName": "Ink 3 Dark",
+        "canonical": "#8d9cad",
+        "tonalRamp": [
+          "#2a2f34",
+          "#474e57",
+          "#636d79",
+          "#7c8998",
+          "#a4b0bd",
+          "#c0c9d2",
+          "#dde1e6",
+          "#f4f5f7"
+        ]
+      },
+      "rule-dark": {
+        "role": "neutral",
+        "displayName": "Rule Dark",
+        "canonical": "#263443",
+        "tonalRamp": [
+          "#0b1014",
+          "#131a22",
+          "#1b242f",
+          "#212e3b",
+          "#515d69",
+          "#888f98",
+          "#bec2c7",
+          "#e9ebec"
+        ]
+      },
+      "rule-strong-dark": {
+        "role": "neutral",
+        "displayName": "Rule Strong Dark",
+        "canonical": "#34465a",
+        "tonalRamp": [
+          "#10151b",
+          "#1a232d",
+          "#24313f",
+          "#2e3e4f",
+          "#5d6b7b",
+          "#8f99a4",
+          "#c2c8ce",
+          "#ebedef"
+        ]
+      },
+      "sky-dark": {
+        "role": "primary",
+        "displayName": "Sky Dark",
+        "canonical": "#5aa9e6",
+        "tonalRamp": [
+          "#1b3345",
+          "#2d5573",
+          "#3f76a1",
+          "#4f95ca",
+          "#7bbaeb",
+          "#a4d0f1",
+          "#cee5f8",
+          "#eff6fd"
+        ]
+      },
+      "sky-wash-dark": {
+        "role": "primary",
+        "displayName": "Sky Wash Dark",
+        "canonical": "#16304a",
+        "tonalRamp": [
+          "#070e16",
+          "#0b1825",
+          "#0f2234",
+          "#132a41",
+          "#45596e",
+          "#7f8d9b",
+          "#b9c1c9",
+          "#e8eaed"
+        ]
+      },
+      "ok-dark": {
+        "role": "tertiary",
+        "displayName": "Ok Dark",
+        "canonical": "#4cc38a",
+        "tonalRamp": [
+          "#173b29",
+          "#266245",
+          "#358961",
+          "#43ac79",
+          "#70cfa1",
+          "#9ddebf",
+          "#c9eddc",
+          "#edf9f3"
+        ]
+      },
+      "ok-wash-dark": {
+        "role": "tertiary",
+        "displayName": "Ok Wash Dark",
+        "canonical": "#12302a",
+        "tonalRamp": [
+          "#050e0d",
+          "#091815",
+          "#0d221d",
+          "#102a25",
+          "#415955",
+          "#7d8d8a",
+          "#b8c1bf",
+          "#e7eaea"
+        ]
+      },
+      "warn-dark": {
+        "role": "tertiary",
+        "displayName": "Warn Dark",
+        "canonical": "#e0a526",
+        "tonalRamp": [
+          "#43320b",
+          "#705313",
+          "#9d731b",
+          "#c59121",
+          "#e6b751",
+          "#eece88",
+          "#f6e4be",
+          "#fcf6e9"
+        ]
+      },
+      "warn-wash-dark": {
+        "role": "tertiary",
+        "displayName": "Warn Wash Dark",
+        "canonical": "#352a12",
+        "tonalRamp": [
+          "#100d05",
+          "#1b1509",
+          "#251d0d",
+          "#2f2510",
+          "#5d5541",
+          "#908a7d",
+          "#c2bfb8",
+          "#ebeae7"
+        ]
+      },
+      "danger-dark": {
+        "role": "tertiary",
+        "displayName": "Danger Dark",
+        "canonical": "#f07167",
+        "tonalRamp": [
+          "#48221f",
+          "#783934",
+          "#a84f48",
+          "#d3635b",
+          "#f38d85",
+          "#f7b1ab",
+          "#fbd4d1",
+          "#fef1f0"
+        ]
+      },
+      "danger-wash-dark": {
+        "role": "tertiary",
+        "displayName": "Danger Wash Dark",
+        "canonical": "#3a1c1f",
+        "tonalRamp": [
+          "#110809",
+          "#1d0e10",
+          "#291416",
+          "#33191b",
+          "#61494c",
+          "#938284",
+          "#c4bbbc",
+          "#ebe8e9"
+        ]
+      },
+      "phase-1-dark": {
+        "role": "secondary",
+        "displayName": "Phase 1 Dark",
+        "canonical": "#6aa8ec",
+        "tonalRamp": [
+          "#203247",
+          "#355476",
+          "#4a76a5",
+          "#5d94d0",
+          "#88b9f0",
+          "#adcff5",
+          "#d2e5f9",
+          "#f0f6fd"
+        ]
+      },
+      "phase-2-dark": {
+        "role": "secondary",
+        "displayName": "Phase 2 Dark",
+        "canonical": "#a993ec",
+        "tonalRamp": [
+          "#332c47",
+          "#554a76",
+          "#7667a5",
+          "#9581d0",
+          "#baa9f0",
+          "#d0c4f5",
+          "#e5dff9",
+          "#f6f4fd"
+        ]
+      },
+      "phase-3-dark": {
+        "role": "secondary",
+        "displayName": "Phase 3 Dark",
+        "canonical": "#4fb8ae",
+        "tonalRamp": [
+          "#183734",
+          "#285c57",
+          "#37817a",
+          "#46a299",
+          "#72c6be",
+          "#9ed8d2",
+          "#caeae7",
+          "#edf8f7"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Headline reading values in the readings sheet."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "KPI strip values."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Top bar page title."
+      },
+      "title-sheet": {
+        "displayName": "Sheet Title",
+        "purpose": "Card titles."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Base text, table cells, status sentence."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Reading, KPI, gauge and form labels; clock."
+      },
+      "caption": {
+        "displayName": "Caption",
+        "purpose": "Chips, table headers, limit lines. Floor size."
+      }
+    },
+    "shadows": [
+      {
+        "name": "sheet-rest",
+        "value": "0 1px 2px rgba(22,32,43,.06), 0 4px 14px rgba(22,32,43,.05)",
+        "purpose": "Every sheet at rest (light). Dark: 0 1px 2px rgba(0,0,0,.3), 0 4px 14px rgba(0,0,0,.2)."
+      },
+      {
+        "name": "sheet-lifted",
+        "value": "0 2px 4px rgba(22,32,43,.08), 0 10px 24px rgba(22,32,43,.1)",
+        "purpose": "Clickable sheet hover, with translateY(-2px). Dark: 0 2px 4px rgba(0,0,0,.35), 0 10px 24px rgba(0,0,0,.3)."
+      },
+      {
+        "name": "topbar",
+        "value": "0 1px 0 var(--border), 0 6px 18px rgba(22,32,43,.04)",
+        "purpose": "Translucent top bar edge, with backdrop-filter: saturate(1.4) blur(10px)."
+      },
+      {
+        "name": "drawer",
+        "value": "8px 0 32px rgba(0,0,0,.35)",
+        "purpose": "Open mobile rail drawer only."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-out-expo",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Default easing for all entrances and state changes."
+      },
+      {
+        "name": "sheet-rise",
+        "value": "0.5s cubic-bezier(0.16, 1, 0.3, 1); translateY(10px) to rest; 40ms stagger capped at 200ms",
+        "purpose": "Staggered sheet entrance when a tab opens."
+      },
+      {
+        "name": "value-tick",
+        "value": "0.6s cubic-bezier(0.16, 1, 0.3, 1); opacity .35, translateY(-3px), blur(1px) to rest",
+        "purpose": "A new live value arrives."
+      },
+      {
+        "name": "hist-grow",
+        "value": "0.45s cubic-bezier(0.16, 1, 0.3, 1); scaleY(0.2) to 1 from bottom",
+        "purpose": "Newest history bar grows in."
+      },
+      {
+        "name": "live-ripple",
+        "value": "2s cubic-bezier(0, 0, 0.2, 1) infinite; scale 1 to 2.6, opacity .6 to 0",
+        "purpose": "Live dot ripple."
+      },
+      {
+        "name": "gauge-fill",
+        "value": "stroke-dashoffset 0.7s cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Gauge arc fill; the only animated gauge property."
+      },
+      {
+        "name": "theme-turn",
+        "value": "0.45s cubic-bezier(0.16, 1, 0.3, 1); rotate(-90deg) scale(.6) to rest",
+        "purpose": "Theme toggle icon on switch."
+      },
+      {
+        "name": "theme-switch",
+        "value": "background-color, border-color, color, fill, stroke 0.3s; class removed after 350ms",
+        "purpose": "Color transition only while switching theme."
+      },
+      {
+        "name": "drawer-slide",
+        "value": "transform 0.25s cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Mobile rail drawer."
+      },
+      {
+        "name": "login-wave",
+        "value": "translateX(-200px) 6s linear infinite",
+        "purpose": "Three-phase waveform on the login brand panel."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "prefers-reduced-motion: reduce",
+        "purpose": "Disables every animation and transition above."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "login-stack",
+        "value": "760px"
+      },
+      {
+        "name": "mobile",
+        "value": "820px"
+      },
+      {
+        "name": "tablet",
+        "value": "1100px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Deep-sky submit action, used on the login form.",
+      "html": "<button class=\"ds-btn-primary\">Ingresar</button>",
+      "css": ".ds-btn-primary{background:var(--rail-active,#0369a1);color:#fff;border:none;border-radius:6px;padding:11px 24px;font:700 14px 'Public Sans Variable',system-ui,sans-serif;cursor:pointer;transition:background-color .15s,transform .1s}.ds-btn-primary:hover{background:#075985}.ds-btn-primary:focus-visible{outline:2px solid var(--accent,#0369a1);outline-offset:2px}.ds-btn-primary:active{transform:scale(.98)}"
+    },
+    {
+      "name": "Icon Button",
+      "kind": "button",
+      "refersTo": "button-icon",
+      "description": "Theme toggle and menu button in the top bar.",
+      "html": "<button class=\"ds-btn-icon\" aria-label=\"Tema\"><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z\"/></svg></button>",
+      "css": ".ds-btn-icon{width:40px;height:40px;display:grid;place-items:center;border:1px solid var(--border,#d3dae0);border-radius:8px;background:var(--bg-card,#fff);color:var(--txt1,#16202b);cursor:pointer;transition:background-color .15s,border-color .15s}.ds-btn-icon:hover{background:var(--bg-deep,#f6f7f4);border-color:var(--border2,#b8c2cc)}.ds-btn-icon:focus-visible{outline:2px solid var(--accent,#0369a1);outline-offset:2px}.ds-btn-icon:active{transform:scale(.97)}"
+    },
+    {
+      "name": "Text Field",
+      "kind": "input",
+      "refersTo": "input-field",
+      "description": "Login field with deep-sky focus ring.",
+      "html": "<label class=\"ds-label\">Usuario<input class=\"ds-input\" placeholder=\"usuario\"></label>",
+      "css": ".ds-label{display:block;font:600 13px 'Public Sans Variable',system-ui,sans-serif;color:var(--txt2,#44515e)}.ds-input{display:block;width:100%;margin-top:6px;padding:10px 12px;border:1px solid var(--border2,#b8c2cc);border-radius:6px;background:var(--bg-card,#fff);color:var(--txt1,#16202b);font:400 14px 'Public Sans Variable',system-ui,sans-serif;transition:border-color .15s,box-shadow .15s}.ds-input::placeholder{color:var(--txt3,#5b6875)}.ds-input:focus{outline:none;border-color:var(--accent,#0369a1);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent,#0369a1) 22%,transparent)}"
+    },
+    {
+      "name": "Navigation Rail",
+      "kind": "nav",
+      "refersTo": "nav-item",
+      "description": "Slate rail with grouped items and a single deep-sky active item.",
+      "html": "<nav class=\"ds-rail\"><div class=\"ds-rail-group\">Monitoreo Trifásico</div><button class=\"ds-rail-item ds-active\">Panel Principal</button><button class=\"ds-rail-item\">Tendencias Eléctricas</button></nav>",
+      "css": ".ds-rail{width:248px;background:#1f2937;padding:16px 12px;font-family:'Public Sans Variable',system-ui,sans-serif}.ds-rail-group{font-size:12px;font-weight:600;color:#a3acb9;padding:0 10px 6px}.ds-rail-item{display:flex;width:100%;padding:8px 10px;margin-bottom:2px;border:none;border-radius:6px;background:transparent;color:#e5e7eb;font-size:14px;font-weight:500;text-align:left;cursor:pointer;transition:background-color .15s}.ds-rail-item:hover{background:#2b3647}.ds-rail-item.ds-active{background:#0369a1;color:#fff;font-weight:650}.ds-rail-item:focus-visible{outline:2px solid #fff;outline-offset:-2px}"
+    },
+    {
+      "name": "Status Chips",
+      "kind": "chip",
+      "refersTo": "chip-warn",
+      "description": "Word chips that accompany every status color.",
+      "html": "<span class=\"ds-chip ds-ok\">En vivo</span> <span class=\"ds-chip ds-warn\">Atención</span> <span class=\"ds-chip ds-err\">Fuera de límite</span> <span class=\"ds-chip ds-info\">IEC 61000</span>",
+      "css": ".ds-chip{display:inline-flex;align-items:center;gap:6px;font:700 12px 'Public Sans Variable',system-ui,sans-serif;padding:3px 9px;border-radius:4px;border:1px solid currentColor;white-space:nowrap}.ds-ok{color:var(--ok,#1e7b46);background:var(--ok-bg,#e7f3ec)}.ds-warn{color:var(--warn,#8a5f00);background:var(--warn-bg,#fbf1dc)}.ds-err{color:var(--danger,#c0392b);background:var(--danger-bg,#fbe9e6)}.ds-info{color:var(--accent,#0369a1);background:var(--accent-bg,#e6f0f7)}"
+    },
+    {
+      "name": "Sheet",
+      "kind": "card",
+      "refersTo": "sheet",
+      "description": "Paper sheet; clickable sheets lift on hover.",
+      "html": "<div class=\"ds-sheet\" tabindex=\"0\"><div class=\"ds-sheet-title\">Calidad de energía (IEC 61000)</div><p>Contenido de la hoja.</p></div>",
+      "css": ".ds-sheet{background:var(--bg-card,#fff);border:1px solid var(--border,#d3dae0);border-radius:10px;padding:18px 20px;box-shadow:0 1px 2px rgba(22,32,43,.06),0 4px 14px rgba(22,32,43,.05);color:var(--txt1,#16202b);font:400 14px/1.45 'Public Sans Variable',system-ui,sans-serif;cursor:pointer;transition:border-color .2s,box-shadow .25s,transform .25s cubic-bezier(.16,1,.3,1)}.ds-sheet-title{font-size:15px;font-weight:700;margin-bottom:12px}.ds-sheet:hover{border-color:var(--accent,#0369a1);box-shadow:0 2px 4px rgba(22,32,43,.08),0 10px 24px rgba(22,32,43,.1);transform:translateY(-2px)}.ds-sheet:focus-visible{outline:2px solid var(--accent,#0369a1);outline-offset:2px}"
+    },
+    {
+      "name": "Status Field",
+      "kind": "custom",
+      "refersTo": "status-field-err",
+      "description": "Persistent fixed-height unit status with tag, two lines and action.",
+      "html": "<section class=\"ds-estado\"><span class=\"ds-estado-tag\">Crítico</span><div class=\"ds-estado-txt\"><strong>Panel solar: 3 alertas críticas activas</strong><span>Ahora: THD 7.8 % sobre 5 %</span></div><button class=\"ds-estado-btn\">Ver incidencias</button></section>",
+      "css": ".ds-estado{--tono:var(--danger,#c0392b);display:flex;align-items:center;gap:16px;padding:14px 18px;border-radius:10px;background:var(--danger-bg,#fbe9e6);border:1px solid color-mix(in srgb,var(--tono) 35%,transparent);box-shadow:0 1px 2px rgba(22,32,43,.06),0 4px 14px rgba(22,32,43,.05);font-family:'Public Sans Variable',system-ui,sans-serif}.ds-estado-tag{font-size:13px;font-weight:800;color:#fff;background:var(--tono);border-radius:6px;padding:6px 12px}.ds-estado-txt{flex:1;display:flex;flex-direction:column;gap:2px;min-width:0;font-size:14px;color:var(--txt1,#16202b)}.ds-estado-txt strong,.ds-estado-txt span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.ds-estado-txt span{font-size:13px;color:var(--txt2,#44515e)}.ds-estado-btn{padding:8px 14px;border-radius:6px;border:1px solid var(--tono);background:var(--bg-card,#fff);color:var(--txt1,#16202b);font:700 13px 'Public Sans Variable',system-ui,sans-serif;cursor:pointer}.ds-estado-btn:hover{background:var(--tono);color:#fff}.ds-estado-btn:focus-visible{outline:2px solid var(--accent,#0369a1);outline-offset:2px}"
+    },
+    {
+      "name": "Reading with History Strip",
+      "kind": "custom",
+      "refersTo": "sheet",
+      "description": "Signature: value, limit sentence, bill-style bars with limit band.",
+      "html": "<div class=\"ds-lectura\"><div class=\"ds-lectura-label\">Voltaje L1</div><div class=\"ds-lectura-val\">223.4<small>V</small></div><div class=\"ds-lectura-lim\">Rango 210–240 V · dentro de límite</div><div class=\"ds-hist\"><i style=\"height:50%\"></i><i style=\"height:55%\"></i><i class=\"ds-fuera\" style=\"height:92%\"></i><i style=\"height:48%\"></i><i class=\"ds-fuera\" style=\"height:12%\"></i><i style=\"height:52%\"></i><i style=\"height:58%\"></i><i class=\"ds-ultima\" style=\"height:54%\"></i><span class=\"ds-banda\" style=\"bottom:25%;height:55%\"></span><span class=\"ds-lim\" style=\"bottom:25%\"></span><span class=\"ds-lim\" style=\"bottom:80%\"></span></div></div>",
+      "css": ".ds-lectura{padding:16px 20px 18px;width:300px;font-family:'Public Sans Variable',system-ui,sans-serif;font-variant-numeric:tabular-nums;background:var(--bg-card,#fff)}.ds-lectura-label{font-size:13px;font-weight:600;color:var(--txt2,#44515e)}.ds-lectura-val{font-size:34px;font-weight:700;letter-spacing:-.02em;line-height:1.1;margin-top:4px;color:var(--txt1,#16202b)}.ds-lectura-val small{font-size:15px;font-weight:500;color:var(--txt3,#5b6875);margin-left:4px;letter-spacing:0}.ds-lectura-lim{font-size:12px;margin:4px 0 10px;color:var(--ok,#1e7b46)}.ds-hist{position:relative;display:flex;align-items:flex-end;gap:2px;height:44px;border-bottom:1px solid var(--border,#d3dae0)}.ds-hist i{flex:1;min-height:2px;background:color-mix(in srgb,var(--txt3,#5b6875) 35%,transparent);border-radius:1px 1px 0 0;transition:height .35s cubic-bezier(.16,1,.3,1)}.ds-hist i.ds-fuera{background:var(--danger,#c0392b)}.ds-hist i.ds-ultima{background:var(--txt1,#16202b)}.ds-banda{position:absolute;left:0;right:0;background:color-mix(in srgb,var(--ok,#1e7b46) 9%,transparent)}.ds-lim{position:absolute;left:0;right:0;border-top:1px dashed var(--txt2,#44515e)}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Utility Statement",
+    "overview": "Every equipment unit reads like a printed utility bill: the current reading set large, its limit written beside it in words, and its recent history drawn as a strip of bars under a ruled limit line. The sheets sit on a clean paper ground with a faint millimetre grid, and the navigation is a dark slate rail that holds the brand and the grouped routes. The interface is dense but ordered. One status sentence comes first, then the readings, then the analysis tabs.\n\nStatus is flat colored fields, never light. Green, amber and red appear as washes and solid tags, and each one always carries a word, so color is never the only signal. Numbers are tabular everywhere, so live values tick in place without jitter. Depth is soft paper layering: low ambient shadows under sheets and a translucent top bar. There are no gradients, glows or colored side borders. This rejects the neon control-room look the product replaced, the near-black ground with fluorescent accents, and the generic admin template.\n\nLight and dark are two printings of the same statement. Dark mode swaps the paper for ink-blue (`paper-dark`) and lifts the status hues for contrast. The slate rail and its deep-sky active item stay the same in both themes.",
+    "keyCharacteristics": [
+      "Paper ground, white or ink-blue sheets, one 1px rule value for every divider.",
+      "Dark slate rail with a single deep-sky active state.",
+      "Bill-style history strip with a limit band under every headline reading.",
+      "Flat status fields, each paired with a word chip in a fixed-height slot.",
+      "Public Sans with tabular numerals throughout; hierarchy by scale and weight, not color.",
+      "Motion confirms that data arrived and is fully disabled under reduced motion."
+    ],
+    "rules": [
+      {
+        "name": "The Word With Every Color Rule",
+        "body": "Every color-coded value carries a word: \"Atención\" for amber, \"Fuera de límite\" for red, or a limit sentence such as \"dentro de límite\". The word sits in a fixed-height slot, so a chip that appears or disappears never moves the layout.",
+        "section": "colors"
+      },
+      {
+        "name": "The Red Means Out Rule",
+        "body": "Red is used only for a value outside its limit or a critical incident. Amber is used only for the warning band. A value is never shown amber when it is out of limit.",
+        "section": "colors"
+      },
+      {
+        "name": "The Phase Is Not Status Rule",
+        "body": "Phase colors identify L1, L2 and L3 only. Never use them to signal health.",
+        "section": "colors"
+      },
+      {
+        "name": "The Tabular Everything Rule",
+        "body": "All numerals are tabular. Live values must update without changing width.",
+        "section": "typography"
+      },
+      {
+        "name": "The Twelve Pixel Floor Rule",
+        "body": "Running text and labels stay at 12px or larger. The user rejected 8 to 9px labels.",
+        "section": "typography"
+      },
+      {
+        "name": "The Paper Not Light Rule",
+        "body": "Depth comes from soft shadow and texture only. Never use gradients, glows or colored halos.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "**Do** pair every status color with a word, in a fixed-height slot.",
+      "**Do** use red only for out-of-limit values and critical incidents, and amber only for the warning band.",
+      "**Do** put the limit and its standard next to every headline number, with a history strip under it.",
+      "**Do** divide sheets with the single 1px rule instead of nesting boxes.",
+      "**Do** keep all numerals tabular and all text at 12px or larger.",
+      "**Do** animate only transform, opacity, filter and stroke-dashoffset, with the `cubic-bezier(0.16, 1, 0.3, 1)` ease, and switch every animation off under `prefers-reduced-motion`.",
+      "**Do** keep live charts on fixed Y scales with no per-point animation.",
+      "**Do** keep the theme color transition limited to the moment of switching (0.3s, removed after 350ms)."
+    ],
+    "donts": [
+      "**Don't** use gradients, glows, neon accents or near-black grounds with fluorescent color.",
+      "**Don't** use colored side borders on alerts or cards; status is a flat field.",
+      "**Don't** use timed pop-ups or toasts for status; the persistent status field is the mechanism.",
+      "**Don't** use phase colors to signal status.",
+      "**Don't** let a chip, badge or message change a row's height."
+    ]
+  }
+}

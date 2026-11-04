@@ -1,0 +1,16 @@
+services:
+  db:
+    image: timescale/timescaledb:latest-pg16
+    container_name: pgp_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: '0819bupa'
+      POSTGRES_DB: pgp_db
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgp_db_data:/var/lib/postgresql/data
+
+volumes:
+  pgp_db_data:

@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0}
+body{width:1440px;height:900px;overflow:hidden;font-family:"Public Sans",system-ui,sans-serif;background:#F6F7F4;color:#16202B;display:grid;grid-template-columns:248px 1fr}
+.rail{background:#1F5FA8;color:#fff;padding:24px 18px;display:flex;flex-direction:column;gap:22px}
+.brand b{display:block;font-size:19px;font-weight:800;letter-spacing:-.01em}.brand span{font-size:12px;color:#DCE7F5}
+.grp{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#DCE7F5;margin-bottom:6px}
+.it{display:block;padding:8px 10px;border-radius:6px;font-size:14px;font-weight:500;color:#fff}
+.it.on{background:#fff;color:#1F5FA8;font-weight:700}
+.foot{margin-top:auto;font-size:12px;color:#DCE7F5}
+main{display:flex;flex-direction:column;min-width:0}
+.top{height:68px;border-bottom:1px solid #D3DAE0;display:flex;align-items:center;gap:16px;padding:0 32px;background:#fff}
+.top h1{font-size:20px;font-weight:700}.top small{color:#5B6875;font-size:13px}
+.sel{margin-left:auto;border:1px solid #D3DAE0;border-radius:6px;padding:8px 12px;font-size:14px}
+.live{font-size:13px;font-weight:600;color:#1E7B46;display:flex;align-items:center;gap:6px}.live:before{content:"";width:8px;height:8px;border-radius:50%;background:#1E7B46}
+.theme{width:40px;height:40px;border:1px solid #D3DAE0;border-radius:8px;display:grid;place-items:center;font-size:18px}
+.page{padding:28px 32px;display:flex;flex-direction:column;gap:22px}
+.state{display:flex;gap:18px;align-items:center;background:#C0392B;color:#fff;border-radius:8px;padding:16px 22px}
+.state .tag{font-size:13px;font-weight:800;letter-spacing:.04em;background:#fff;color:#C0392B;border-radius:4px;padding:5px 10px}
+.state h2{font-size:20px;font-weight:700}.state p{color:#fff;font-size:14px;margin-top:2px}
+.state a{margin-left:auto;font-size:14px;font-weight:700;color:#fff;border:1.5px solid #fff;border-radius:6px;padding:8px 14px}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0;background:#fff;border:1px solid #D3DAE0;border-radius:8px}
+.rd{padding:20px 22px;border-right:1px solid #D3DAE0}.rd:last-child{border:0}
+.rd .l{font-size:13px;font-weight:600;color:#5B6875}
+.rd .v{font-size:46px;font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums;margin-top:6px;line-height:1}
+.rd .v small{font-size:16px;font-weight:500;color:#5B6875;margin-left:4px}
+.rd .lim{font-size:12px;color:#5B6875;margin-top:8px}
+.bars{display:flex;align-items:flex-end;gap:3px;height:54px;margin-top:14px;border-bottom:1px solid #D3DAE0;position:relative}
+.bars i{flex:1;background:#B9C8D8;border-radius:1px 1px 0 0}.bars i.x{background:#C0392B}.bars i.w{background:#C98A0B}
+.bars:after{content:"";position:absolute;left:0;right:0;bottom:38px;border-top:1px dashed #16202B;opacity:.45}
+.ok{color:#1E7B46}.wa{color:#9A6A00}.er{color:#C0392B}
+.two{display:grid;grid-template-columns:1.4fr 1fr;gap:22px}
+.card{background:#fff;border:1px solid #D3DAE0;border-radius:8px;padding:18px 22px}
+.card h3{font-size:15px;font-weight:700;margin-bottom:12px}
+table{width:100%;border-collapse:collapse;font-size:14px;font-variant-numeric:tabular-nums}
+th{text-align:left;font-size:12px;color:#5B6875;font-weight:600;padding:8px 0;border-bottom:1px solid #D3DAE0}
+td{padding:9px 0;border-bottom:1px solid #EEF1F3}
+.inc{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #EEF1F3;font-size:14px}
+.stamp{font-size:11px;font-weight:700;border:1.5px solid currentColor;border-radius:4px;padding:2px 6px;letter-spacing:.05em}
+</style></head><body>
+<nav class="rail">
+<div class="brand"><b>PowerGuardian Pro</b><span>INDUC TECH · Calidad de energía</span></div>
+<div><div class="grp">Panel</div><a class="it on">Panel Principal</a></div>
+<div><div class="grp">Monitoreo trifásico</div><a class="it">Parámetros Eléctricos</a><a class="it">Armónicos / THD</a><a class="it">Forma de Onda</a><a class="it">Tendencias</a></div>
+<div><div class="grp">Compensación</div><a class="it">Compensación Activa</a><a class="it">Cortocircuito</a></div>
+<div><div class="grp">Gestión</div><a class="it">Equipos</a><a class="it">Incidencias</a></div>
+<div class="foot">IEC 61000 · IEEE 519</div>
+</nav>
+<main>
+<header class="top"><h1>Panel Principal</h1><small>Panel solar · lectura 16:42:08</small>
+<div class="sel">Equipo: Panel solar ▾</div><span class="live">En vivo</span><div class="theme">☾</div></header>
+<div class="page">
+<section class="state"><span class="tag">CRÍTICO</span><div><h2>2 alertas críticas activas en Panel solar</h2><p>Sobrecorriente L3 (118,4 A &gt; 100 A) y THD 9,8 % sobre el límite IEEE 519 de 5 %.</p></div><a>Ver incidencias →</a></section>
+<section class="grid">
+<div class="rd"><div class="l">Tensión L1</div><div class="v">219,6<small>V</small></div><div class="lim ok">Rango 210–240 V · dentro</div><div class="bars"><i style="height:62%"></i><i style="height:64%"></i><i style="height:60%"></i><i style="height:63%"></i><i style="height:61%"></i><i style="height:66%"></i><i style="height:62%"></i><i style="height:60%"></i><i style="height:63%"></i><i style="height:65%"></i><i style="height:61%"></i><i style="height:62%"></i><i style="height:64%"></i><i style="height:63%"></i><i style="height:60%"></i><i style="height:62%"></i></div></div>
+<div class="rd"><div class="l">THD</div><div class="v er">9,8<small>%</small></div><div class="lim er">Límite IEEE 519: 5 % · excedido</div><div class="bars"><i style="height:30%"></i><i style="height:28%"></i><i style="height:33%"></i><i style="height:31%"></i><i style="height:29%"></i><i style="height:35%"></i><i class="w" style="height:48%"></i><i class="x" style="height:82%"></i><i class="x" style="height:90%"></i><i class="x" style="height:86%"></i><i class="w" style="height:55%"></i><i style="height:34%"></i><i class="x" style="height:88%"></i><i class="x" style="height:92%"></i><i class="x" style="height:84%"></i><i class="x" style="height:89%"></i></div></div>
+<div class="rd"><div class="l">Factor de potencia</div><div class="v wa">0,91</div><div class="lim wa">Mínimo 0,90 · al límite</div><div class="bars"><i style="height:80%"></i><i style="height:82%"></i><i style="height:79%"></i><i style="height:81%"></i><i style="height:78%"></i><i class="w" style="height:70%"></i><i class="w" style="height:72%"></i><i style="height:80%"></i><i style="height:81%"></i><i style="height:79%"></i><i class="w" style="height:71%"></i><i style="height:78%"></i><i style="height:80%"></i><i class="w" style="height:73%"></i><i class="w" style="height:72%"></i><i class="w" style="height:74%"></i></div></div>
+<div class="rd"><div class="l">Frecuencia</div><div class="v">49,98<small>Hz</small></div><div class="lim ok">Nominal 50 Hz · estable</div><div class="bars"><i style="height:50%"></i><i style="height:51%"></i><i style="height:49%"></i><i style="height:50%"></i><i style="height:52%"></i><i style="height:50%"></i><i style="height:49%"></i><i style="height:50%"></i><i style="height:51%"></i><i style="height:50%"></i><i style="height:49%"></i><i style="height:50%"></i><i style="height:51%"></i><i style="height:50%"></i><i style="height:50%"></i><i style="height:49%"></i></div></div>
+</section>
+<section class="two">
+<div class="card"><h3>Últimas lecturas</h3><table><tr><th>Hora</th><th>V L1</th><th>V L2</th><th>V L3</th><th>THD</th><th>FP</th></tr>
+<tr><td>16:42:08</td><td>219,6</td><td>221,0</td><td>217,8</td><td class="er">9,8</td><td class="wa">0,91</td></tr>
+<tr><td>16:42:07</td><td>220,4</td><td>220,1</td><td>218,9</td><td class="er">9,2</td><td class="wa">0,90</td></tr>
+<tr><td>16:42:06</td><td>218,8</td><td>222,3</td><td>219,4</td><td>3,4</td><td class="ok">0,95</td></tr></table></div>
+<div class="card"><h3>Incidencias recientes</h3>
+<div class="inc"><span>Sobrecorriente L3 · 118,4 A</span><span class="stamp er">ACTIVA</span></div>
+<div class="inc"><span>THD alto · 9,8 %</span><span class="stamp er">ACTIVA</span></div>
+<div class="inc"><span>Bajo factor de potencia · 0,86</span><span class="stamp wa">RECONOCIDA</span></div>
+<div class="inc"><span>Sobrevoltaje L1 · 247,2 V</span><span class="stamp ok">RESUELTA</span></div></div>
+</section>
+</div></main></body></html>

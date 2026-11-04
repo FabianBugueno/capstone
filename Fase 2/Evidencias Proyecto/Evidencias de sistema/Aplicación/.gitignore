@@ -1,0 +1,22 @@
+# Entornos virtuales de Python
+venv/
+env/
+.venv/
+
+# Cache de Python
+__pycache__/
+*.pyc
+
+# Variables de entorno reales (nunca subir credenciales)
+.env
+
+# Bases de datos locales / volúmenes de Docker
+*.sqlite3
+
+# Archivos de editor / SO
+.vscode/
+.idea/
+.DS_Store
+
+# Logs
+*.log

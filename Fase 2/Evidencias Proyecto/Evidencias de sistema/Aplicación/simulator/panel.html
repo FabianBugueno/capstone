@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PGP Simulador Electrico</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg: #050E1A;
+            --panel: #091828;
+            --card: #0D2035;
+            --accent: #00C8E8;
+            --accent2: #0099BB;
+            --ok: #2DBD6E;
+            --warn: #E8A000;
+            --danger: #E03040;
+            --border: #12304A;
+            --border2: #1A4060;
+            --t1: #E8F4FF;
+            --t2: #7AACCF;
+            --t3: #3A6080;
+        }
+        body {
+            font-family: 'Segoe UI', 'Consolas', sans-serif;
+            background: var(--bg);
+            color: var(--t1);
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(90deg, #07192B, #050E1A);
+            border-bottom: 1px solid var(--border);
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header h1 {
+            font-size: 14px;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--accent), #00E5C0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .header-sub { font-size: 8px; color: var(--t3); margin-top: 2px; }
+        .header-right { display: flex; gap: 8px; align-items: center; }
+        .badge {
+            font-size: 8px; padding: 3px 8px; border-radius: 3px;
+            border: 1px solid; font-weight: 600; letter-spacing: 0.5px;
+        }
+        .badge-off { color: var(--t3); border-color: var(--t3); }
+        .badge-on { color: var(--ok); border-color: var(--ok); background: rgba(45,189,110,0.1); }
+        .badge-err { color: var(--danger); border-color: var(--danger); background: rgba(224,48,64,0.1); }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 240px 1fr 260px;
+            height: calc(100vh - 46px);
+            gap: 0;
+        }
+
+        /* Panel izquierdo: controles */
+        .controls {
+            background: var(--panel);
+            border-right: 1px solid var(--border);
+            padding: 12px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .section {
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 10px;
+        }
+        .section-title {
+            font-size: 8px; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 0.8px; color: var(--accent); margin-bottom: 8px;
+        }
+        .btn {
+            width: 100%; padding: 8px; border: none; border-radius: 5px;
+            font-size: 10px; font-weight: 700; cursor: pointer;
+            text-transform: uppercase; letter-spacing: 0.4px; transition: all 0.2s;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            color: var(--bg);
+        }
+        .btn-primary:hover { box-shadow: 0 3px 12px rgba(0,200,232,0.3); }
+        .btn-danger {
+            background: transparent; border: 1px solid var(--danger);
+            color: var(--danger);
+        }
+        .btn-danger:hover { background: rgba(224,48,64,0.1); }
+        .sel {
+            width: 100%; padding: 6px 8px; background: var(--bg);
+            border: 1px solid var(--border); border-radius: 4px;
+            color: var(--t1); font-size: 10px; cursor: pointer; outline: none;
+        }
+        .sel:focus { border-color: var(--accent); }
+        .inp {
+            width: 100%; padding: 5px 8px; background: var(--bg);
+            border: 1px solid var(--border); border-radius: 4px;
+            color: var(--t1); font-size: 10px; outline: none;
+            font-family: 'Consolas', monospace;
+        }
+        .inp:focus { border-color: var(--accent); }
+        .row { display: flex; justify-content: space-between; align-items: center; padding: 4px 0; }
+        .row-label { font-size: 9px; color: var(--t2); }
+        .log {
+            font-size: 8px; color: var(--t3); max-height: 120px; overflow-y: auto;
+            font-family: 'Consolas', monospace; line-height: 1.6;
+        }
+        .log-ok { color: var(--ok); }
+        .log-err { color: var(--danger); }
+
+        /* Centro: visualizacion */
+        .center {
+            padding: 14px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px;
+        }
+        .card-title {
+            font-size: 9px; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 0.8px; color: var(--accent); margin-bottom: 10px;
+            border-bottom: 1px solid var(--border); padding-bottom: 6px;
+        }
+        .kpi-row { display: flex; gap: 8px; }
+        .kpi {
+            flex: 1; background: #0A1A2E; border: 1px solid var(--border);
+            border-radius: 7px; padding: 12px; text-align: center;
+        }
+        .kpi-val {
+            font-size: 20px; font-weight: 800;
+            font-family: 'Consolas', monospace;
+        }
+        .kpi-label {
+            font-size: 7.5px; color: var(--t2); text-transform: uppercase;
+            letter-spacing: 0.8px; margin-top: 3px;
+        }
+        .kpi-unit { font-size: 10px; color: var(--t3); }
+
+        .wave-canvas { width: 100%; height: 160px; display: block; }
+
+        .gauges { display: flex; gap: 16px; justify-content: space-around; }
+        .gauge-wrap { text-align: center; }
+        .gauge-label { font-size: 8px; color: var(--t2); margin-top: 3px; }
+
+        /* Panel derecho: lecturas */
+        .readings {
+            background: var(--panel);
+            border-left: 1px solid var(--border);
+            padding: 12px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .reading {
+            display: flex; align-items: center; padding: 5px 0;
+            border-bottom: 1px solid var(--border);
+        }
+        .reading:last-child { border-bottom: none; }
+        .r-label { font-size: 9px; color: var(--t2); width: 70px; }
+        .r-val {
+            font-size: 14px; font-weight: 800;
+            font-family: 'Consolas', monospace;
+            flex: 1; text-align: right;
+            transition: color 0.3s;
+        }
+        .r-unit { font-size: 8px; color: var(--t3); width: 24px; text-align: right; }
+
+        .status-dot {
+            width: 8px; height: 8px; border-radius: 50%;
+            display: inline-block; margin-right: 6px;
+        }
+        .dot-off { background: var(--t3); }
+        .dot-on { background: var(--ok); box-shadow: 0 0 6px var(--ok); animation: pulse 2s infinite; }
+        @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-thumb { background: rgba(0,200,232,0.2); border-radius: 2px; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div>
+            <h1>PGP Simulador Electrico</h1>
+            <div class="header-sub">SIMULADOR DE DATOS TRIFASICOS | POWERGUARDIAN PRO</div>
+        </div>
+        <div class="header-right">
+            <span class="badge badge-off" id="status-badge">DETENIDO</span>
+            <span style="font-size:9px;color:var(--t3)" id="counter">0 mediciones</span>
+        </div>
+    </div>
+
+    <div class="layout">
+        <!-- CONTROLES -->
+        <div class="controls">
+            <div class="section">
+                <div class="section-title">Conexion Backend</div>
+                <div class="row">
+                    <span class="row-label">URL</span>
+                </div>
+                <input class="inp" id="backend-url" value="http://127.0.0.1:8000">
+                <div style="display:flex;gap:4px;margin-top:6px">
+                    <input class="inp" id="email" value="admin@pgp.cl" placeholder="Email" style="flex:1">
+                    <input class="inp" id="pass" value="admin123" type="password" style="width:70px">
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">Configuracion</div>
+                <div class="row">
+                    <span class="row-label">Escenario</span>
+                </div>
+                <select class="sel" id="escenario">
+                    <option value="mixto">Mixto (ponderado)</option>
+                    <option value="normal">Normal</option>
+                    <option value="thd_alto">THD Alto</option>
+                    <option value="fp_bajo">FP Bajo</option>
+                    <option value="sobrecarga">Sobrecarga</option>
+                    <option value="sobrevoltaje">Sobrevoltaje</option>
+                    <option value="bajo_voltaje">Bajo Voltaje</option>
+                    <option value="desbalance">Desbalance</option>
+                    <option value="falla_critica">Falla Critica</option>
+                </select>
+                <div class="row" style="margin-top:6px">
+                    <span class="row-label">Equipo ID</span>
+                    <input class="inp" id="equipo-id" type="number" value="2" min="1" style="width:50px;text-align:right">
+                </div>
+                <div class="row">
+                    <span class="row-label">Intervalo (seg)</span>
+                    <input class="inp" id="intervalo" type="number" value="3" min="1" max="60" style="width:50px;text-align:right">
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">Control</div>
+                <button class="btn btn-primary" id="btn-iniciar" onclick="iniciar()">INICIAR SIMULACION</button>
+                <button class="btn btn-danger" id="btn-detener" onclick="detener()" style="margin-top:6px;display:none">DETENER</button>
+                <button class="btn" style="margin-top:6px;background:transparent;border:1px solid var(--border2);color:var(--t2)" onclick="enviarLote()">
+                    GENERAR LOTE (200)
+                </button>
+            </div>
+
+            <div class="section">
+                <div class="section-title">Log</div>
+                <div class="log" id="log"></div>
+            </div>
+        </div>
+
+        <!-- CENTRO -->
+        <div class="center">
+            <div class="kpi-row">
+                <div class="kpi">
+                    <div class="kpi-val" id="kpi-vl1" style="color:var(--accent)">--</div>
+                    <div class="kpi-label">Voltaje L1 <span class="kpi-unit">V</span></div>
+                </div>
+                <div class="kpi">
+                    <div class="kpi-val" id="kpi-vl2" style="color:var(--ok)">--</div>
+                    <div class="kpi-label">Voltaje L2 <span class="kpi-unit">V</span></div>
+                </div>
+                <div class="kpi">
+                    <div class="kpi-val" id="kpi-vl3" style="color:var(--warn)">--</div>
+                    <div class="kpi-label">Voltaje L3 <span class="kpi-unit">V</span></div>
+                </div>
+                <div class="kpi">
+                    <div class="kpi-val" id="kpi-fp" style="color:var(--ok)">--</div>
+                    <div class="kpi-label">Factor Potencia</div>
+                </div>
+            </div>
+
+            <!-- Forma de onda -->
+            <div class="card">
+                <div class="card-title">Forma de Onda Trifasica</div>
+                <canvas class="wave-canvas" id="wave-canvas"></canvas>
+            </div>
+
+            <!-- Gauges -->
+            <div class="card">
+                <div class="card-title">Indicadores de Calidad</div>
+                <div class="gauges">
+                    <div class="gauge-wrap">
+                        <svg width="100" height="80" viewBox="0 0 100 80" id="g-fp"></svg>
+                        <div class="gauge-label">Factor Potencia</div>
+                    </div>
+                    <div class="gauge-wrap">
+                        <svg width="100" height="80" viewBox="0 0 100 80" id="g-thd"></svg>
+                        <div class="gauge-label">THD (%)</div>
+                    </div>
+                    <div class="gauge-wrap">
+                        <svg width="100" height="80" viewBox="0 0 100 80" id="g-freq"></svg>
+                        <div class="gauge-label">Frecuencia (Hz)</div>
+                    </div>
+                    <div class="gauge-wrap">
+                        <svg width="100" height="80" viewBox="0 0 100 80" id="g-temp"></svg>
+                        <div class="gauge-label">Temperatura (C)</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- LECTURAS -->
+        <div class="readings">
+            <div class="section">
+                <div class="section-title">Estado</div>
+                <div class="reading">
+                    <span class="status-dot dot-off" id="sim-dot"></span>
+                    <span class="r-label" id="sim-estado">Detenido</span>
+                    <span class="r-val" id="sim-escenario" style="font-size:10px;color:var(--t3)">--</span>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">Tensiones</div>
+                <div class="reading">
+                    <span class="r-label">VA</span>
+                    <span class="r-val" id="r-va">--</span>
+                    <span class="r-unit">V</span>
+                </div>
+                <div class="reading">
+                    <span class="r-label">VB</span>
+                    <span class="r-val" id="r-vb">--</span>
+                    <span class="r-unit">V</span>
+                </div>
+                <div class="reading">
+                    <span class="r-label">VC</span>
+                    <span class="r-val" id="r-vc">--</span>
+                    <span class="r-unit">V</span>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">Corrientes</div>
+                <div class="reading">
+                    <span class="r-label">IA</span>
+                    <span class="r-val" id="r-ia">--</span>
+                    <span class="r-unit">A</span>
+                </div>
+                <div class="reading">
+                    <span class="r-label">IB</span>
+                    <span class="r-val" id="r-ib">--</span>
+                    <span class="r-unit">A</span>
+                </div>
+                <div class="reading">
+                    <span class="r-label">IC</span>
+                    <span class="r-val" id="r-ic">--</span>
+                    <span class="r-unit">A</span>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">Calidad Energia</div>
+                <div class="reading">
+                    <span class="r-label">THD</span>
+                    <span class="r-val" id="r-thd">--</span>
+                    <span class="r-unit">%</span>
+                </div>
+                <div class="reading">
+                    <span class="r-label">cos phi</span>
+                    <span class="r-val" id="r-fp">--</span>
+                    <span class="r-unit"></span>
+                </div>
+                <div class="reading">
+                    <span class="r-label">Frecuencia</span>
+                    <span class="r-val" id="r-freq">--</span>
+                    <span class="r-unit">Hz</span>
+                </div>
+                <div class="reading">
+                    <span class="r-label">Temp.</span>
+                    <span class="r-val" id="r-temp">--</span>
+                    <span class="r-unit">C</span>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">Estadisticas</div>
+                <div class="reading">
+                    <span class="r-label">Enviadas</span>
+                    <span class="r-val" id="r-enviadas" style="font-size:11px">0</span>
+                </div>
+                <div class="reading">
+                    <span class="r-label">Errores</span>
+                    <span class="r-val" id="r-errores" style="font-size:11px;color:var(--danger)">0</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script>
+const API = 'http://127.0.0.1:8001';
+let datos = null;
+let animFrame = null;
+let waveOffset = 0;
+
+// ── Log ──
+function log(msg, tipo) {
+    const el = document.getElementById('log');
+    const cls = tipo === 'ok' ? 'log-ok' : tipo === 'err' ? 'log-err' : '';
+    const ts = new Date().toLocaleTimeString('es-CL',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+    el.innerHTML = `<div class="${cls}">[${ts}] ${msg}</div>` + el.innerHTML;
+    if (el.children.length > 50) el.removeChild(el.lastChild);
+}
+
+// ── Gauge SVG ──
+function drawGauge(id, value, max, color) {
+    const svg = document.getElementById(id);
+    const r = 38, cx = 50, cy = 50;
+    const pct = Math.min(value / max, 1);
+    const angle = pct * 240 - 120;
+
+    function arc(sa, ea) {
+        const s = (sa - 90) * Math.PI / 180;
+        const e = (ea - 90) * Math.PI / 180;
+        const x1 = cx + r * Math.cos(s), y1 = cy + r * Math.sin(s);
+        const x2 = cx + r * Math.cos(e), y2 = cy + r * Math.sin(e);
+        const lg = ea - sa > 180 ? 1 : 0;
+        return `M ${x1} ${y1} A ${r} ${r} 0 ${lg} 1 ${x2} ${y2}`;
+    }
+
+    svg.innerHTML = `
+        <path d="${arc(-120, 120)}" fill="none" stroke="#1A4060" stroke-width="5" stroke-linecap="round"/>
+        <path d="${arc(-120, angle)}" fill="none" stroke="${color}" stroke-width="5" stroke-linecap="round"/>
+        <text x="${cx}" y="${cy - 2}" text-anchor="middle" fill="${color}" font-size="14" font-weight="800" font-family="Consolas,monospace">${value}</text>
+        <text x="${cx}" y="${cy + 10}" text-anchor="middle" fill="#3A6080" font-size="8">/ ${max}</text>
+    `;
+}
+
+// ── Forma de onda ──
+function drawWave() {
+    const c = document.getElementById('wave-canvas');
+    const ctx = c.getContext('2d');
+    c.width = c.offsetWidth;
+    c.height = 160;
+    const w = c.width, h = c.height;
+
+    ctx.fillStyle = '#0A1A2E';
+    ctx.fillRect(0, 0, w, h);
+
+    // Grid
+    ctx.strokeStyle = 'rgba(255,255,255,0.04)';
+    ctx.lineWidth = 1;
+    for (let y = 0; y < h; y += 20) { ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(w,y); ctx.stroke(); }
+    for (let x = 0; x < w; x += 30) { ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,h); ctx.stroke(); }
+
+    // Centro
+    ctx.strokeStyle = 'rgba(255,255,255,0.1)';
+    ctx.beginPath(); ctx.moveTo(0, h/2); ctx.lineTo(w, h/2); ctx.stroke();
+
+    const v1 = datos ? datos.voltaje_l1 || 220 : 220;
+    const v2 = datos ? datos.voltaje_l2 || 220 : 220;
+    const v3 = datos ? datos.voltaje_l3 || 220 : 220;
+    const thd = datos ? datos.thd || 3 : 3;
+    const amp = h * 0.35;
+
+    const phases = [
+        { offset: 0, color: '#00C8E8', v: v1 },
+        { offset: 2.094, color: '#2DBD6E', v: v2 },
+        { offset: 4.189, color: '#E8A000', v: v3 },
+    ];
+
+    phases.forEach(p => {
+        const scale = p.v / 220;
+        ctx.beginPath();
+        ctx.strokeStyle = p.color;
+        ctx.lineWidth = 2;
+        for (let x = 0; x < w; x++) {
+            const t = (x / w) * Math.PI * 4 + waveOffset + p.offset;
+            let y = Math.sin(t) * amp * scale;
+            // Agregar distorsion armonica segun THD
+            if (thd > 3) {
+                y += Math.sin(t * 3) * amp * (thd / 100) * 0.5;
+                y += Math.sin(t * 5) * amp * (thd / 150) * 0.3;
+            }
+            if (x === 0) ctx.moveTo(x, h/2 + y);
+            else ctx.lineTo(x, h/2 + y);
+        }
+        ctx.stroke();
+    });
+
+    waveOffset += 0.04;
+    animFrame = requestAnimationFrame(drawWave);
+}
+
+// ── Colorear valores ──
+function vColor(v) {
+    if (v > 240 || v < 210) return 'var(--danger)';
+    if (v > 235 || v < 215) return 'var(--warn)';
+    return 'var(--t1)';
+}
+function thdColor(v) { return v > 8 ? 'var(--danger)' : v > 5 ? 'var(--warn)' : 'var(--ok)'; }
+function fpColor(v) { return v < 0.85 ? 'var(--danger)' : v < 0.92 ? 'var(--warn)' : 'var(--ok)'; }
+
+// ── Actualizar panel ──
+function actualizar(d) {
+    datos = d;
+
+    document.getElementById('kpi-vl1').textContent = d.voltaje_l1;
+    document.getElementById('kpi-vl2').textContent = d.voltaje_l2;
+    document.getElementById('kpi-vl3').textContent = d.voltaje_l3;
+    document.getElementById('kpi-fp').textContent = d.factor_potencia;
+
+    document.getElementById('kpi-vl1').style.color = vColor(d.voltaje_l1);
+    document.getElementById('kpi-vl2').style.color = vColor(d.voltaje_l2);
+    document.getElementById('kpi-vl3').style.color = vColor(d.voltaje_l3);
+    document.getElementById('kpi-fp').style.color = fpColor(d.factor_potencia);
+
+    document.getElementById('r-va').textContent = d.voltaje_l1;
+    document.getElementById('r-vb').textContent = d.voltaje_l2;
+    document.getElementById('r-vc').textContent = d.voltaje_l3;
+    document.getElementById('r-va').style.color = vColor(d.voltaje_l1);
+    document.getElementById('r-vb').style.color = vColor(d.voltaje_l2);
+    document.getElementById('r-vc').style.color = vColor(d.voltaje_l3);
+
+    document.getElementById('r-ia').textContent = d.corriente_l1;
+    document.getElementById('r-ib').textContent = d.corriente_l2;
+    document.getElementById('r-ic').textContent = d.corriente_l3;
+
+    document.getElementById('r-thd').textContent = d.thd;
+    document.getElementById('r-thd').style.color = thdColor(d.thd);
+    document.getElementById('r-fp').textContent = d.factor_potencia;
+    document.getElementById('r-fp').style.color = fpColor(d.factor_potencia);
+    document.getElementById('r-freq').textContent = d.frecuencia;
+    document.getElementById('r-temp').textContent = d.temperatura_gabinete;
+
+    drawGauge('g-fp', d.factor_potencia, 1, fpColor(d.factor_potencia));
+    drawGauge('g-thd', d.thd, 15, thdColor(d.thd));
+    drawGauge('g-freq', d.frecuencia, 51, 'var(--accent)');
+    drawGauge('g-temp', d.temperatura_gabinete, 80, d.temperatura_gabinete > 55 ? 'var(--danger)' : d.temperatura_gabinete > 40 ? 'var(--warn)' : 'var(--ok)');
+}
+
+// ── Polling del estado ──
+let pollInterval = null;
+
+async function pollEstado() {
+    try {
+        const res = await fetch(API + '/');
+        const data = await res.json();
+
+        document.getElementById('r-enviadas').textContent = data.mediciones_enviadas;
+        document.getElementById('r-errores').textContent = data.errores;
+        document.getElementById('counter').textContent = data.mediciones_enviadas + ' mediciones';
+
+        const badge = document.getElementById('status-badge');
+        const dot = document.getElementById('sim-dot');
+        const estado = document.getElementById('sim-estado');
+        const esc = document.getElementById('sim-escenario');
+
+        if (data.activo) {
+            badge.className = 'badge badge-on'; badge.textContent = 'ACTIVO';
+            dot.className = 'status-dot dot-on';
+            estado.textContent = 'Simulando';
+            esc.textContent = data.escenario;
+            document.getElementById('btn-iniciar').style.display = 'none';
+            document.getElementById('btn-detener').style.display = 'block';
+        } else {
+            badge.className = 'badge badge-off'; badge.textContent = 'DETENIDO';
+            dot.className = 'status-dot dot-off';
+            estado.textContent = 'Detenido';
+            document.getElementById('btn-iniciar').style.display = 'block';
+            document.getElementById('btn-detener').style.display = 'none';
+        }
+
+        // Obtener ultima medicion del historial
+        const hres = await fetch(API + '/historial');
+        const hdata = await hres.json();
+        if (hdata.registros && hdata.registros.length > 0) {
+            const last = hdata.registros[hdata.registros.length - 1];
+            // Simular datos para visualizacion
+            if (last.v_l1) {
+                actualizar({
+                    voltaje_l1: Math.round(last.v_l1 * 10) / 10,
+                    voltaje_l2: Math.round((last.v_l1 + (Math.random()-0.5)*6) * 10) / 10,
+                    voltaje_l3: Math.round((last.v_l1 + (Math.random()-0.5)*6) * 10) / 10,
+                    corriente_l1: Math.round((55 + Math.random()*30) * 10) / 10,
+                    corriente_l2: Math.round((55 + Math.random()*30) * 10) / 10,
+                    corriente_l3: Math.round((55 + Math.random()*30) * 10) / 10,
+                    thd: Math.round(last.thd * 10) / 10,
+                    frecuencia: Math.round((50 + (Math.random()-0.5)*0.2) * 100) / 100,
+                    factor_potencia: Math.round(last.fp * 100) / 100,
+                    temperatura_gabinete: Math.round((35 + Math.random()*15) * 10) / 10,
+                });
+            }
+        }
+    } catch(e) {
+        document.getElementById('status-badge').className = 'badge badge-err';
+        document.getElementById('status-badge').textContent = 'SIN CONEXION';
+    }
+}
+
+// ── Acciones ──
+async function iniciar() {
+    const body = {
+        escenario: document.getElementById('escenario').value,
+        equipo_id: parseInt(document.getElementById('equipo-id').value),
+        intervalo: parseInt(document.getElementById('intervalo').value),
+        backend_url: document.getElementById('backend-url').value,
+        email: document.getElementById('email').value,
+        password: document.getElementById('pass').value,
+    };
+    try {
+        const res = await fetch(API + '/iniciar', {
+            method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(body)
+        });
+        const data = await res.json();
+        if (data.error) { log(data.error, 'err'); return; }
+        log('Simulacion iniciada: ' + body.escenario, 'ok');
+    } catch(e) { log('Error conectando al simulador', 'err'); }
+}
+
+async function detener() {
+    try {
+        const res = await fetch(API + '/detener', { method: 'POST' });
+        const data = await res.json();
+        log('Detenido. Enviadas: ' + data.mediciones_enviadas, 'ok');
+    } catch(e) { log('Error', 'err'); }
+}
+
+async function enviarLote() {
+    log('Generando lote de 200...', '');
+    try {
+        const res = await fetch(API + '/lote', {
+            method: 'POST', headers: {'Content-Type':'application/json'},
+            body: JSON.stringify({
+                escenario: document.getElementById('escenario').value,
+                equipo_id: parseInt(document.getElementById('equipo-id').value),
+                cantidad: 200
+            })
+        });
+        const data = await res.json();
+        if (data.error) { log(data.error, 'err'); return; }
+        log('Lote: ' + data.creadas + ' creadas, ' + data.errores + ' errores', 'ok');
+    } catch(e) { log('Error', 'err'); }
+}
+
+// Cambiar escenario en caliente
+document.getElementById('escenario').addEventListener('change', async function() {
+    try {
+        await fetch(API + '/escenario/' + this.value, { method: 'POST' });
+        log('Escenario: ' + this.value, 'ok');
+    } catch(e) {}
+});
+
+// Iniciar polling y animacion
+pollInterval = setInterval(pollEstado, 2000);
+pollEstado();
+drawWave();
+</script>
+</body>
+</html>

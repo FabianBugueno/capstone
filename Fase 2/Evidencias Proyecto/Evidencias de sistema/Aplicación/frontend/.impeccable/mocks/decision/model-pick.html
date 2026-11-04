@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Semi+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0}
+body{width:1440px;height:900px;overflow:hidden;font-family:"Barlow",system-ui,sans-serif;background:#F3F3EF;color:#1E1E1E}
+.earth{height:8px;background:#3D8B3D;border-bottom:3px solid #D9B51C}
+.top{height:64px;display:flex;align-items:center;gap:28px;padding:0 32px;background:#fff;border-bottom:1px solid #D8D8D2}
+.top b{font-family:"Barlow Semi Condensed";font-size:22px;font-weight:700}.top b span{font-weight:500;color:#6B6B66;font-size:14px;margin-left:8px}
+.tabs{display:flex;gap:4px}.tabs a{font-size:15px;font-weight:600;padding:20px 12px;color:#55554F}.tabs a.on{color:#1E1E1E;box-shadow:inset 0 -3px #2F6FD6}
+.r{margin-left:auto;display:flex;gap:12px;align-items:center}
+.sel{border:1px solid #D8D8D2;border-radius:6px;padding:8px 12px;font-size:14px;background:#fff}
+.theme{width:40px;height:40px;border:1px solid #D8D8D2;border-radius:8px;display:grid;place-items:center}
+.page{padding:26px 32px;display:flex;flex-direction:column;gap:20px}
+.status{display:flex;gap:18px;align-items:center;background:#fff;border:1px solid #D8D8D2;border-radius:8px;padding:16px 20px}
+.badge{font-family:"Barlow Semi Condensed";font-weight:700;font-size:14px;background:#B3261E;color:#fff;padding:6px 12px;border-radius:4px;letter-spacing:.04em}
+.status p{font-size:17px}.status small{margin-left:auto;color:#6B6B66;font-size:14px}
+.phases{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.ph{background:#fff;border:1px solid #D8D8D2;border-radius:8px;overflow:hidden}
+.ph .cab{height:14px}.l1 .cab{background:#8B5A2B}.l2 .cab{background:#1E1E1E}.l3 .cab{background:#8A8F94}
+.ph .in{padding:18px 22px}
+.ph h2{font-family:"Barlow Semi Condensed";font-size:24px;font-weight:700;display:flex;gap:10px;align-items:center}
+.dot{width:14px;height:14px;border-radius:50%}
+.row{display:flex;justify-content:space-between;align-items:baseline;margin-top:16px}
+.row span{font-size:14px;color:#6B6B66}.row b{font-size:40px;font-weight:600;font-variant-numeric:tabular-nums}.row b small{font-size:16px;color:#6B6B66;margin-left:3px}
+.er{color:#B3261E}.wa{color:#9A6A00}.ok{color:#2E7D32}
+.spark{height:46px;margin-top:14px;border-bottom:1px solid #E6E6E0}
+.two{display:grid;grid-template-columns:2fr 1fr;gap:20px}
+.card{background:#fff;border:1px solid #D8D8D2;border-radius:8px;padding:18px 22px}
+.card h3{font-family:"Barlow Semi Condensed";font-size:17px;font-weight:700;margin-bottom:12px}
+.kv{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid #EEEEE8;font-size:15px}.kv b{font-variant-numeric:tabular-nums}
+</style></head><body>
+<div class="earth"></div>
+<header class="top"><b>PowerGuardian Pro<span>INDUC TECH</span></b>
+<nav class="tabs"><a class="on">Panel</a><a>Monitoreo trifásico</a><a>Compensación</a><a>Equipos</a><a>Incidencias</a></nav>
+<div class="r"><div class="sel">Panel solar ▾</div><div class="theme">☾</div></div></header>
+<div class="page">
+<section class="status"><span class="badge">CRÍTICO</span><p>2 alertas activas: sobrecorriente en <b>L3</b> y THD 9,8 % (IEEE 519: 5 %)</p><small>En vivo · 16:42:08</small></section>
+<section class="phases">
+<div class="ph l1"><div class="cab"></div><div class="in"><h2><i class="dot" style="background:#8B5A2B"></i>Fase L1</h2>
+<div class="row"><span>Tensión</span><b>219,6<small>V</small></b></div><div class="row"><span>Corriente</span><b>58,3<small>A</small></b></div>
+<svg class="spark" viewBox="0 0 400 46" width="100%"><polyline fill="none" stroke="#8B5A2B" stroke-width="2.5" points="0,24 40,22 80,26 120,23 160,25 200,21 240,24 280,22 320,25 360,23 400,24"/></svg></div></div>
+<div class="ph l2"><div class="cab"></div><div class="in"><h2><i class="dot" style="background:#1E1E1E"></i>Fase L2</h2>
+<div class="row"><span>Tensión</span><b>221,0<small>V</small></b></div><div class="row"><span>Corriente</span><b>48,6<small>A</small></b></div>
+<svg class="spark" viewBox="0 0 400 46" width="100%"><polyline fill="none" stroke="#1E1E1E" stroke-width="2.5" points="0,26 40,25 80,23 120,26 160,24 200,25 240,22 280,24 320,23 360,25 400,24"/></svg></div></div>
+<div class="ph l3"><div class="cab"></div><div class="in"><h2><i class="dot" style="background:#8A8F94"></i>Fase L3</h2>
+<div class="row"><span>Tensión</span><b>217,8<small>V</small></b></div><div class="row"><span>Corriente</span><b class="er">118,4<small>A</small></b></div>
+<svg class="spark" viewBox="0 0 400 46" width="100%"><polyline fill="none" stroke="#8A8F94" stroke-width="2.5" points="0,30 40,29 80,31 120,28 160,30 200,18 240,10 280,8 320,9 360,7 400,8"/></svg></div></div>
+</section>
+<section class="two">
+<div class="card"><h3>Calidad de energía</h3><div class="kv"><span>THD</span><b class="er">9,8 %</b></div><div class="kv"><span>Factor de potencia</span><b class="wa">0,91</b></div><div class="kv"><span>Frecuencia</span><b>49,98 Hz</b></div><div class="kv"><span>Desbalance de tensión</span><b class="ok">1,47 %</b></div></div>
+<div class="card"><h3>Incidencias</h3><div class="kv"><span>Sobrecorriente L3</span><b class="er">Activa</b></div><div class="kv"><span>THD alto</span><b class="er">Activa</b></div><div class="kv"><span>Bajo FP</span><b class="wa">Reconocida</b></div></div>
+</section></div></body></html>
