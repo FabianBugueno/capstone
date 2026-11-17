@@ -2,9 +2,11 @@ import { useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import useTema from "../hooks/useTema";
+import AlertaCritica from "./AlertaCritica";
 import {
   IconoArmonicos,
   IconoCompensacion,
+  IconoContraer,
   IconoCortocircuito,
   IconoEquipos,
   IconoIncidencias,
@@ -13,6 +15,7 @@ import {
   IconoOnda,
   IconoPanel,
   IconoParametros,
+  IconoPredicciones,
   IconoSalir,
   IconoSol,
   IconoTendencias,
@@ -32,6 +35,7 @@ const navItems = [
   { label: "Cortocircuito / Protección", path: "/cortocircuito", group: "Compensación", icon: <IconoCortocircuito />, sub: "IEC 60909 · NFPA 70E · curvas de protección" },
   { label: "Equipos", path: "/equipos", group: "Gestión", icon: <IconoEquipos />, sub: "Registro y estado de los equipos monitoreados" },
   { label: "Incidencias", path: "/incidencias", group: "Alertas", icon: <IconoIncidencias />, sub: "Alertas detectadas y su seguimiento" },
+  { label: "Pronóstico de Fallas", path: "/predicciones", group: "Alertas", icon: <IconoPredicciones />, sub: "Historial de análisis, riesgo de falla y reportes para descargar" },
 ];
 
 export default function Layout({ children }: LayoutProps) {
@@ -39,6 +43,22 @@ export default function Layout({ children }: LayoutProps) {
   const location = useLocation();
   const [tema, alternarTema] = useTema();
   const [menuAbierto, setMenuAbierto] = useState(false);
+  const [contraido, setContraido] = useState(() => {
+    try {
+      return localStorage.getItem("menuContraido") === "1";
+    } catch {
+      return false;
+    }
+  });
+  const alternarContraido = () =>
+    setContraido((c) => {
+      try {
+        localStorage.setItem("menuContraido", c ? "0" : "1");
+      } catch {
+        // sin almacenamiento: la preferencia dura solo esta sesion
+      }
+      return !c;
+    });
 
   const logout = () => {
     localStorage.removeItem("token");
@@ -70,14 +90,11 @@ export default function Layout({ children }: LayoutProps) {
   return (
     <div className="pgp-app">
       {menuAbierto && <div className="pgp-velo" onClick={() => setMenuAbierto(false)} />}
-      <aside className={`pgp-sidebar ${menuAbierto ? "abierto" : ""}`}>
+      <aside className={`pgp-sidebar ${menuAbierto ? "abierto" : ""} ${contraido ? "contraido" : ""}`}>
         <div className="pgp-brand">
+          <div className="pgp-brand-mini" aria-hidden="true">PGP</div>
           <div className="pgp-brand-name">PowerGuardian Pro</div>
           <div className="pgp-brand-sub">Gestión de calidad energética</div>
-          <div className="pgp-brand-ver">
-            <span className="pgp-dot pgp-dot-ok"></span> v1.0 · Operativo
-          </div>
-          <div className="pgp-brand-company">INDUC TECH</div>
         </div>
 
         <nav className="pgp-nav" aria-label="Navegación principal">
@@ -93,9 +110,11 @@ export default function Layout({ children }: LayoutProps) {
                   }}
                   className={`pgp-nav-item ${location.pathname === item.path ? "active" : ""}`}
                   aria-current={location.pathname === item.path ? "page" : undefined}
+                  title={contraido ? item.label : undefined}
+                  aria-label={item.label}
                 >
                   {item.icon}
-                  {item.label}
+                  <span className="pgp-nav-label">{item.label}</span>
                 </button>
               ))}
             </div>
@@ -103,8 +122,20 @@ export default function Layout({ children }: LayoutProps) {
         </nav>
 
         <div className="pgp-sidebar-footer">
-          <button className="pgp-sidebar-btn" onClick={logout}>
-            <IconoSalir /> Cerrar sesión
+          <div className="pgp-brand-ver">
+            <span className="pgp-dot pgp-dot-ok"></span> v1.0 · Operativo · INDUC TECH
+          </div>
+          <button
+            className="pgp-sidebar-btn pgp-contraer-btn"
+            onClick={alternarContraido}
+            aria-expanded={!contraido}
+            aria-label={contraido ? "Expandir menú" : "Contraer menú"}
+            title={contraido ? "Expandir menú" : undefined}
+          >
+            <IconoContraer /> <span className="pgp-nav-label">Contraer menú</span>
+          </button>
+          <button className="pgp-sidebar-btn" onClick={logout} title={contraido ? "Cerrar sesión" : undefined} aria-label="Cerrar sesión">
+            <IconoSalir /> <span className="pgp-nav-label">Cerrar sesión</span>
           </button>
         </div>
       </aside>
@@ -136,6 +167,9 @@ export default function Layout({ children }: LayoutProps) {
             </button>
           </div>
         </header>
+
+        {/* Aviso de alerta critica: aparece en cualquier pagina del sistema */}
+        <AlertaCritica />
 
         <main className="pgp-content">{children}</main>
       </div>

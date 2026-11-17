@@ -8,6 +8,7 @@ from app.core.security import get_current_user
 from app.models.medicion import Medicion
 from app.schemas.medicion import MedicionCreate, MedicionResponse
 from app.services.detector_anomalias import detectar_anomalias
+from app.services.detector_ml import ejecutar_prediccion_completa
 from app.services.en_vivo import publicar_medicion
 
 router = APIRouter(prefix="/mediciones", tags=["Mediciones"])
@@ -21,6 +22,8 @@ def ingestar_medicion(data: MedicionCreate, db: Session = Depends(get_db),user=D
     incidencias = detectar_anomalias(db, data.equipo_id, nueva)
     db.refresh(nueva)
     publicar_medicion(nueva, incidencias)
+    # Prediccion ML (si el modelo esta entrenado)
+    ejecutar_prediccion_completa(db=db, equipo_id=data.equipo_id, medicion=nueva)
     return nueva
 
 @router.get("/", response_model=list[MedicionResponse])

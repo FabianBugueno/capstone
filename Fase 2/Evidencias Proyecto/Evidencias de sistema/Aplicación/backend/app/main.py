@@ -13,6 +13,7 @@ from app.routers import en_vivo
 import asyncio
 from contextlib import asynccontextmanager
 from app.services.en_vivo import loop_simulador
+from app.routers import ml
 
 
 
@@ -37,6 +38,7 @@ app.include_router(mediciones.router)
 app.include_router(dashboard.router)
 app.include_router(incidencias.router)
 app.include_router(en_vivo.router)
+app.include_router(ml.router)
 
 app.add_middleware(
     CORSMiddleware,
@@ -44,6 +46,7 @@ app.add_middleware(
     allow_credentials=True,
     allow_methods=["*"],  # Permite todos los métodos HTTP (GET, POST, PUT, etc.)
     allow_headers=["*"],  # Permite todos los encabezados
+    expose_headers=["X-Total-Count"],  # total para la paginacion de incidencias (frontend en otro dominio)
 )
 
 @app.get("/health")

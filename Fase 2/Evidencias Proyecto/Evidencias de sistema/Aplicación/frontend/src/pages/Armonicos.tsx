@@ -65,7 +65,8 @@ export default function Armonicos() {
                   <XAxis dataKey="etiqueta" stroke="var(--txt3)" fontSize={12} />
                   {/* Escala hasta 20 %: la fundamental (100 %) se recorta para que las armonicas sean legibles */}
                   <YAxis stroke="var(--txt3)" fontSize={12} unit="%" domain={[0, 20]} allowDataOverflow />
-                  <Tooltip contentStyle={tooltipStyle} cursor={{ fill: "var(--accent-bg)" }} formatter={(v) => `${Number(v).toFixed(2)} %`} />
+                  {/* Las barras se colorean con <Cell>: sin itemStyle Recharts pinta el texto del item en negro */}
+                  <Tooltip contentStyle={tooltipStyle} itemStyle={{ color: "var(--txt1)" }} cursor={{ fill: "var(--accent-bg)" }} formatter={(v) => `${Number(v).toFixed(2)} %`} />
                   <ReferenceLine y={5} stroke="var(--danger)" strokeDasharray="4 3" label={{ value: "Límite individual 5%", fill: "var(--danger)", fontSize: 12, position: "right" }} />
                   <Bar dataKey="pct" name="% fundamental" animationDuration={300}>
                     {/* La fundamental se recorta en el eje de 20 %: su etiqueta dice el valor real */}

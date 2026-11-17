@@ -10,6 +10,7 @@ import ParametrosElectricos from "./pages/ParametrosElectricos";
 import Armonicos from "./pages/Armonicos";
 import Compensacion from "./pages/Compensacion";
 import Cortocircuito from "./pages/Cortocircuito";
+import HistorialPredicciones from "./pages/HistorialPredicciones";
 
 export default function App() {
   return (
@@ -86,6 +87,15 @@ export default function App() {
         element={
           <ProtectedRoute>
             <Incidencias />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/predicciones"
+        element={
+          <ProtectedRoute>
+            <HistorialPredicciones />
           </ProtectedRoute>
         }
       />

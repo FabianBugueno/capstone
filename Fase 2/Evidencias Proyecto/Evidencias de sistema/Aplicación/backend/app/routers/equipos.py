@@ -20,7 +20,8 @@ user=Depends(get_current_user)):
 
 @router.get("/", response_model=list[EquipoResponse])
 def listar_equipos(db: Session = Depends(get_db), user=Depends(get_current_user)):
-    return db.query(Equipo).all()
+    # Los dados de baja conservan su historial pero no se listan
+    return db.query(Equipo).filter(Equipo.estado != "eliminado").all()
 
 @router.get("/{equipo_id}", response_model=EquipoResponse)
 def obtener_equipo(equipo_id: int, db: Session = Depends(get_db), user=Depends(get_current_user)):
@@ -28,3 +29,13 @@ def obtener_equipo(equipo_id: int, db: Session = Depends(get_db), user=Depends(g
     if not equipo:
         raise HTTPException(status_code=404, detail="Equipo no encontrado")
     return equipo
+
+
+@router.delete("/{equipo_id}", status_code=status.HTTP_204_NO_CONTENT)
+def dar_de_baja_equipo(equipo_id: int, db: Session = Depends(get_db), user=Depends(get_current_user)):
+    """Baja logica: el equipo sale de listas y del simulador; mediciones e incidencias se conservan."""
+    equipo = db.query(Equipo).filter(Equipo.id == equipo_id).first()
+    if not equipo:
+        raise HTTPException(status_code=404, detail="Equipo no encontrado")
+    equipo.estado = "eliminado"
+    db.commit()

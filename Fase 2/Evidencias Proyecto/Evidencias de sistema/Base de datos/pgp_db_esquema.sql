@@ -90,7 +90,8 @@ CREATE TABLE IF NOT EXISTS mediciones (
 
 -- ---------------------------------------------------------------------
 -- Tabla: incidencias
--- Migracion: a1b2c3d4e5f6_crear_tabla_incidencias.py
+-- Migraciones: a1b2c3d4e5f6_crear_tabla_incidencias.py
+--              d3e4f5a6b7c8_trazabilidad_incidencias.py (quien y cuando reconoce o resuelve)
 -- ---------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS incidencias (
     id               SERIAL PRIMARY KEY,
@@ -102,8 +103,32 @@ CREATE TABLE IF NOT EXISTS incidencias (
     descripcion      VARCHAR(500),
     valor_medido     NUMERIC(10, 2),
     umbral_config    NUMERIC(10, 2),
-    fecha_creacion   TIMESTAMP DEFAULT now()
+    fecha_creacion   TIMESTAMP DEFAULT now(),
+    reconocida_por   VARCHAR(150),
+    reconocida_en    TIMESTAMPTZ,
+    resuelta_por     VARCHAR(150),
+    resuelta_en      TIMESTAMPTZ,
+    nota_resolucion  VARCHAR(500)
 );
+
+-- ---------------------------------------------------------------------
+-- Tabla: predicciones_ml (resultados del modelo de prediccion de fallas)
+-- Migracion: c2d3e4f5a6b7_crear_tabla_predicciones_ml.py
+-- ---------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS predicciones_ml (
+    id                      SERIAL PRIMARY KEY,
+    equipo_id               INTEGER NOT NULL REFERENCES equipos (id),
+    timestamp               TIMESTAMPTZ NOT NULL DEFAULT now(),
+    clase_predicha          VARCHAR(50),
+    probabilidad            NUMERIC(5, 4),
+    riesgo_falla            NUMERIC(5, 4),
+    horizonte_estimado_min  INTEGER,
+    modelo_version          VARCHAR(20)
+);
+
+CREATE INDEX IF NOT EXISTS ix_predicciones_ml_equipo_id        ON predicciones_ml (equipo_id);
+CREATE INDEX IF NOT EXISTS ix_predicciones_ml_timestamp        ON predicciones_ml (timestamp);
+CREATE INDEX IF NOT EXISTS ix_predicciones_ml_equipo_timestamp ON predicciones_ml (equipo_id, timestamp);
 
 -- ---------------------------------------------------------------------
 -- Politicas de TimescaleDB

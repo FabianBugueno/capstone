@@ -22,6 +22,9 @@
   --ok-bg: #e7f3ec;
   --warn-bg: #fbf1dc;
   --danger-bg: #fbe9e6;
+  /* tonos suaves para graficos y acentos de alertas (no para texto) */
+  --danger-soft: #e3857b;
+  --warn-soft: #e9c25e;
   --border: #d3dae0;
   --border2: #b8c2cc;
   --txt1: #16202b;
@@ -59,6 +62,8 @@
   --ok-bg: #12302a;
   --warn-bg: #352a12;
   --danger-bg: #3a1c1f;
+  --danger-soft: #c96f68;
+  --warn-soft: #c9a24a;
   --border: #263443;
   --border2: #34465a;
   --txt1: #e6edf3;
@@ -134,38 +139,36 @@ button:focus-visible {
   z-index: 100;
 }
 
+/* Mismo alto que .pgp-topbar (68 px): las lineas inferiores de ambos encabezados quedan alineadas */
 .pgp-brand {
-  padding: 22px 20px 18px;
+  height: 68px;
+  padding: 0 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   border-bottom: 1px solid var(--rail-line);
 }
 
 .pgp-brand-name {
-  font-size: 18px;
+  font-size: 20px;
+  line-height: 1.25;
   font-weight: 800;
   letter-spacing: -0.01em;
   color: #fff;
 }
 
 .pgp-brand-sub {
-  font-size: 12px;
+  font-size: 13px;
   color: var(--rail-muted);
   margin-top: 2px;
 }
 
 .pgp-brand-ver {
   font-size: 12px;
-  color: var(--rail-txt);
-  margin-top: 10px;
+  color: var(--rail-muted);
   display: flex;
   align-items: center;
   gap: 7px;
-}
-
-.pgp-brand-company {
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--rail-muted);
-  margin-top: 2px;
 }
 
 /* Indicadores de estado */
@@ -287,6 +290,129 @@ button:focus-visible {
 .pgp-sidebar-btn:hover {
   background: var(--rail-hover);
   border-color: var(--rail-muted);
+}
+
+.pgp-sidebar-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Fila propia sobre Cerrar sesion: no cambia de posicion al contraer el menu */
+.pgp-contraer-btn {
+  border-color: var(--rail-line);
+  color: var(--rail-muted);
+}
+
+.pgp-brand-mini {
+  display: none;
+}
+
+/* Riel contraido: solo cambia el ancho. Los textos se desvanecen sin salir del flujo (no hay saltos
+   verticales) y 62 px deja cada icono en la misma posicion que con el riel abierto. Solo escritorio */
+@media (min-width: 821px) {
+  .pgp-sidebar {
+    transition: width 0.2s ease, min-width 0.2s ease;
+  }
+  .pgp-sidebar.contraido {
+    width: 62px;
+    min-width: 62px;
+  }
+  /* .pgp-nav solo oculta el desborde horizontal: debe seguir con scroll vertical en pantallas bajas */
+  .pgp-nav {
+    overflow-x: hidden;
+  }
+  .pgp-brand,
+  .pgp-nav-item,
+  .pgp-sidebar-btn {
+    overflow: hidden;
+  }
+  .pgp-brand {
+    position: relative;
+  }
+  .pgp-brand > *,
+  .pgp-nav-label {
+    white-space: nowrap;
+    transition: opacity 0.15s ease;
+  }
+  /* Al contraer, el titulo del grupo cierra su altura al mismo ritmo que el ancho del riel:
+     los iconos se agrupan sin saltos bruscos al expandir */
+  .pgp-nav-group-label {
+    white-space: nowrap;
+    overflow: hidden;
+    max-height: 28px;
+    transition: opacity 0.15s ease, max-height 0.2s ease, padding 0.2s ease;
+  }
+  .pgp-nav-group {
+    position: relative;
+    transition: margin 0.2s ease;
+  }
+  .pgp-sidebar.contraido .pgp-nav-group-label {
+    max-height: 0;
+    padding-bottom: 0;
+  }
+  .pgp-sidebar.contraido .pgp-nav-group {
+    margin-bottom: 11px;
+  }
+  .pgp-sidebar.contraido .pgp-brand > :not(.pgp-brand-mini),
+  .pgp-sidebar.contraido .pgp-nav-label,
+  .pgp-sidebar.contraido .pgp-nav-group-label {
+    opacity: 0;
+  }
+  .pgp-brand-mini {
+    display: grid;
+    place-items: center;
+    position: absolute;
+    inset: 0;
+    font-size: 14px;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .pgp-sidebar.contraido .pgp-brand-mini {
+    opacity: 1;
+  }
+  /* Contraido: una linea divisoria entre grupos en lugar del titulo */
+  .pgp-nav-group:not(:first-child)::before {
+    content: "";
+    position: absolute;
+    left: 10px;
+    right: 10px;
+    top: -6px;
+    height: 1px;
+    background: var(--rail-line);
+    opacity: 0;
+    transition: opacity 0.15s ease;
+  }
+  .pgp-sidebar.contraido .pgp-nav-group:not(:first-child)::before {
+    opacity: 1;
+  }
+  .pgp-sidebar.contraido .pgp-contraer-btn svg {
+    transform: rotate(180deg);
+  }
+  /* Botones del pie centran su contenido: el texto invisible descentraria el icono */
+  .pgp-sidebar.contraido .pgp-sidebar-btn .pgp-nav-label {
+    display: none;
+  }
+  .pgp-sidebar.contraido .pgp-brand-ver {
+    display: none;
+  }
+}
+
+/* En movil el riel es un cajon completo: el boton de contraer no aplica */
+@media (max-width: 820px) {
+  .pgp-contraer-btn {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pgp-sidebar,
+  .pgp-nav-group,
+  .pgp-nav-group-label {
+    transition: none;
+  }
 }
 
 /* ── AREA PRINCIPAL ── */
@@ -1209,14 +1335,235 @@ html.pgp-tema-cambiando * {
 .pgp-estado {
   --tono: var(--ok);
   --tono-bg: var(--ok-bg);
-  display: flex;
-  align-items: center;
-  gap: 16px;
   padding: 14px 18px;
   border-radius: 10px;
   background: var(--tono-bg);
   border: 1px solid color-mix(in srgb, var(--tono) 35%, transparent);
   box-shadow: var(--shadow);
+}
+
+.pgp-estado-fila {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.pgp-estado-acciones {
+  margin-left: auto;
+  flex: none;
+  display: flex;
+  gap: 8px;
+}
+
+/* Franja de estado + bloque de prediccion ML lado a lado (se apilan en pantallas angostas) */
+.pgp-estado-grid {
+  display: grid;
+  gap: 12px;
+  align-items: stretch;
+}
+
+.pgp-estado-grid.con-prediccion {
+  grid-template-columns: minmax(0, 1.6fr) minmax(300px, 1fr);
+}
+
+.pgp-estado-grid > .pgp-estado {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.pgp-pred-fila {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.pgp-pred-riesgo {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.pgp-pred-cab {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pgp-pred-titulo {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--tono);
+}
+
+.pgp-pred-nivel {
+  padding: 2px 8px;
+  font-size: 11px;
+  text-transform: capitalize;
+}
+
+.pgp-pred-valor {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.pgp-pred-pct {
+  font-size: 26px;
+  font-weight: 800;
+  line-height: 1.1;
+  color: var(--tono);
+  font-variant-numeric: tabular-nums;
+}
+
+.pgp-pred-sub {
+  font-size: 12px;
+  color: var(--txt2);
+}
+
+.pgp-pred-barra {
+  margin-top: 4px;
+  height: 6px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--tono) 18%, var(--bg-card));
+  overflow: hidden;
+}
+
+.pgp-pred-barra > span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--tono);
+  transition: width 0.4s ease;
+}
+
+.pgp-pred-horizonte {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 1px;
+  text-align: right;
+}
+
+.pgp-pred-horizonte strong {
+  font-size: 18px;
+  line-height: 1.2;
+  color: var(--txt1);
+  font-variant-numeric: tabular-nums;
+}
+
+.pgp-pred-link {
+  margin-top: 4px;
+  padding: 0;
+  background: none;
+  border: none;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--tono);
+  cursor: pointer;
+}
+
+.pgp-pred-link:hover {
+  text-decoration: underline;
+}
+
+/* Modal del detalle del modelo ML */
+.pgp-modal-velo {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(10, 16, 24, 0.55);
+}
+
+.pgp-modal {
+  width: min(620px, 100%);
+  max-height: 90vh;
+  overflow-y: auto;
+  border-top: 4px solid var(--tono);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.pgp-modal-cab {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.pgp-modal-cab h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--txt1);
+}
+
+.pgp-modal-cab p {
+  margin: 4px 0 0;
+  font-size: 12px;
+  color: var(--txt3);
+}
+
+.pgp-modal-cerrar {
+  flex: none;
+  padding: 4px 10px;
+  background: transparent;
+  border: 1px solid var(--border2);
+  border-radius: 4px;
+  color: var(--txt2);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.pgp-modal-sub {
+  margin: 0 0 -10px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--txt1);
+}
+
+@media (max-width: 1100px) {
+  .pgp-estado-grid.con-prediccion {
+    grid-template-columns: 1fr;
+  }
+}
+
+.pgp-estado-btn-sec {
+  border-color: color-mix(in srgb, var(--tono) 45%, var(--border));
+  color: var(--txt2);
+}
+
+.pgp-estado-detalle {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 10px 16px;
+  margin: 12px 0 0;
+  padding-top: 12px;
+  border-top: 1px solid color-mix(in srgb, var(--tono) 30%, transparent);
+}
+
+.pgp-estado-detalle dt {
+  font-size: 12px;
+  color: var(--txt3);
+}
+
+.pgp-estado-detalle dd {
+  margin: 2px 0 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--txt1);
+  font-variant-numeric: tabular-nums;
 }
 
 .pgp-estado-warn {
@@ -1269,7 +1616,6 @@ html.pgp-tema-cambiando * {
 }
 
 .pgp-estado-btn {
-  margin-left: auto;
   flex: none;
   padding: 8px 14px;
   border-radius: 6px;
@@ -1303,10 +1649,10 @@ html.pgp-tema-cambiando * {
   .pgp-kpi-val {
     font-size: 26px;
   }
-  .pgp-estado {
+  .pgp-estado-fila {
     flex-wrap: wrap;
   }
-  .pgp-estado-btn {
+  .pgp-estado-acciones {
     margin-left: 0;
   }
 }
@@ -1489,6 +1835,200 @@ html.pgp-tema-cambiando * {
   .pgp-login-onda-mov,
   .pgp-login-caps li,
   .pgp-login-form {
+    animation: none;
+  }
+}
+
+/* ── Burbuja de alertas criticas: esquina inferior derecha, no tapa la pagina ── */
+.pgp-burbuja {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+}
+
+.pgp-burbuja-btn {
+  position: relative;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--bg-card);
+  color: var(--danger);
+  border: 1px solid color-mix(in srgb, var(--danger) 45%, transparent);
+  box-shadow: var(--shadow-hover);
+  cursor: pointer;
+  animation: pgp-burbuja-entra 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: background-color 0.15s;
+}
+
+.pgp-burbuja-btn:hover {
+  background: var(--danger-bg);
+}
+
+.pgp-burbuja-num {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: var(--danger);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 20px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+@keyframes pgp-burbuja-entra {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.pgp-burbuja-panel {
+  width: min(340px, calc(100vw - 40px));
+  max-height: min(420px, calc(100vh - 120px));
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  overflow: hidden;
+  box-shadow: var(--shadow-hover);
+}
+
+.pgp-burbuja-cab {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--danger);
+}
+
+.pgp-burbuja-texto {
+  background: transparent;
+  border: none;
+  color: var(--txt3);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.pgp-burbuja-texto:hover {
+  color: var(--txt1);
+}
+
+.pgp-burbuja-lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+}
+
+.pgp-burbuja-lista li {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+}
+
+.pgp-burbuja-fila {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--txt1);
+}
+
+.pgp-burbuja-hora {
+  font-size: 12px;
+  color: var(--txt3);
+  font-variant-numeric: tabular-nums;
+}
+
+.pgp-burbuja-msg {
+  margin-top: 2px;
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--txt2);
+  overflow-wrap: anywhere;
+}
+
+.pgp-burbuja-datos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 12px;
+  margin-top: 4px;
+  font-size: 12px;
+  color: var(--txt3);
+}
+
+.pgp-burbuja-pie {
+  display: flex;
+  gap: 8px;
+  margin: 10px 14px;
+}
+
+.pgp-burbuja-sonido {
+  flex: none;
+  width: 34px;
+  display: grid;
+  place-items: center;
+  background: transparent;
+  border: 1px solid var(--border2);
+  border-radius: 4px;
+  color: var(--txt2);
+  cursor: pointer;
+}
+
+.pgp-burbuja-sonido:hover {
+  color: var(--txt1);
+  background: var(--bg-deep);
+}
+
+.pgp-burbuja-sonido[aria-pressed="true"] {
+  color: var(--danger);
+  border-color: color-mix(in srgb, var(--danger) 45%, transparent);
+}
+
+.pgp-burbuja-ver {
+  flex: 1;
+  padding: 7px 12px;
+  background: var(--danger);
+  border: none;
+  border-radius: 4px;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+@media (max-width: 760px) {
+  .pgp-burbuja {
+    right: 12px;
+    bottom: 12px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pgp-burbuja-btn {
     animation: none;
   }
 }

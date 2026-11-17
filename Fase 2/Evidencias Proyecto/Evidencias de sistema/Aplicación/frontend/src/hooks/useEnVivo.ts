@@ -11,9 +11,21 @@ export interface MedicionVivo {
 interface Handlers {
   medicion?: (m: MedicionVivo) => void;
   incidencia?: (d: { equipo_id: number; nuevas: number }) => void;
+  // Incidencia de nivel critico: requiere accion inmediata
+  critica?: (d: CriticaVivo) => void;
 }
 
-// Suscripcion SSE a /en-vivo: cada medicion e incidencia llega en cuanto el backend la guarda.
+export interface CriticaVivo {
+  equipo_id: number;
+  equipo: string | null;
+  tipo: string;
+  descripcion: string | null;
+  valor_medido: number | null;
+  umbral: number | null;
+  timestamp: string | null;
+}
+
+// Suscripcion SSE a /en-vivo: cada medicion, incidencia y aviso critico llega en cuanto el backend lo guarda.
 export default function useEnVivo(handlers: Handlers) {
   const ref = useRef(handlers);
   useEffect(() => {
@@ -27,6 +39,7 @@ export default function useEnVivo(handlers: Handlers) {
     const es = new EventSource(`/api/en-vivo?token=${encodeURIComponent(token)}`);
     es.addEventListener("medicion", (e) => ref.current.medicion?.(JSON.parse(e.data)));
     es.addEventListener("incidencia", (e) => ref.current.incidencia?.(JSON.parse(e.data)));
+    es.addEventListener("critica", (e) => ref.current.critica?.(JSON.parse(e.data)));
     // El backend rechaza la conexion (401) con token vencido y EventSource reintentaria para siempre
     es.onerror = () => {
       if (!tokenVigente()) {

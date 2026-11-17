@@ -1,15 +1,18 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import api from "../api/axios";
 import Layout from "../components/Layout";
+import DetalleEquipo, { type Equipo } from "../components/DetalleEquipo";
 
-interface Equipo {
-  id: number;
-  cliente_id: number;
-  nombre: string;
-  ubicacion: string | null;
-  estado: string;
-  fecha_registro: string;
-}
+const botonFila = (color: string) => ({
+  padding: "4px 10px",
+  fontSize: "12px",
+  background: "transparent",
+  border: `1px solid ${color}`,
+  borderRadius: "4px",
+  color,
+  fontWeight: 600,
+  cursor: "pointer",
+});
 
 interface EquipoForm {
   cliente_id: number;
@@ -23,6 +26,11 @@ export default function Equipos() {
   const [showForm, setShowForm] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [detalle, setDetalle] = useState<Equipo | null>(null);
+  const [baja, setBaja] = useState<Equipo | null>(null);
+  // estables: los modales registran Escape con estas funciones
+  const cerrarDetalle = useCallback(() => setDetalle(null), []);
+  const cerrarBaja = useCallback(() => setBaja(null), []);
   const [form, setForm] = useState<EquipoForm>({
     cliente_id: 1,
     nombre: "",
@@ -54,6 +62,20 @@ export default function Equipos() {
       fetchEquipos();
     } catch {
       setError("Error al crear equipo");
+    }
+  };
+
+  const darDeBaja = async (eq: Equipo) => {
+    setError("");
+    setSuccess("");
+    try {
+      await api.delete(`/equipos/${eq.id}`);
+      setSuccess(`Equipo "${eq.nombre}" dado de baja`);
+      fetchEquipos();
+    } catch {
+      setError("Error al dar de baja el equipo");
+    } finally {
+      setBaja(null);
     }
   };
 
@@ -210,13 +232,14 @@ export default function Equipos() {
                 <th>Ubicación</th>
                 <th>Estado</th>
                 <th>Fecha Registro</th>
+                <th style={{ textAlign: "right" }}>Acciones</th>
               </tr>
             </thead>
             <tbody>
               {equipos.length === 0 ? (
                 <tr>
                   <td
-                    colSpan={5}
+                    colSpan={6}
                     style={{
                       textAlign: "center",
                       padding: "30px",
@@ -242,6 +265,16 @@ export default function Equipos() {
                     <td style={{ fontSize: "12px" }}>
                       {new Date(eq.fecha_registro).toLocaleDateString("es-CL")}
                     </td>
+                    <td style={{ textAlign: "right", whiteSpace: "nowrap" }}>
+                      <div style={{ display: "inline-flex", gap: "6px" }}>
+                        <button onClick={() => setDetalle(eq)} style={botonFila("var(--accent)")} aria-label={`Ver detalles de ${eq.nombre}`}>
+                          Ver detalles
+                        </button>
+                        <button onClick={() => setBaja(eq)} style={botonFila("var(--danger)")} aria-label={`Eliminar ${eq.nombre}`}>
+                          Eliminar
+                        </button>
+                      </div>
+                    </td>
                   </tr>
                 ))
               )}
@@ -249,6 +282,56 @@ export default function Equipos() {
           </table>
         </div>
       </div>
+      {detalle && <DetalleEquipo equipo={detalle} onClose={cerrarDetalle} />}
+      {baja && <ConfirmarBaja equipo={baja} onConfirm={() => darDeBaja(baja)} onClose={cerrarBaja} />}
     </Layout>
+  );
+}
+
+function ConfirmarBaja({ equipo, onConfirm, onClose }: { equipo: Equipo; onConfirm: () => void; onClose: () => void }) {
+  const cancelarRef = useRef<HTMLButtonElement>(null);
+  const [enviando, setEnviando] = useState(false);
+
+  useEffect(() => {
+    cancelarRef.current?.focus();
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [onClose]);
+
+  return (
+    <div className="pgp-modal-velo" onClick={onClose}>
+      <div
+        role="alertdialog"
+        aria-modal="true"
+        aria-labelledby="baja-titulo"
+        aria-describedby="baja-desc"
+        onClick={(e) => e.stopPropagation()}
+        className="pgp-card pgp-fade-in"
+        style={{ width: "min(420px, 100%)", display: "flex", flexDirection: "column", gap: "12px" }}
+      >
+        <h2 id="baja-titulo" style={{ fontSize: "16px", fontWeight: 700, color: "var(--txt1)", margin: 0 }}>
+          ¿Eliminar "{equipo.nombre}"?
+        </h2>
+        <p id="baja-desc" style={{ fontSize: "13px", color: "var(--txt2)", margin: 0 }}>
+          El equipo deja de aparecer en el sistema y de generar mediciones. Su historial de mediciones e incidencias se conserva.
+        </p>
+        <div style={{ display: "flex", justifyContent: "flex-end", gap: "8px" }}>
+          <button ref={cancelarRef} onClick={onClose} style={{ ...botonFila("var(--border2)"), color: "var(--txt2)" }}>
+            Cancelar
+          </button>
+          <button
+            onClick={() => {
+              setEnviando(true);
+              onConfirm();
+            }}
+            disabled={enviando}
+            style={{ ...botonFila("var(--danger)"), background: "var(--danger)", color: "#fff", opacity: enviando ? 0.6 : 1 }}
+          >
+            {enviando ? "Eliminando..." : "Eliminar equipo"}
+          </button>
+        </div>
+      </div>
+    </div>
   );
 }

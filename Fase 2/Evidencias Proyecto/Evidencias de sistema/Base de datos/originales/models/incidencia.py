@@ -17,3 +17,8 @@ class Incidencia(Base):
     valor_medido = Column(Numeric(10, 2))
     umbral_config = Column(Numeric(10, 2))
     fecha_creacion = Column(DateTime, server_default=func.now())
+    reconocida_por = Column(String(150))
+    reconocida_en = Column(DateTime(timezone=True))
+    resuelta_por = Column(String(150))
+    resuelta_en = Column(DateTime(timezone=True))
+    nota_resolucion = Column(String(500))

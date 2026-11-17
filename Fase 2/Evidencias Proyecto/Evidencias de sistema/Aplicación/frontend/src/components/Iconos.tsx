@@ -73,6 +73,15 @@ export const IconoIncidencias = () => (
   </Icono>
 );
 
+export const IconoPredicciones = () => (
+  <Icono>
+    <path d="M3 3v18h18" />
+    <path d="m7 15 3.5-4.5 3 2L18 7.5" />
+    <circle cx="7" cy="15" r="1.6" />
+    <circle cx="18" cy="7.5" r="1.6" />
+  </Icono>
+);
+
 export const IconoSalir = () => (
   <Icono size={16}>
     <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9" />
@@ -95,5 +104,26 @@ export const IconoLuna = () => (
 export const IconoMenu = () => (
   <Icono>
     <path d="M4 6h16M4 12h16M4 18h16" />
+  </Icono>
+);
+
+export const IconoVolumen = () => (
+  <Icono size={16}>
+    <path d="M11 5 6 9H2v6h4l5 4z" />
+    <path d="M15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14" />
+  </Icono>
+);
+
+export const IconoSilencio = () => (
+  <Icono size={16}>
+    <path d="M11 5 6 9H2v6h4l5 4z" />
+    <path d="m22 9-6 6M16 9l6 6" />
+  </Icono>
+);
+
+// Apunta a la izquierda; se rota con CSS cuando el riel esta contraido
+export const IconoContraer = () => (
+  <Icono>
+    <path d="m15 6-6 6 6 6" />
   </Icono>
 );

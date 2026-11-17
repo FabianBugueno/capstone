@@ -76,7 +76,8 @@ export default function ParametrosElectricos() {
                   <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
                   <XAxis dataKey="fase" stroke="var(--txt3)" fontSize={12} />
                   <YAxis stroke="var(--txt3)" fontSize={12} unit=" A" />
-                  <Tooltip contentStyle={tooltipStyle} cursor={{ fill: "var(--accent-bg)" }} />
+                  {/* Las barras se colorean con <Cell>: sin itemStyle Recharts pinta el texto del item en negro */}
+                  <Tooltip contentStyle={tooltipStyle} itemStyle={{ color: "var(--txt1)" }} cursor={{ fill: "var(--accent-bg)" }} />
                   <Bar dataKey="i" name="Corriente (A)" animationDuration={300}>
                     {COLORES_FASE.map((color) => (
                       <Cell key={color} fill={color} fillOpacity={0.75} />

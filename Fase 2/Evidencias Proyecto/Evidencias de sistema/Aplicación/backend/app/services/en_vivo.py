@@ -15,7 +15,7 @@ from app.services.escenarios import ESCENARIOS, generar_mixto
 log = logging.getLogger("pgp.en_vivo")
 
 # ── Difusion de eventos a los clientes conectados (SSE) ──
-# shortcut: broker en memoria, solo sirve con un proceso de uvicorn; con varios workers usar Redis/pg NOTIFY.
+# Broker en memoria: solo sirve con un proceso de uvicorn; con varios workers usar Redis/pg NOTIFY.
 
 _suscriptores: set[asyncio.Queue] = set()
 _loop: asyncio.AbstractEventLoop | None = None
@@ -47,10 +47,36 @@ def publicar(evento: str, datos: dict):
     _loop.call_soon_threadsafe(_entregar, mensaje)
 
 
+def _nombre_equipo(equipo_id: int) -> str | None:
+    """Nombre del equipo para el aviso critico; si la BD falla se envia sin nombre."""
+    try:
+        db = Sessionlocal()
+        try:
+            fila = db.query(Equipo.nombre).filter(Equipo.id == equipo_id).first()
+            return fila[0] if fila else None
+        finally:
+            db.close()
+    except Exception:
+        return None
+
+
 def publicar_medicion(medicion: Medicion, incidencias: list):
     publicar("medicion", MedicionResponse.model_validate(medicion).model_dump(mode="json"))
     if incidencias:
         publicar("incidencia", {"equipo_id": medicion.equipo_id, "nuevas": len(incidencias)})
+        # Aviso emergente para lo que exige accion inmediata (nivel critico)
+        for inc in incidencias:
+            if inc.nivel != "critico":
+                continue
+            publicar("critica", {
+                "equipo_id": medicion.equipo_id,
+                "equipo": _nombre_equipo(medicion.equipo_id),
+                "tipo": inc.tipo,
+                "descripcion": inc.descripcion,
+                "valor_medido": float(inc.valor_medido) if inc.valor_medido is not None else None,
+                "umbral": float(inc.umbral_config) if inc.umbral_config is not None else None,
+                "timestamp": inc.timestamp.isoformat() if inc.timestamp else None,
+            })
 
 
 # ── Simulador integrado: genera mediciones para todos los equipos activos ──
